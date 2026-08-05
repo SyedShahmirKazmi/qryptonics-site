@@ -44,8 +44,15 @@
     /* Anchor the lattice origin right of the text column. On narrow
        viewports the column takes the full width, so push the origin
        further out and let the veil carry legibility. */
-    cx = w * (w < 1000 ? 0.94 : 0.7);
-    cy = h * 0.5;
+    if (w < 1000) {
+      /* Narrow: the text column takes the full width, so drop the basis
+         into the empty region below the buttons rather than off-canvas. */
+      cx = w * 0.78;
+      cy = h * 0.80;
+    } else {
+      cx = w * 0.70;
+      cy = h * 0.50;
+    }
   }
 
   function easeInOut(x) {
