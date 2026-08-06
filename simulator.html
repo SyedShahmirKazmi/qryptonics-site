@@ -148,7 +148,7 @@
 
         <div class="sim-ctls">
           <div id="ctl-circuit">
-            <p class="sim-ctls__h">Device</p>
+            <details class="sim-fold" open><summary>Device</summary>
             <label class="sim-field"><span>Qubits <b id="qubits-v">4</b></span>
               <input id="qubits" type="range" min="1" max="8" step="1" value="4"></label>
             <label class="sim-field"><span>T&#8321; relaxation <b id="t1-v">80 &#181;s</b></span>
@@ -159,7 +159,7 @@
               <input id="g1" type="range" min="5" max="200" step="5" value="35"></label>
             <label class="sim-field"><span>2-qubit gate <b id="g2-v">300 ns</b></span>
               <input id="g2" type="range" min="20" max="1000" step="20" value="300"></label>
-            <p class="sim-ctls__h">Error</p>
+            </details><details class="sim-fold"><summary>Error</summary>
             <label class="sim-field"><span>1-qubit depolarizing <b id="d1-v">0.10 %</b></span>
               <input id="d1" type="range" min="0" max="50" step="1" value="10"></label>
             <label class="sim-field"><span>2-qubit depolarizing <b id="d2-v">1.00 %</b></span>
@@ -168,25 +168,38 @@
               <input id="ro" type="range" min="0" max="100" step="5" value="10"></label>
             <label class="sim-field"><span>Shots <b id="shots-v">2048</b></span>
               <input id="shots" type="range" min="0" max="16384" step="256" value="2048"></label>
+            </details>
+            <details class="sim-fold"><summary>Connectivity</summary>
+              <label class="sim-field"><span>Coupling map</span>
+                <select id="topo" class="sim-select">
+                  <option value="all">All-to-all (ideal)</option>
+                  <option value="line" selected>Linear chain</option>
+                  <option value="ring">Ring</option>
+                  <option value="grid">Grid</option>
+                  <option value="heavy-hex">Heavy-hex</option>
+                </select></label>
+              <p class="sim-note">Two-qubit gates between non-adjacent qubits are routed with SWAPs, which cost depth and fidelity.</p>
+            </details>
           </div>
           <div id="ctl-net" hidden>
-            <p class="sim-ctls__h">Memory &amp; source</p>
+            <details class="sim-fold" open><summary>Memory &amp; source</summary>
             <label class="sim-field"><span>Memory T&#8322; <b id="memory-v">10 ms</b></span>
               <input id="memory" type="range" min="1" max="500" step="1" value="10"></label>
             <label class="sim-field"><span>Source fidelity <b id="srcfid-v">0.980</b></span>
               <input id="srcfid" type="range" min="800" max="999" step="1" value="980"></label>
-            <p class="sim-ctls__h">Detection</p>
+            </details><details class="sim-fold"><summary>Detection</summary>
             <label class="sim-field"><span>Detector efficiency <b id="deteff-v">0.90</b></span>
               <input id="deteff" type="range" min="10" max="99" step="1" value="90"></label>
             <label class="sim-field"><span>Dark count rate <b id="dark-v">0 /s</b></span>
               <input id="dark" type="range" min="0" max="5000" step="50" value="0"></label>
             <label class="sim-field"><span>Multiplexed modes <b id="mux-v">1</b></span>
               <input id="mux" type="range" min="1" max="200" step="1" value="1"></label>
-            <p class="sim-ctls__h">Swapping</p>
+            </details><details class="sim-fold"><summary>Swapping</summary>
             <label class="sim-field"><span>Swap success <b id="swapp-v">0.50</b></span>
               <input id="swapp" type="range" min="10" max="100" step="1" value="50"></label>
             <label class="sim-field"><span>Swap quality <b id="swapq-v">0.970</b></span>
               <input id="swapq" type="range" min="800" max="999" step="1" value="970"></label>
+            </details>
           </div>
         </div>
       </aside>
@@ -240,9 +253,14 @@
     </div>
 
     <!-- ── results ────────────────────────────────────── -->
-    <section class="sim-results" aria-live="polite" aria-label="Simulation results">
-      <h2 class="section-h"><span class="section-h__mark">§</span> Results</h2>
-      <div id="results"></div>
+    <section class="sim-results" aria-label="Simulation results">
+      <div class="sim-tabs" role="tablist" aria-label="Result view">
+        <button class="sim-tab" role="tab" data-tab="kpi" aria-selected="true">Metrics</button>
+        <button class="sim-tab" role="tab" data-tab="dist" aria-selected="false">Distribution</button>
+        <button class="sim-tab" role="tab" data-tab="state" aria-selected="false">State</button>
+        <button class="sim-tab" role="tab" data-tab="hw" aria-selected="false">Hardware</button>
+      </div>
+      <div id="results" aria-live="polite"></div>
     </section>
 
   </section>

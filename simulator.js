@@ -30,7 +30,8 @@
   var app = {
     mode: 'circuit',
     view: { x: 0, y: 0, k: 1 },
-    circuit: { qubits: 4, ops: [] },
+    circuit: { qubits: 4, ops: [], roles: ['data','data','data','data'], topology: 'line' },
+    tab: 'kpi',
     net: { nodes: [], links: [], cuts: [] },
     params: {},
     selected: null,
@@ -82,6 +83,18 @@
   /* ── parameters ────────────────────────────────────────── */
   function num(id) { var e = document.getElementById(id); return e ? +e.value : 0; }
 
+  var ROLES = ['data', 'ancilla', 'comm'];
+  var ROLE_LABEL = { data: 'data', ancilla: 'anc', comm: 'comm' };
+
+  /* Keep the roles array the same length as the register. */
+  function normaliseRoles(c) {
+    c.roles = c.roles || [];
+    while (c.roles.length < c.qubits) c.roles.push('data');
+    c.roles.length = c.qubits;
+    return c.roles;
+  }
+  function topology(c) { return c.topology || 'line'; }
+
   function readParams() {
     app.params = {
       T1: num('t1'), T2: num('t2'),
@@ -97,6 +110,8 @@
       swapQuality: num('swapq') / 1000,
       sourceRate: 1e7, gateWindow: 1e-9
     };
+    var te = document.getElementById('topo');
+    if (te) activeCircuit().topology = te.value;
     var set = function (id, txt) { var e = document.getElementById(id); if (e) e.textContent = txt; };
     set('qubits-v', num('qubits'));
     set('t1-v', app.params.T1 ? app.params.T1 + ' µs' : 'off');
@@ -365,11 +380,14 @@
     var maxCol = c.ops.reduce(function (m, o) { return Math.max(m, o.col); }, 6);
     var width = COL_X + (maxCol + 3) * COL_W;
 
+    var roles = normaliseRoles(c);
     for (var q = 0; q < c.qubits; q++) {
       var y = WIRE_Y + q * WIRE_H;
-      el('line', { class: 'sim-wire', x1: 80, y1: y, x2: width, y2: y }, layerWires);
+      el('line', { class: 'sim-wire is-' + roles[q], x1: 80, y1: y, x2: width, y2: y }, layerWires);
       el('text', { class: 'sim-qlabel', x: 46, y: y + 4 }, layerWires).textContent = 'q' + q;
       el('text', { class: 'sim-ket', x: 62, y: y + 4 }, layerWires).textContent = '|0⟩';
+      el('text', { class: 'sim-role is-' + roles[q], x: 40, y: y + 16 }, layerWires)
+        .textContent = ROLE_LABEL[roles[q]];
     }
 
     c.ops.forEach(function (op) {
@@ -470,6 +488,7 @@
              '<input id="th" type="range" min="0" max="2" step="0.02" value="' + (op.theta/Math.PI) + '"></label>';
       }
       if (TWO_Q[op.type]) h += '<button class="sim-btn" id="flip">Swap control and target</button>';
+      
       h += '<button class="sim-btn sim-btn--del" id="del">Delete gate</button>';
       inspector.innerHTML = h;
 
@@ -688,49 +707,108 @@
       results.innerHTML = '<p class="sim-empty">Drop a gate onto a wire to run the simulation.</p>';
       return;
     }
-    var r = QSim.simulateCircuit({ qubits: c.qubits, ops: c.ops }, app.params);
-    var n = c.qubits, labels = [], vals = [];
+    var roles = normaliseRoles(c);
+    var topo = topology(c);
+
+    /* Route onto the coupling map first. SWAPs inserted here are then
+       genuinely simulated, so their cost shows up in the fidelity
+       rather than being reported and ignored. */
+    var tr = QSim.transpile({ qubits: c.qubits, ops: c.ops }, topo);
+    var r = QSim.simulateCircuit(tr.circuit, app.params);
+    var n = c.qubits;
     var shown = r.counts || r.probs;
+    var labels = [], vals = [];
     for (var i = 0; i < (1 << n); i++) {
       labels.push(i.toString(2).padStart(n, '0'));
       vals.push(shown[i]);
     }
     var maxEnt = Math.max.apply(null, r.entropy);
+    var rc = QSim.roleCheck({ ops: c.ops }, roles);
+    var html = '';
 
-    var html = '<div class="sim-kpis">';
-    html += kpi('Qubits', n, 'Hilbert dimension ' + (1 << n));
-    html += kpi('Depth', r.depth, r.gates + ' gates, ' + r.twoQubit + ' two-qubit');
-    html += kpi('Circuit time', (r.durationNs / 1000).toFixed(2) + ' µs',
-                app.params.T1 ? 'against T₁ ' + app.params.T1 + ' µs' : 'coherence off');
-    html += kpi('State fidelity', fmt(r.fidelity, 4), 'against the noiseless run',
-                r.fidelity > 0.9 ? 'good' : r.fidelity > 0.6 ? 'warn' : 'bad');
-    html += kpi('Purity Tr(ρ²)', fmt(r.purity, 4),
-                r.purity > 0.99 ? 'nearly pure' : 'mixed by decoherence');
-    html += kpi('Entanglement', fmt(maxEnt, 3) + ' ebit',
-                maxEnt > 0.01 ? 'qubits are correlated' : 'product state');
-    html += '</div>';
-
-    html += plot(r.counts ? 'Measured outcomes over ' + app.params.shots + ' shots'
-                          : 'Outcome probabilities (exact)',
-      bars(vals, labels, { aria: 'Measurement outcome distribution' }),
-      r.counts ? 'Sampling noise is visible at low shot counts. Set shots to zero for exact probabilities.'
-               : 'Exact distribution from the density matrix.');
-
-    html += plot('Bloch vector per qubit', blochChart(r.bloch),
-      'Vector length is coherence. A qubit entangled with the rest sits near the origin ' +
-      'because its own reduced state is mixed — that is what entanglement looks like locally.');
-
-    if (r.rho) {
-      html += plot('Density matrix magnitude', rhoHeatmap(r.rho),
-        'Off-diagonal elements are coherence. Decoherence erases them from the outside in.');
+    if (app.tab === 'kpi') {
+      html += '<div class="sim-kpis">';
+      html += kpi('Qubits', n, rc.data + ' data · ' + rc.ancilla + ' ancilla · ' + rc.comm + ' comm');
+      html += kpi('Depth', tr.routedDepth,
+                  tr.swaps ? 'was ' + tr.nativeDepth + ' before routing' : 'no routing needed');
+      html += kpi('SWAP overhead', tr.swaps,
+                  tr.swaps ? tr.swaps * 3 + ' extra CNOTs on ' + topo : topo + ' fits this circuit',
+                  tr.swaps === 0 ? 'good' : tr.swaps > 4 ? 'bad' : 'warn');
+      html += kpi('Circuit time', (r.durationNs / 1000).toFixed(2) + ' µs',
+                  app.params.T1 ? 'against T₁ ' + app.params.T1 + ' µs' : 'coherence off');
+      html += kpi('State fidelity', fmt(r.fidelity, 4), 'against the noiseless run',
+                  r.fidelity > 0.9 ? 'good' : r.fidelity > 0.6 ? 'warn' : 'bad');
+      html += kpi('Purity Tr(ρ²)', fmt(r.purity, 4),
+                  r.purity > 0.99 ? 'nearly pure' : 'mixed by decoherence');
+      html += '</div>';
+      if (rc.problems.length) {
+        html += '<p class="sim-warn">' + esc(rc.problems[0]) +
+                '. Communication qubits hold entanglement with another QPU and should not be used for local work.</p>';
+      }
+      html += plot('Entanglement entropy per qubit',
+        bars(r.entropy, r.entropy.map(function (_, q) { return 'q' + q + ' ' + ROLE_LABEL[roles[q]]; }),
+             { aria: 'Entanglement entropy per qubit' }),
+        'Von Neumann entropy of each qubit against the rest. 1.0 ebit is maximal.');
     }
 
-    html += plot('Entanglement entropy per qubit',
-      bars(r.entropy, r.entropy.map(function (_, q) { return 'q' + q; }),
-           { aria: 'Entanglement entropy per qubit' }),
-      'Von Neumann entropy of each qubit against the rest. 1.0 ebit is maximal.');
+    if (app.tab === 'dist') {
+      html += plot(r.counts ? 'Measured outcomes over ' + app.params.shots + ' shots'
+                            : 'Outcome probabilities (exact)',
+        bars(vals, labels, { aria: 'Measurement outcome distribution' }),
+        r.counts ? 'Sampling noise is visible at low shot counts. Set shots to zero for exact probabilities.'
+                 : 'Exact distribution from the density matrix.');
+    }
+
+    if (app.tab === 'state') {
+      html += plot('Bloch vector per qubit', blochChart(r.bloch),
+        'Vector length is coherence. A qubit entangled with the rest sits near the origin ' +
+        'because its own reduced state is mixed.');
+      if (r.rho) {
+        html += plot('Density matrix magnitude', rhoHeatmap(r.rho),
+          'Off-diagonal elements are coherence. Decoherence erases them from the outside in.');
+      } else {
+        html += '<p class="sim-empty">Turn on any noise source to see the density matrix. ' +
+                'A noiseless run stays a pure state.</p>';
+      }
+    }
+
+    if (app.tab === 'hw') {
+      html += plot('Coupling map · ' + topo, couplingChart(c.qubits, tr.edges, roles),
+        'Two-qubit gates are only native between connected qubits. Anything else is routed ' +
+        'with SWAPs, each costing three CNOTs of depth and error.');
+      var comp = ['all', 'line', 'ring', 'grid', 'heavy-hex'].map(function (t) {
+        return { t: t, s: QSim.transpile({ qubits: c.qubits, ops: c.ops }, t).swaps };
+      });
+      html += plot('SWAP cost of this circuit on each topology',
+        bars(comp.map(function (x) { return x.s; }), comp.map(function (x) { return x.t; }),
+             { aria: 'SWAP count per topology',
+               alt: comp.map(function (x) { return x.t === topo; }) }),
+        'Highlighted bar is the map you have selected.');
+    }
 
     results.innerHTML = html;
+  }
+
+  /* Coupling graph drawn as the hardware actually connects. */
+  function couplingChart(n, edges, roles) {
+    var W = 560, H = 200, R = Math.min(72, 24 + n * 7), cx = W / 2, cy = H / 2;
+    var pos = [];
+    for (var i = 0; i < n; i++) {
+      var a = (i / n) * Math.PI * 2 - Math.PI / 2;
+      pos.push({ x: cx + Math.cos(a) * R, y: cy + Math.sin(a) * R });
+    }
+    var s = '<svg class="sim-chart" viewBox="0 0 ' + W + ' ' + H + '" role="img" ' +
+            'aria-label="Qubit coupling map">';
+    edges.forEach(function (e) {
+      s += '<line class="sim-coupling" x1="' + pos[e[0]].x.toFixed(1) + '" y1="' + pos[e[0]].y.toFixed(1) +
+           '" x2="' + pos[e[1]].x.toFixed(1) + '" y2="' + pos[e[1]].y.toFixed(1) + '"/>';
+    });
+    pos.forEach(function (p, i) {
+      s += '<circle class="sim-cnode is-' + roles[i] + '" cx="' + p.x.toFixed(1) + '" cy="' + p.y.toFixed(1) +
+           '" r="13"><title>q' + i + ' — ' + roles[i] + '</title></circle>' +
+           '<text class="sim-clabel" x="' + p.x.toFixed(1) + '" y="' + p.y.toFixed(1) + '">' + i + '</text>';
+    });
+    return s + '</svg>';
   }
 
   function simNetwork() {
@@ -920,6 +998,22 @@
   [].forEach.call(document.querySelectorAll('[data-mode]'), function (b) {
     b.addEventListener('click', function () { setMode(b.getAttribute('data-mode')); });
   });
+
+  [].forEach.call(document.querySelectorAll('.sim-tab'), function (b) {
+    b.addEventListener('click', function () {
+      app.tab = b.getAttribute('data-tab');
+      [].forEach.call(document.querySelectorAll('.sim-tab'), function (o) {
+        o.setAttribute('aria-selected', String(o === b));
+      });
+      simulate();
+    });
+  });
+
+  var topoSel = document.getElementById('topo');
+  if (topoSel) topoSel.addEventListener('change', function () {
+    activeCircuit().topology = topoSel.value;
+    render(); simulate();
+  });
   document.getElementById('btn-link').addEventListener('click', function () { setLinking(!app.linking); });
   document.getElementById('btn-cut').addEventListener('click', function () { setCutting(!app.cutting); });
   document.getElementById('btn-back').addEventListener('click', function () {
@@ -973,12 +1067,17 @@
     app.circuit.qubits = 4;
     var qbEl = document.getElementById('qubits');
     if (qbEl) qbEl.value = 4;
+    /* GHZ, then a wrap-around gate from q3 back to q0. A chain maps GHZ
+       perfectly and needs no routing, so without that last gate the
+       coupling map would look free and the SWAP cost would never show. */
     app.circuit.ops = [
       { id: ++uid, type: 'H', q: 0, col: 0 },
       { id: ++uid, type: 'CNOT', q: 1, control: 0, col: 1 },
       { id: ++uid, type: 'CNOT', q: 2, control: 1, col: 2 },
-      { id: ++uid, type: 'CNOT', q: 3, control: 2, col: 3 }
+      { id: ++uid, type: 'CNOT', q: 3, control: 2, col: 3 },
+      { id: ++uid, type: 'CZ', q: 0, control: 3, col: 4 }
     ];
+    app.circuit.roles = ['data', 'data', 'ancilla', 'comm'];
   }
   function loadNetwork() {
     var y = 210;

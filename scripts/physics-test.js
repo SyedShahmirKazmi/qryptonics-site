@@ -182,6 +182,78 @@ console.log('\nNetwork and routing');
       noisy.fidelity.toFixed(4) + ' < ' + d.fidelity.toFixed(4));
 }
 
+/* ── connectivity and routing ────────────────────────────── */
+console.log('\nQPU topology and routing');
+{
+
+// coupling maps
+chk('line on 5 qubits has 4 edges', QSim.couplingMap('line',5).length===4);
+chk('ring on 5 qubits has 5 edges', QSim.couplingMap('ring',5).length===5);
+chk('all-to-all on 5 has 10 edges', QSim.couplingMap('all',5).length===10);
+chk('grid on 4 is a square', QSim.couplingMap('grid',4).length===4, JSON.stringify(QSim.couplingMap('grid',4)));
+
+// distance
+const adj=QSim.adjacency(5,QSim.couplingMap('line',5));
+chk('line: path 0->4 has 5 nodes', QSim.qubitPath(adj,0,4).length===5);
+chk('line: neighbours are adjacent', QSim.qubitPath(adj,1,2).length===2);
+const ringAdj=QSim.adjacency(5,QSim.couplingMap('ring',5));
+chk('ring shortens the far hop', QSim.qubitPath(ringAdj,0,4).length===2, QSim.qubitPath(ringAdj,0,4).join('-'));
+
+// routing inserts SWAPs only when needed
+const far={qubits:5,ops:[{type:'CNOT',q:4,control:0,col:0}]};
+const rAll=QSim.transpile(far,'all'), rLine=QSim.transpile(far,'line');
+chk('all-to-all needs no SWAPs', rAll.swaps===0, rAll.swaps);
+chk('line needs 3 SWAPs for 0->4', rLine.swaps===3, rLine.swaps);
+chk('routing deepens the circuit', rLine.routedDepth>rLine.nativeDepth,
+    rLine.nativeDepth+' -> '+rLine.routedDepth);
+const near={qubits:5,ops:[{type:'CNOT',q:1,control:0,col:0}]};
+chk('adjacent gate needs no SWAP on a line', QSim.transpile(near,'line').swaps===0);
+
+// THE critical test: routing must not change the physics
+function dist(c,topo){
+  const tr=QSim.transpile(c,topo||'all');
+  return QSim.simulateCircuit(tr.circuit,{});
+}
+const ghz={qubits:4,ops:[
+  {type:'H',q:0,col:0},{type:'CNOT',q:1,control:0,col:1},
+  {type:'CNOT',q:2,control:1,col:2},{type:'CNOT',q:3,control:2,col:3}]};
+const a=dist(ghz,'all'), l=dist(ghz,'line'), r=dist(ghz,'ring'), g=dist(ghz,'grid');
+const sortP=x=>Array.from(x.probs).map(v=>+v.toFixed(9)).sort((p,q)=>q-p);
+chk('GHZ outcome distribution is identical on every topology',
+    JSON.stringify(sortP(a))===JSON.stringify(sortP(l)) &&
+    JSON.stringify(sortP(l))===JSON.stringify(sortP(r)) &&
+    JSON.stringify(sortP(r))===JSON.stringify(sortP(g)),
+    'all='+sortP(a).slice(0,2)+' line='+sortP(l).slice(0,2));
+chk('GHZ stays maximally entangled after routing',
+    close(l.entropy[0],1,1e-6), l.entropy[0].toFixed(6));
+
+// a swap-heavy route on real noise must cost fidelity
+// A GHZ chain maps perfectly onto a line and needs no SWAPs, so it
+// cannot show routing cost. Use a circuit that spans the register.
+const spanning={qubits:5,ops:[
+  {type:'H',q:0,col:0},{type:'CNOT',q:4,control:0,col:1},
+  {type:'CNOT',q:3,control:1,col:2},{type:'CNOT',q:0,control:4,col:3}]};
+const sw=o=>QSim.transpile(spanning,o).swaps;
+chk('a line needs SWAPs for a spanning circuit', sw('line')>0, 'line='+sw('line')+' all='+sw('all'));
+chk('all-to-all needs none', sw('all')===0);
+chk('ring needs fewer SWAPs than a line', sw('ring')<sw('line'), 'ring='+sw('ring')+' line='+sw('line'));
+const nf=o=>QSim.simulateCircuit(QSim.transpile(spanning,o).circuit,{depol2:0.01}).fidelity;
+chk('routing overhead costs fidelity', nf('line')<nf('all'),
+    nf('line').toFixed(4)+' < '+nf('all').toFixed(4));
+const idealLine=QSim.simulateCircuit(QSim.transpile(spanning,'line').circuit,{});
+const idealAll=QSim.simulateCircuit(QSim.transpile(spanning,'all').circuit,{});
+const sp=x=>Array.from(x.probs).map(v=>+v.toFixed(9)).sort((p,q)=>q-p);
+chk('but noiseless physics is unchanged by routing',
+    JSON.stringify(sp(idealLine))===JSON.stringify(sp(idealAll)));
+
+// roles
+const roles=['data','data','ancilla','comm'];
+const rc=QSim.roleCheck({ops:[]},roles);
+chk('roles counted', rc.data===2&&rc.ancilla===1&&rc.comm===1,
+    JSON.stringify(rc));
+
+}
+
 console.log('\n  ' + (fails
   ? fails + ' FAILURE(S) of ' + total
   : 'all ' + total + ' physics tests passed') + '\n');

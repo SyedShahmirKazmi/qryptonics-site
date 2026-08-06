@@ -810,3 +810,63 @@ fieldset{border:0;padding:0;margin:0;display:grid;gap:.45rem}
   .contact__actions,.hero__actions{gap:.7rem}
   .btn{width:100%}
 }
+
+/* ── simulator: denser, less vertical ──────────────────────
+   The page was a wall of stacked plots. Parameters collapse into
+   groups, results move behind tabs, and the canvas gets a shorter
+   aspect so the whole workbench fits one screen.
+   ─────────────────────────────────────────────────────────── */
+.sim-fold{border-bottom:1px solid var(--line)}
+.sim-fold:last-of-type{border-bottom:0}
+.sim-fold > summary{
+  font-family:var(--f-mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--copper);cursor:pointer;padding:.7rem 0;list-style:none;
+  display:flex;align-items:center;justify-content:space-between;min-height:38px;
+}
+.sim-fold > summary::-webkit-details-marker{display:none}
+.sim-fold > summary::after{content:'+';font-size:.9rem;color:var(--faint)}
+.sim-fold[open] > summary::after{content:'–'}
+.sim-fold > summary:hover{color:var(--copper-hi)}
+.sim-fold[open]{padding-bottom:.6rem}
+.sim-select{
+  font-family:var(--f-mono);font-size:.76rem;color:var(--ink);width:100%;
+  background:var(--sunk);border:1px solid var(--line-hi);border-radius:3px;padding:.5rem .55rem;
+}
+.sim-note{font-size:.72rem;line-height:1.5;color:var(--faint);margin-top:.5rem}
+
+.sim-tabs{display:flex;gap:1px;background:var(--line);border:var(--rule);border-radius:5px 5px 0 0;overflow:hidden;margin-bottom:0}
+.sim-tab{
+  flex:1;background:var(--card);border:0;cursor:pointer;padding:.85rem .4rem;min-height:44px;
+  font-family:var(--f-mono);font-size:.7rem;color:var(--muted);
+  transition:background .15s ease,color .15s ease;
+}
+.sim-tab:hover{background:var(--raise);color:var(--ink)}
+.sim-tab[aria-selected="true"]{background:var(--copper);color:var(--on-copper)}
+#results{border:var(--rule);border-top:0;border-radius:0 0 5px 5px;padding:1.6rem 1.4rem;background:var(--paper)}
+#results .sim-plot:last-child{margin-bottom:0}
+.sim-results{margin-bottom:var(--space-section)}
+
+/* shorter canvas: 16:9 was taller than the work needed */
+.sim-frame{aspect-ratio:2.1/1}
+.sim-ctls{max-height:none;overflow:visible}
+.sim-side{max-height:none}
+.sim-palette{max-height:15rem}
+
+/* qubit role colouring on the wires */
+.sim-role{font-family:'IBM Plex Mono',monospace;font-size:8.5px;text-anchor:end;letter-spacing:.04em}
+.sim-role.is-data{fill:var(--g-1q)}
+.sim-role.is-ancilla{fill:var(--g-phase)}
+.sim-role.is-comm{fill:var(--g-rot)}
+.sim-wire.is-ancilla{stroke:var(--g-phase);stroke-opacity:.45;stroke-dasharray:5 4}
+.sim-wire.is-comm{stroke:var(--g-rot);stroke-opacity:.5}
+.sim-coupling{stroke:var(--line-hi);stroke-width:1.4}
+.sim-cnode{fill:var(--card);stroke:var(--g-1q);stroke-width:1.5}
+.sim-cnode.is-ancilla{stroke:var(--g-phase)}
+.sim-cnode.is-comm{stroke:var(--g-rot)}
+.sim-clabel{font-family:'IBM Plex Mono',monospace;font-size:9px;fill:var(--body);text-anchor:middle;dominant-baseline:central}
+
+@media (max-width:1100px){
+  .sim-frame{aspect-ratio:16/10}
+  .sim-tab{font-size:.64rem;padding:.7rem .2rem}
+}
+.sim-warn{font-size:.85rem;line-height:1.6;color:var(--g-rot);background:var(--rot-bg);border-left:2px solid var(--g-rot);padding:.9rem 1.1rem;border-radius:0 4px 4px 0;margin-bottom:1.5rem}

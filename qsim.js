@@ -594,10 +594,155 @@
     };
   }
 
+
+  /* ══════════════════════════════════════════════════════════
+     Qubit roles and QPU connectivity
+
+     Real processors do not have all-to-all coupling, and not every
+     qubit does the same job. Both facts dominate what a circuit
+     actually costs, so both are modelled rather than assumed away.
+
+       data    carries the computation
+       ancilla syndrome extraction and error correction
+       comm    coupled to the optical interface; the only qubits
+               that can hold entanglement with another QPU
+
+     A two-qubit gate between non-adjacent qubits has to be routed
+     with SWAPs. Each SWAP is three CNOTs, so it costs depth and
+     error, and those SWAPs are inserted into the circuit and then
+     genuinely simulated rather than being counted and ignored.
+     ══════════════════════════════════════════════════════════ */
+  var TOPOLOGIES = ['all', 'line', 'ring', 'grid', 'heavy-hex'];
+
+  function couplingMap(topology, n) {
+    var e = [], i, j;
+    if (n < 2) return e;
+    if (topology === 'all') {
+      for (i = 0; i < n; i++) for (j = i + 1; j < n; j++) e.push([i, j]);
+    } else if (topology === 'ring') {
+      for (i = 0; i < n; i++) e.push([i, (i + 1) % n]);
+      if (n === 2) e = [[0, 1]];
+    } else if (topology === 'grid') {
+      var w = Math.ceil(Math.sqrt(n));
+      for (i = 0; i < n; i++) {
+        var r = Math.floor(i / w), c = i % w;
+        if (c + 1 < w && i + 1 < n) e.push([i, i + 1]);
+        if (i + w < n) e.push([i, i + w]);
+      }
+    } else if (topology === 'heavy-hex') {
+      /* A line with a branch off every third site, which is the
+         shape IBM's heavy-hex lattice reduces to at small sizes. */
+      for (i = 0; i < n - 1; i++) if ((i + 1) % 3 !== 0) e.push([i, i + 1]);
+      for (i = 2; i < n - 1; i += 3) e.push([i - 1, i + 1]);
+      if (!e.length) for (i = 0; i < n - 1; i++) e.push([i, i + 1]);
+    } else {                                    // line
+      for (i = 0; i < n - 1; i++) e.push([i, i + 1]);
+    }
+    return e;
+  }
+
+  function adjacency(n, edges) {
+    var a = [];
+    for (var i = 0; i < n; i++) a.push([]);
+    edges.forEach(function (p) {
+      if (a[p[0]].indexOf(p[1]) < 0) a[p[0]].push(p[1]);
+      if (a[p[1]].indexOf(p[0]) < 0) a[p[1]].push(p[0]);
+    });
+    return a;
+  }
+
+  /* BFS shortest path over the coupling graph. */
+  function qubitPath(adj, from, to) {
+    if (from === to) return [from];
+    var prev = {}, seen = {}, queue = [from];
+    seen[from] = true;
+    while (queue.length) {
+      var u = queue.shift();
+      for (var k = 0; k < adj[u].length; k++) {
+        var v = adj[u][k];
+        if (seen[v]) continue;
+        seen[v] = true; prev[v] = u;
+        if (v === to) {
+          var path = [to], cur = to;
+          while (cur !== from) { cur = prev[cur]; path.unshift(cur); }
+          return path;
+        }
+        queue.push(v);
+      }
+    }
+    return null;                                 // disconnected
+  }
+
+  /* Greedy routing: bring the two operands adjacent with SWAPs along
+     the shortest path, apply the gate, and leave the permutation in
+     place. Returns a circuit that can be simulated directly. */
+  function transpile(circuit, topology) {
+    var n = circuit.qubits;
+    var edges = couplingMap(topology || 'all', n);
+    var adj = adjacency(n, edges);
+
+    /* logical qubit -> physical position, and its inverse */
+    var loc = [], at = [];
+    for (var i = 0; i < n; i++) { loc[i] = i; at[i] = i; }
+
+    var out = [], swaps = 0, col = 0, uid = 0;
+    var ops = circuit.ops.slice().sort(function (a, b) { return a.col - b.col; });
+
+    ops.forEach(function (op) {
+      if (op.control == null || op.type === 'M') {
+        out.push({ id: ++uid, type: op.type, q: loc[op.q], col: col++, theta: op.theta });
+        return;
+      }
+      var pa = loc[op.control], pb = loc[op.q];
+      var path = qubitPath(adj, pa, pb);
+      if (!path) {                               // unreachable on this map
+        out.push({ id: ++uid, type: op.type, q: pb, control: pa, col: col++, unrouted: true });
+        return;
+      }
+      /* walk the control toward the target until they are neighbours */
+      for (var s = 0; s < path.length - 2; s++) {
+        var x = path[s], y = path[s + 1];
+        out.push({ id: ++uid, type: 'SWAP', q: y, control: x, col: col++ });
+        var lx = at[x], ly = at[y];
+        at[x] = ly; at[y] = lx; loc[lx] = y; loc[ly] = x;
+        swaps++;
+      }
+      out.push({ id: ++uid, type: op.type, q: loc[op.q], control: loc[op.control], col: col++ });
+    });
+
+    return {
+      circuit: { qubits: n, ops: out },
+      swaps: swaps,
+      edges: edges,
+      nativeDepth: new Set(circuit.ops.map(function (o) { return o.col; })).size,
+      routedDepth: col,
+      unrouted: out.filter(function (o) { return o.unrouted; }).length
+    };
+  }
+
+  /* Roles constrain what a qubit may be used for. */
+  function roleCheck(circuit, roles) {
+    var problems = [];
+    (circuit.ops || []).forEach(function (op) {
+      var rq = roles[op.q], rc = op.control != null ? roles[op.control] : null;
+      if (rq === 'comm' && rc && rc !== 'comm') {
+        problems.push('gate on ' + op.type + ' couples a communication qubit to a local one');
+      }
+    });
+    return {
+      data: roles.filter(function (r) { return r === 'data'; }).length,
+      ancilla: roles.filter(function (r) { return r === 'ancilla'; }).length,
+      comm: roles.filter(function (r) { return r === 'comm'; }).length,
+      problems: problems
+    };
+  }
+
   root.QSim = {
     simulateCircuit: simulateCircuit, Rho: Rho, Psi: Psi,
     gates: G, matrixFor: matrixFor,
-    channels: { ampDamp: ampDamp, phaseDamp: phaseDamp, depol: depol }
+    channels: { ampDamp: ampDamp, phaseDamp: phaseDamp, depol: depol },
+    couplingMap: couplingMap, transpile: transpile, qubitPath: qubitPath,
+    adjacency: adjacency, roleCheck: roleCheck, TOPOLOGIES: TOPOLOGIES
   };
   root.QNet = {
     linkMetrics: linkMetrics, chainMetrics: chainMetrics,
