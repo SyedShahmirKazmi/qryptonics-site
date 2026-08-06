@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simulator — Qryptonics</title>
+<meta name="description" content="Build quantum circuits, quantum networks and distributed quantum programs by dragging components onto a canvas. Runs entirely in your browser.">
+<meta name="theme-color" content="#F6F8FC">
+<link rel="canonical" href="https://qryptonics.com/simulator.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Simulator — Qryptonics">
+<meta property="og:description" content="Drag-and-drop quantum circuit, network and distributed computing simulator.">
+<meta property="og:url" content="https://qryptonics.com/simulator.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script>document.documentElement.className+=" js"</script>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav" id="top">
+  <a class="nav__brand" href="index.html" aria-label="Qryptonics home">
+    <svg class="nav__glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M2 8 L12 2 L22 8 L12 14 Z"/><path d="M2 16 L12 10 L22 16 L12 22 Z"/>
+    </svg>
+    <span class="nav__word">Qryptonics</span>
+  </a>
+  <button class="nav__toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Toggle menu">
+    <svg class="nav__ico-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    <svg class="nav__ico-close" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>
+  </button>
+  <nav class="nav__menu" id="nav-menu" aria-label="Primary">
+    <a href="index.html">Home</a>
+    <a href="development.html">Development</a>
+    <a href="services.html">Services</a>
+    <a href="simulator.html" aria-current="page">Simulator</a>
+    <a href="about.html">About</a>
+    <div class="nav__group">
+      <button class="nav__group-btn" aria-expanded="false">Insights
+        <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5L6 8.5L10 4.5"/></svg>
+      </button>
+      <div class="nav__dropdown">
+        <a href="blog.html">Blog<small>Notes from the field</small></a>
+        <a href="research.html">Research<small>Papers and preprints</small></a>
+      </div>
+    </div>
+    <a class="nav__cta" href="index.html#contact">Get in touch</a>
+  </nav>
+</header>
+
+<main id="main">
+
+  <section class="phead">
+    <div class="phead__inner">
+      <p class="eyebrow">Simulator</p>
+      <h1 class="phead__title">Build it, then see what it costs you.</h1>
+      <p class="phead__lede">
+        Drag components onto the sheet and the results update as you go. Circuits run a full
+        state-vector simulation. Networks run loss, decoherence and entanglement swapping over
+        fibre. Put both together and you get distributed quantum computing, where the cost of
+        every gate that crosses a node boundary becomes visible.
+      </p>
+      <ul class="phead__meta">
+        <li>Runs in your browser</li><li>Nothing uploaded</li><li>No account</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="wrap wrap--tight">
+
+    <div class="sim">
+      <!-- ── left palette ─────────────────────────────── -->
+      <aside class="sim-side">
+        <div class="sim-modes" role="group" aria-label="Simulation mode">
+          <button class="sim-mode" data-mode="circuit" aria-pressed="true">Circuit</button>
+          <button class="sim-mode" data-mode="network" aria-pressed="false">Network</button>
+          <button class="sim-mode" data-mode="distributed" aria-pressed="false">Distributed</button>
+        </div>
+        <div id="palette" class="sim-palette"></div>
+
+        <div class="sim-ctls">
+          <div id="ctl-circuit">
+            <label class="sim-field"><span>Qubits <b id="qubits-v">4</b></span>
+              <input id="qubits" type="range" min="1" max="8" step="1" value="4"></label>
+            <label class="sim-field"><span>Gate noise <b id="noise-v">0.0 %</b></span>
+              <input id="noise" type="range" min="0" max="10" step="0.1" value="0"></label>
+          </div>
+          <div id="ctl-net" hidden>
+            <label class="sim-field"><span>Memory T₂ <b id="memory-v">10 ms</b></span>
+              <input id="memory" type="range" min="1" max="200" step="1" value="10"></label>
+            <label class="sim-field"><span>Source fidelity <b id="srcfid-v">0.980</b></span>
+              <input id="srcfid" type="range" min="800" max="999" step="1" value="980"></label>
+          </div>
+        </div>
+      </aside>
+
+      <!-- ── canvas ───────────────────────────────────── -->
+      <div class="sim-main">
+        <div class="sim-bar">
+          <div class="sim-bar__l">
+            <button class="sim-tool" id="btn-link" aria-pressed="false" hidden>Connect</button>
+            <button class="sim-tool" id="btn-demo">Load example</button>
+            <button class="sim-tool" id="btn-clear">Clear</button>
+          </div>
+          <div class="sim-bar__r">
+            <button class="sim-tool sim-tool--sq" id="btn-out" aria-label="Zoom out">−</button>
+            <button class="sim-tool sim-tool--sq" id="btn-fit" aria-label="Reset view">⌂</button>
+            <button class="sim-tool sim-tool--sq" id="btn-in" aria-label="Zoom in">+</button>
+          </div>
+        </div>
+
+        <div class="sim-frame" id="frame">
+          <svg id="sheet" viewBox="0 0 1000 560" preserveAspectRatio="xMidYMid slice"
+               role="application" aria-label="Simulation canvas. Drag components from the palette.">
+            <defs>
+              <pattern id="grid" width="26" height="26" patternUnits="userSpaceOnUse">
+                <path d="M26 0H0V26" fill="none" stroke="#E6EAF3" stroke-width="1"/>
+              </pattern>
+            </defs>
+            <g id="scene">
+              <g id="layer-grid">
+                <rect x="-4000" y="-4000" width="9000" height="9000" fill="url(#grid)"/>
+              </g>
+              <g id="layer-wires"></g>
+              <g id="layer-items"></g>
+            </g>
+          </svg>
+          <p class="sim-hint" id="hint">Drag gates onto the wires. Drag a placed gate to move it, click to select.</p>
+        </div>
+      </div>
+
+      <!-- ── inspector ────────────────────────────────── -->
+      <aside class="sim-side sim-side--right">
+        <p class="sim-side__h">Inspector</p>
+        <div id="inspector" class="sim-inspector">
+          <p class="sim-empty">Select an element to edit it.</p>
+        </div>
+      </aside>
+    </div>
+
+    <!-- ── results ────────────────────────────────────── -->
+    <section class="sim-results" aria-live="polite" aria-label="Simulation results">
+      <h2 class="section-h"><span class="section-h__mark">§</span> Results</h2>
+      <div id="results"></div>
+    </section>
+
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <h2 class="section-h rv"><span class="section-h__mark">§</span> What the numbers mean</h2>
+      <div class="grid grid--3 rv">
+        <article class="cell">
+          <p class="cell__k">Circuit</p>
+          <h3 class="cell__title">Full state vector</h3>
+          <p class="cell__body">
+            Every amplitude is tracked, so the probability histogram is exact rather than sampled.
+            Entanglement entropy is the von Neumann entropy of each qubit against the rest: zero for
+            a separable state, one full ebit when maximally entangled. Turning on gate noise switches
+            to Monte Carlo trajectories with a depolarising channel after each operation.
+          </p>
+        </article>
+        <article class="cell">
+          <p class="cell__k">Network</p>
+          <h3 class="cell__title">Loss, memory, swapping</h3>
+          <p class="cell__body">
+            Fibre attenuates at 0.2 dB/km with the source at each segment midpoint, so transmittance
+            enters squared. Memories decohere while heralding signals travel. Entanglement swapping
+            multiplies Werner parameters, which is why fidelity falls off faster than distance alone
+            suggests. QBER and secret key rate follow from the end-to-end fidelity.
+          </p>
+        </article>
+        <article class="cell">
+          <p class="cell__k">Distributed</p>
+          <h3 class="cell__title">The cost of crossing</h3>
+          <p class="cell__body">
+            Qubits are assigned to nodes in order. Any two-qubit gate whose operands sit on different
+            nodes has to be teleported, consuming one entangled pair and two classical bits. The
+            fidelity penalty compounds per teleported gate, which is why partitioning a circuit well
+            matters more than buying a better link.
+          </p>
+        </article>
+      </div>
+      <p class="sim-caveat rv">
+        This is a teaching and scoping tool. The models are standard and the physics is real, but
+        they are idealised: no detector dark counts, no multiplexing, no error correction, and a
+        uniform depolarising noise model. Use it to build intuition and size a problem, then talk to
+        us before anyone makes a procurement decision on the numbers.
+      </p>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <div class="contact__inner">
+      <p class="eyebrow">Get in touch</p>
+      <h2 class="contact__title">Want this run against your actual topology?</h2>
+      <p class="contact__body">
+        Send us your network layout or the circuit you are trying to fit onto hardware. We model it
+        properly, with the noise characteristics of the devices you would actually be using.
+      </p>
+      <div class="contact__actions">
+        <a class="btn btn--solid" href="mailto:hello@qryptonics.com">hello@qryptonics.com</a>
+        <a class="btn btn--ghost" href="https://wa.me/97433813027" rel="noopener">WhatsApp +974 3381 3027</a>
+      </div>
+      <p class="contact__loc">Doha, Qatar</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="foot__inner">
+    <div>
+      <p class="foot__brand">Qryptonics</p>
+      <p class="foot__note">Quantum-safe infrastructure and quantum-scale optimization. Doha, Qatar.</p>
+    </div>
+    <div><p class="foot__h">Company</p><ul class="foot__list">
+      <li><a href="index.html">Home</a></li><li><a href="about.html">About</a></li>
+      <li><a href="index.html#contact">Contact</a></li></ul></div>
+    <div><p class="foot__h">What we do</p><ul class="foot__list">
+      <li><a href="development.html">Development</a></li><li><a href="services.html">Services</a></li>
+      <li><a href="simulator.html">Simulator</a></li></ul></div>
+    <div><p class="foot__h">Insights</p><ul class="foot__list">
+      <li><a href="blog.html">Blog</a></li><li><a href="research.html">Research</a></li></ul></div>
+  </div>
+  <p class="foot__legal">© <span id="year">2026</span> Qryptonics. Doha, Qatar.</p>
+</footer>
+
+<script src="site.js" defer></script>
+<script src="qsim.js" defer></script>
+<script src="simulator.js" defer></script>
+</body>
+</html>
