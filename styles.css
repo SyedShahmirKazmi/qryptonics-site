@@ -604,3 +604,68 @@ strong{color:var(--ink)}
 .cell__cta{margin-top:1.6rem}
 .mb-xl{margin-bottom:2.75rem}
 .circuit .sub{font-size:9px;fill:var(--faint)}
+
+/* ══════════════════════════════════════════════════════════
+   Community + forms
+   ══════════════════════════════════════════════════════════ */
+.track{display:grid;grid-template-columns:auto minmax(0,1fr);gap:.4rem 1.3rem;background:var(--card);padding:2rem 1.8rem}
+.track__n{
+  grid-row:1/4;width:46px;height:46px;display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--line-hi);border-radius:5px;font-family:var(--f-mono);
+  font-size:.78rem;font-weight:600;color:var(--copper);
+}
+.track__name{font-size:1.1rem;font-weight:700;letter-spacing:-.01em}
+.track__meta{font-family:var(--f-mono);font-size:.68rem;letter-spacing:.06em;color:var(--faint)}
+.track__body{font-size:.9rem;line-height:1.62;margin-top:.5rem}
+.track__tags{grid-column:2;display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.9rem}
+.track__tags li{font-family:var(--f-mono);font-size:.66rem;color:var(--cryo);border:1px solid var(--line);padding:.28rem .55rem;border-radius:3px}
+
+/* form */
+.form{background:var(--card);border:var(--rule);border-radius:5px;padding:2.4rem 2.2rem;max-width:46rem}
+.form__grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,14rem),1fr));gap:1.4rem}
+.field{display:grid;gap:.45rem}
+.field--wide{grid-column:1/-1}
+.field label,.field legend{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.field .req{color:var(--copper)}
+.field input[type=text],.field input[type=email],.field select,.field textarea{
+  font-family:var(--f-display);font-size:.95rem;color:var(--ink);
+  background:var(--sunk);border:1px solid var(--line-hi);border-radius:3px;
+  padding:.7rem .8rem;width:100%;transition:border-color .15s ease,background .15s ease;
+}
+.field textarea{min-height:6.5rem;resize:vertical;line-height:1.6}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--copper);outline:none;background:var(--card)}
+.field__hint{font-size:.76rem;color:var(--faint);line-height:1.5}
+.field__err{font-family:var(--f-mono);font-size:.72rem;color:#E4796A;display:none}
+.field.is-bad input,.field.is-bad select,.field.is-bad textarea,.field.is-bad .checks{border-color:#E4796A}
+.field.is-bad .field__err{display:block}
+
+fieldset{border:0;padding:0;margin:0;display:grid;gap:.45rem}
+.checks{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,13rem),1fr));gap:.55rem;border:1px solid transparent;border-radius:3px}
+.check{display:flex;gap:.6rem;align-items:flex-start;font-size:.88rem;line-height:1.45;color:var(--body);cursor:pointer}
+.check input{accent-color:var(--copper);margin-top:.18rem;flex:0 0 auto;width:15px;height:15px}
+.consent{display:grid;gap:.8rem;margin-top:1.8rem;padding-top:1.6rem;border-top:var(--rule)}
+.consent .check{font-size:.85rem;color:var(--muted)}
+.consent a{color:var(--cryo);text-decoration:underline;text-underline-offset:2px}
+.form__actions{display:flex;flex-wrap:wrap;gap:.9rem;align-items:center;margin-top:1.9rem}
+.form__note{font-family:var(--f-mono);font-size:.7rem;color:var(--faint);line-height:1.6}
+.form__status{margin-top:1.2rem;font-size:.9rem;line-height:1.6;display:none}
+.form__status.is-on{display:block}
+.form__status.is-ok{color:var(--cryo)}
+.form__status.is-err{color:#E4796A}
+.form-done{background:var(--card);border:1px solid var(--copper);border-radius:5px;padding:2.6rem 2.2rem;max-width:46rem}
+.form-done h3{font-size:1.3rem;margin-bottom:.9rem}
+.form-done p{line-height:1.7;margin-bottom:1.2rem}
+
+/* data table */
+.datatab{width:100%;border-collapse:collapse;font-size:.88rem}
+.datatab th,.datatab td{text-align:left;padding:.85rem 1rem;border-bottom:var(--rule);vertical-align:top}
+.datatab th{font-family:var(--f-mono);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);font-weight:400}
+.datatab td:first-child{color:var(--ink);white-space:nowrap}
+.tabwrap{overflow-x:auto;background:var(--card);border:var(--rule);border-radius:5px}
+
+/* prose (privacy) */
+.prose{max-width:64ch;display:grid;gap:1.15rem}
+.prose h2{font-size:1.25rem;margin-top:1.6rem}
+.prose p,.prose li{line-height:1.75}
+.prose ul{display:grid;gap:.6rem;padding-left:1.2rem;list-style:disc}
+.prose a{color:var(--cryo);text-decoration:underline;text-underline-offset:2px}

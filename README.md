@@ -85,3 +85,23 @@ Still outstanding:
 - Nothing on the site claims a client, partner, certification or credential. Keep it that
   way until each one is evidenced.
 - Capability lists describe what you intend to sell. Remove anything you cannot staff.
+
+## Community signup
+
+`community.js` has a `FORM_ENDPOINT` constant at the top. It is empty by design.
+
+**Empty (current):** submitting composes the joining request in the visitor's own mail client
+and copies it to their clipboard. Nothing is transmitted anywhere until they press send, no
+third party is involved, and there is no data processor to sign an agreement with. The
+trade-off is friction and no structured storage.
+
+**Set to a URL:** the form POSTs JSON instead. Two things must change together:
+
+1. Set `FORM_ENDPOINT` in `community.js`.
+2. Relax the CSP in `community.html` — `connect-src 'none'` must become
+   `connect-src https://your-endpoint.example`, or the browser blocks the request.
+
+Before choosing a provider, note that it becomes a **data processor** for personal data. You
+need a data processing agreement with them, and `privacy.html` must be updated to name them —
+it currently states that nobody else sees the data. Prefer a provider that lets you pick an
+EU or Gulf region.
