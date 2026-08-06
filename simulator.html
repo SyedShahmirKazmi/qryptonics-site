@@ -92,16 +92,45 @@
 
         <div class="sim-ctls">
           <div id="ctl-circuit">
+            <p class="sim-ctls__h">Device</p>
             <label class="sim-field"><span>Qubits <b id="qubits-v">4</b></span>
               <input id="qubits" type="range" min="1" max="8" step="1" value="4"></label>
-            <label class="sim-field"><span>Gate noise <b id="noise-v">0.0 %</b></span>
-              <input id="noise" type="range" min="0" max="10" step="0.1" value="0"></label>
+            <label class="sim-field"><span>T&#8321; relaxation <b id="t1-v">80 &#181;s</b></span>
+              <input id="t1" type="range" min="0" max="300" step="5" value="80"></label>
+            <label class="sim-field"><span>T&#8322; dephasing <b id="t2-v">60 &#181;s</b></span>
+              <input id="t2" type="range" min="0" max="300" step="5" value="60"></label>
+            <label class="sim-field"><span>1-qubit gate <b id="g1-v">35 ns</b></span>
+              <input id="g1" type="range" min="5" max="200" step="5" value="35"></label>
+            <label class="sim-field"><span>2-qubit gate <b id="g2-v">300 ns</b></span>
+              <input id="g2" type="range" min="20" max="1000" step="20" value="300"></label>
+            <p class="sim-ctls__h">Error</p>
+            <label class="sim-field"><span>1-qubit depolarizing <b id="d1-v">0.10 %</b></span>
+              <input id="d1" type="range" min="0" max="50" step="1" value="10"></label>
+            <label class="sim-field"><span>2-qubit depolarizing <b id="d2-v">1.00 %</b></span>
+              <input id="d2" type="range" min="0" max="200" step="5" value="100"></label>
+            <label class="sim-field"><span>Readout error <b id="ro-v">1.0 %</b></span>
+              <input id="ro" type="range" min="0" max="100" step="5" value="10"></label>
+            <label class="sim-field"><span>Shots <b id="shots-v">2048</b></span>
+              <input id="shots" type="range" min="0" max="16384" step="256" value="2048"></label>
           </div>
           <div id="ctl-net" hidden>
-            <label class="sim-field"><span>Memory T₂ <b id="memory-v">10 ms</b></span>
-              <input id="memory" type="range" min="1" max="200" step="1" value="10"></label>
+            <p class="sim-ctls__h">Memory &amp; source</p>
+            <label class="sim-field"><span>Memory T&#8322; <b id="memory-v">10 ms</b></span>
+              <input id="memory" type="range" min="1" max="500" step="1" value="10"></label>
             <label class="sim-field"><span>Source fidelity <b id="srcfid-v">0.980</b></span>
               <input id="srcfid" type="range" min="800" max="999" step="1" value="980"></label>
+            <p class="sim-ctls__h">Detection</p>
+            <label class="sim-field"><span>Detector efficiency <b id="deteff-v">0.90</b></span>
+              <input id="deteff" type="range" min="10" max="99" step="1" value="90"></label>
+            <label class="sim-field"><span>Dark count rate <b id="dark-v">0 /s</b></span>
+              <input id="dark" type="range" min="0" max="5000" step="50" value="0"></label>
+            <label class="sim-field"><span>Multiplexed modes <b id="mux-v">1</b></span>
+              <input id="mux" type="range" min="1" max="200" step="1" value="1"></label>
+            <p class="sim-ctls__h">Swapping</p>
+            <label class="sim-field"><span>Swap success <b id="swapp-v">0.50</b></span>
+              <input id="swapp" type="range" min="10" max="100" step="1" value="50"></label>
+            <label class="sim-field"><span>Swap quality <b id="swapq-v">0.970</b></span>
+              <input id="swapq" type="range" min="800" max="999" step="1" value="970"></label>
           </div>
         </div>
       </aside>
@@ -110,7 +139,9 @@
       <div class="sim-main">
         <div class="sim-bar">
           <div class="sim-bar__l">
-            <button class="sim-tool" id="btn-link" aria-pressed="false" hidden>Connect</button>
+            <button class="sim-tool" id="btn-link" aria-pressed="false" hidden>Lay fibre</button>
+            <button class="sim-tool" id="btn-cut" aria-pressed="false" hidden>Add cross-QPU gate</button>
+            <button class="sim-tool" id="btn-back" hidden>Back to network</button>
             <button class="sim-tool" id="btn-demo">Load example</button>
             <button class="sim-tool" id="btn-clear">Clear</button>
             <button class="sim-tool sim-tool--go" id="btn-send">Send us this setup</button>
@@ -122,6 +153,7 @@
           </div>
         </div>
 
+        <p class="sim-context" id="context" aria-live="polite"></p>
         <div class="sim-frame" id="frame">
           <svg id="sheet" viewBox="0 0 1000 560" preserveAspectRatio="xMidYMid slice"
                role="application" aria-label="Simulation canvas. Drag components from the palette.">

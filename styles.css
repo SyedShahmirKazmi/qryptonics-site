@@ -710,3 +710,27 @@ fieldset{border:0;padding:0;margin:0;display:grid;gap:.45rem}
 .foot__legal a{display:inline-flex;align-items:center;min-height:44px;padding:0 .3rem;margin-left:.3rem}
 .check input{width:20px;height:20px}
 .check{min-height:32px;align-items:center}
+
+/* ── simulator: expanded controls, context, new plots ────── */
+.sim-ctls__h{font-family:var(--f-mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--copper);margin:.9rem 0 .55rem}
+.sim-ctls__h:first-child{margin-top:0}
+.sim-ctls{max-height:26rem;overflow-y:auto;padding-right:.4rem}
+.sim-context{font-family:var(--f-mono);font-size:.7rem;color:var(--cryo);padding:.5rem .8rem;background:var(--cryo-bg);border-bottom:var(--rule)}
+.sim-frame.is-cutting{outline:2px solid var(--g-rot);outline-offset:-4px}
+.sim-cut{fill:none;stroke:var(--g-rot);stroke-width:2;stroke-dasharray:6 4}
+.sim-nsub{font-family:'IBM Plex Mono',monospace;font-size:9px;fill:var(--cryo);text-anchor:middle;pointer-events:none}
+.sim-btn--go{border-color:var(--copper);color:var(--copper)}
+.sim-btn--go:hover{background:var(--copper);color:var(--on-copper)}
+.sim-kpi.is-good .sim-kpi__v{color:var(--g-1q)}
+.sim-kpi.is-warn .sim-kpi__v{color:var(--g-rot)}
+.sim-kpi.is-bad .sim-kpi__v{color:#E4796A}
+.ch-bar--alt{fill:var(--copper)}
+.bl-sphere{fill:none;stroke:var(--line-hi);stroke-width:1}
+.bl-axis{stroke:var(--line);stroke-width:1}
+.bl-vec{stroke:var(--copper);stroke-width:2}
+.bl-tip{fill:var(--copper-hi)}
+
+/* [hidden] is display:none in the UA sheet, but any explicit display
+   rule outranks it. The touch-target pass gave .sim-tool inline-flex,
+   which silently un-hid the network buttons in Circuit mode. */
+[hidden]{display:none !important}
