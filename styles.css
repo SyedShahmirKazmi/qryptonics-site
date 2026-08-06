@@ -4,25 +4,25 @@
    ink, copper annotation, cryo blue for circuits and data.
    ══════════════════════════════════════════════════════════ */
 :root{
-  --paper:    #0A0E1A;
-  --card:     #10162A;
-  --sunk:     #0D1220;
+  --paper:    #161B29;
+  --card:     #1E2434;
+  --sunk:     #121825;
 
-  --ink:      #E9EDF7;
-  --body:     #A8B3CC;
-  --muted:    #9AA6C4;
-  --faint:    #7B87A6;
+  --ink:      #EDF0F7;
+  --body:     #B4BED4;
+  --muted:    #97A2BC;
+  --faint:    #808CA8;
 
-  --line:     #1E2740;
-  --line-hi:  #2E3C63;
+  --line:     #2A3145;
+  --line-hi:  #3B445E;
 
   --copper:   #C8874A;
   --copper-hi:#E0A468;
-  --copper-bg:#1C1610;
+  --copper-bg:#2C2418;
 
   --cryo:     #5BB8E0;
   --cryo-hi:  #7FCFF0;
-  --cryo-bg:  #0E1C2B;
+  --cryo-bg:  #1B3247;
 
   /* Circuit gate families get their own colour, so a reader can tell
      what a gate does before reading the label. */
@@ -30,8 +30,10 @@
   --g-phase:  #A78BFA;
   --g-rot:    #C3E453;
   --g-2q:     #E0A468;
-  --g-meter:  #9AA6C4;
+  --g-meter:  #97A2BC;
 
+  --rot-bg:   #2A3119;
+  --raise:    #262E42;
   --on-copper:#150C03;
 
   --f-display:'Chivo', system-ui, sans-serif;
@@ -97,7 +99,7 @@ strong{color:var(--ink)}
   position:sticky;top:0;z-index:60;
   display:flex;align-items:center;justify-content:space-between;gap:2rem;
   padding:.9rem var(--gutter);
-  background:rgba(10,14,26,.86);
+  background:rgba(22,27,41,.88);
   backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
   border-bottom:var(--rule);
 }
@@ -145,7 +147,7 @@ strong{color:var(--ink)}
   color:var(--copper) !important;border:1px solid var(--line-hi);
   padding:.55rem 1.05rem;border-radius:3px;transition:border-color .18s ease,background .18s ease;
 }
-.nav__cta:hover{border-color:var(--copper);background:#1C1610}
+.nav__cta:hover{border-color:var(--copper);background:var(--copper-bg)}
 
 @media (max-width:1020px){
   .nav{flex-wrap:wrap}
@@ -173,8 +175,8 @@ strong{color:var(--ink)}
 .hero__veil{
   position:absolute;inset:0;z-index:-1;
   background:
-    linear-gradient(100deg,var(--paper) 0%,rgba(10,14,26,.95) 40%,rgba(10,14,26,.68) 58%,rgba(10,14,26,.12) 80%,rgba(10,14,26,0) 93%),
-    linear-gradient(180deg,rgba(10,14,26,.75) 0%,transparent 16%,transparent 80%,var(--paper) 100%);
+    linear-gradient(100deg,var(--paper) 0%,rgba(22,27,41,.95) 40%,rgba(22,27,41,.68) 58%,rgba(22,27,41,.12) 80%,rgba(22,27,41,0) 93%),
+    linear-gradient(180deg,rgba(22,27,41,.75) 0%,transparent 16%,transparent 80%,var(--paper) 100%);
 }
 .hero__inner{width:100%;max-width:var(--maxw);margin:0 auto;padding:6.5rem var(--gutter) 5.5rem}
 .hero__title{font-size:clamp(2.4rem,1.5rem + 4vw,4.75rem);margin:1.5rem 0 0;max-width:19ch}
@@ -194,7 +196,7 @@ strong{color:var(--ink)}
 .phead__title{font-size:clamp(2.1rem,1.5rem + 2.6vw,3.6rem);margin:1.2rem 0 1.4rem;max-width:20ch}
 .phead__lede{max-width:62ch;font-size:clamp(1.02rem,.98rem + .3vw,1.18rem);line-height:1.72;color:var(--body)}
 .phead__meta{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:2.2rem}
-.phead__meta li{font-family:var(--f-mono);font-size:.72rem;color:var(--cryo);background:#0E1C2B;padding:.4rem .7rem;border-radius:3px}
+.phead__meta li{font-family:var(--f-mono);font-size:.72rem;color:var(--cryo);background:var(--cryo-bg);padding:.4rem .7rem;border-radius:3px}
 
 /* ── generic section wrapper ───────────────────────────── */
 .wrap{max-width:var(--maxw);margin:0 auto;padding:6rem var(--gutter)}
@@ -264,10 +266,10 @@ strong{color:var(--ink)}
 .circuit .gate--param rect{stroke:var(--g-rot)}
 .circuit .gate--param text{fill:var(--g-rot)}
 .circuit .gate{cursor:pointer}
-.circuit .gate:hover rect{fill:#12283A}
-.circuit .gate--param:hover rect{fill:#1E240F}
-.circuit .gate.is-lit rect{fill:#12283A;stroke-width:2}
-.circuit .gate--param.is-lit rect{fill:#1E240F}
+.circuit .gate:hover rect{fill:var(--cryo-bg)}
+.circuit .gate--param:hover rect{fill:var(--rot-bg)}
+.circuit .gate.is-lit rect{fill:var(--cryo-bg);stroke-width:2}
+.circuit .gate--param.is-lit rect{fill:var(--rot-bg)}
 .circuit .ctrl{fill:var(--g-2q);transition:fill .2s ease}
 .circuit .link{stroke:var(--g-2q);stroke-width:1.25;transition:stroke .2s ease,stroke-width .2s ease}
 .circuit .targ{fill:var(--card);stroke:var(--g-2q);stroke-width:1.25;transition:stroke .2s ease,stroke-width .2s ease}
@@ -285,7 +287,7 @@ strong{color:var(--ink)}
 /* ── Ising / QUBO graph figure ─────────────────────────── */
 .graphfig{display:block;max-width:440px;margin:0 auto}
 .graphfig .node{fill:var(--card);stroke:var(--g-1q);stroke-width:1.5;transition:fill .2s ease}
-.graphfig .node.is-up{fill:#1E1710;stroke:var(--copper-hi)}
+.graphfig .node.is-up{fill:var(--copper-bg);stroke:var(--copper-hi)}
 .graphfig .nlabel{font-family:'IBM Plex Mono',monospace;font-size:10px;fill:var(--body);text-anchor:middle;dominant-baseline:central;pointer-events:none}
 .graphfig .edge{stroke:var(--line-hi);stroke-width:1.5}
 .graphfig .edge.is-frust{stroke:var(--copper);stroke-dasharray:4 3}
@@ -438,9 +440,9 @@ strong{color:var(--ink)}
   padding:.5rem .6rem;transition:border-color .15s ease,background .15s ease,transform .1s ease;
   touch-action:none;
 }
-.sim-pitem:hover{border-color:var(--g-1q);background:#12283A}
+.sim-pitem:hover{border-color:var(--g-1q);background:var(--cryo-bg)}
 .sim-pitem:active{cursor:grabbing;transform:scale(.98)}
-.sim-pitem.is-node:hover{border-color:var(--copper);background:#1E1710}
+.sim-pitem.is-node:hover{border-color:var(--copper);background:var(--copper-bg)}
 .sim-pitem__l{font-family:var(--f-mono);font-size:.8rem;font-weight:600;color:var(--cryo)}
 .sim-pitem.is-node .sim-pitem__l{color:var(--copper)}
 .sim-pitem__d{font-size:.7rem;line-height:1.4;color:var(--muted)}
@@ -492,10 +494,10 @@ strong{color:var(--ink)}
 .sim-op{cursor:move}
 .sim-box{fill:var(--card);stroke:var(--g-1q);stroke-width:1.5;transition:fill .15s ease}
 .sim-op.is-param .sim-box{stroke:var(--g-rot)}
-.sim-op:hover .sim-box{fill:#12283A}
-.sim-op.is-param:hover .sim-box{fill:#1E240F}
-.sim-op.is-sel .sim-box{fill:#12283A;stroke-width:2.5}
-.sim-op.is-param.is-sel .sim-box{fill:#1E240F}
+.sim-op:hover .sim-box{fill:var(--cryo-bg)}
+.sim-op.is-param:hover .sim-box{fill:var(--rot-bg)}
+.sim-op.is-sel .sim-box{fill:var(--cryo-bg);stroke-width:2.5}
+.sim-op.is-param.is-sel .sim-box{fill:var(--rot-bg)}
 .sim-glabel{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;fill:var(--g-1q);text-anchor:middle;dominant-baseline:central;pointer-events:none}
 .sim-op.is-param .sim-glabel{fill:var(--g-rot)}
 .sim-theta{font-family:'IBM Plex Mono',monospace;font-size:9px;fill:var(--faint);text-anchor:middle;pointer-events:none}
@@ -514,10 +516,10 @@ strong{color:var(--ink)}
 .sim-nbody{fill:var(--card);stroke:var(--cryo);stroke-width:1.8;transition:fill .15s ease}
 .sim-node.is-repeater .sim-nbody{stroke:var(--muted)}
 .sim-node.is-qpu .sim-nbody{stroke:var(--copper)}
-.sim-node:hover .sim-nbody{fill:#12283A}
-.sim-node.is-qpu:hover .sim-nbody{fill:#1E1710}
-.sim-node.is-sel .sim-nbody{stroke-width:3;fill:#12283A}
-.sim-node.is-qpu.is-sel .sim-nbody{fill:#1E1710}
+.sim-node:hover .sim-nbody{fill:var(--cryo-bg)}
+.sim-node.is-qpu:hover .sim-nbody{fill:var(--copper-bg)}
+.sim-node.is-sel .sim-nbody{stroke-width:3;fill:var(--cryo-bg)}
+.sim-node.is-qpu.is-sel .sim-nbody{fill:var(--copper-bg)}
 .sim-node.is-pending .sim-nbody{stroke:var(--copper);stroke-dasharray:5 3}
 .sim-nlabel{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;fill:var(--ink);text-anchor:middle;dominant-baseline:central;pointer-events:none}
 .sim-nkind{font-family:'IBM Plex Mono',monospace;font-size:9px;fill:var(--faint);text-anchor:middle;pointer-events:none}
@@ -559,7 +561,7 @@ strong{color:var(--ink)}
 .ch-key--0{background:var(--cryo)}
 .ch-key--1{background:var(--copper)}
 .sim-caveat{
-  margin-top:2rem;padding:1.2rem 1.3rem;background:#17120C;
+  margin-top:2rem;padding:1.2rem 1.3rem;background:var(--copper-bg);
   border-left:2px solid var(--copper);border-radius:0 4px 4px 0;
   font-size:.9rem;line-height:1.7;color:var(--body);
 }
@@ -582,7 +584,7 @@ strong{color:var(--ink)}
   display:grid;grid-template-columns:auto minmax(0,1fr);gap:.35rem 1.15rem;
   background:var(--card);padding:1.9rem 1.7rem;transition:background .18s ease;
 }
-.collab:hover{background:#151D33}
+.collab:hover{background:var(--raise)}
 .collab__mark{
   grid-row:1/4;width:52px;height:52px;display:flex;align-items:center;justify-content:center;
   border:1px solid var(--line-hi);border-radius:5px;

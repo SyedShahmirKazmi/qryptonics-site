@@ -79,7 +79,7 @@
         if (px < -20 || px > w + 20 || py < -20 || py > h + 20) continue;
 
         var fade = 1 - d / maxR;
-        var alpha = 0.10 + fade * fade * 0.78;
+        var alpha = 0.09 + fade * fade * 0.66;
         var rad = 1.5 + fade * 2.4;
 
         ctx.beginPath();
@@ -99,7 +99,7 @@
     ctx.lineTo(cx + v1x + v2x, cy + v1y + v2y);
     ctx.lineTo(cx + v2x, cy + v2y);
     ctx.closePath();
-    ctx.fillStyle = COPPER + '0.10)';
+    ctx.fillStyle = COPPER + '0.12)';
     ctx.fill();
     ctx.strokeStyle = COPPER + '0.40)';
     ctx.lineWidth = 1.25;
