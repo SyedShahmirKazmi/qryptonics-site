@@ -820,6 +820,132 @@
     app.selected = null; render(); simulate();
   });
 
+  /* ── send this setup to us ─────────────────────────────
+     Serialises the canvas into a readable brief plus a JSON
+     blob, so the setup can be reconstructed exactly.
+     ─────────────────────────────────────────────────────── */
+  function describeCircuit() {
+    if (!app.circuit.ops.length) return 'No circuit built.\n';
+    var out = app.circuit.qubits + ' qubits, ' + app.circuit.ops.length + ' gates\n';
+    app.circuit.ops.slice().sort(function (a, b) { return a.col - b.col || a.q - b.q; })
+      .forEach(function (o) {
+        var line = '  col ' + String(o.col).padStart(2) + '  ' + o.type.padEnd(5);
+        if (o.control !== undefined) line += ' control q' + o.control + ' -> target q' + o.q;
+        else line += ' q' + o.q;
+        if (o.theta !== undefined) line += '  theta = ' + (o.theta / Math.PI).toFixed(3) + ' pi';
+        out += line + '\n';
+      });
+    out += 'Gate noise: ' + (app.params.noise * 100).toFixed(1) + ' %\n';
+    return out;
+  }
+
+  function describeNetwork() {
+    if (!app.net.nodes.length) return 'No network built.\n';
+    var out = 'Nodes:\n';
+    app.net.nodes.forEach(function (n) {
+      out += '  ' + n.label + '  ' + n.kind + (n.kind === 'qpu' ? ', ' + n.qubits + ' qubits' : '') + '\n';
+    });
+    if (app.net.links.length) {
+      out += 'Links:\n';
+      app.net.links.forEach(function (l) {
+        var a = findNode(l.a), b = findNode(l.b);
+        if (a && b) out += '  ' + a.label + ' -- ' + b.label + '  ' + l.km + ' km\n';
+      });
+      var total = app.net.links.reduce(function (s, l) { return s + l.km; }, 0);
+      out += 'Total span: ' + total + ' km over ' + app.net.links.length + ' segments\n';
+    }
+    out += 'Memory T2: ' + (app.params.memoryT2 * 1000).toFixed(0) + ' ms, ' +
+      'source fidelity: ' + app.params.srcFidelity.toFixed(3) + '\n';
+    return out;
+  }
+
+  function describeResults() {
+    var out = '';
+    if (app.circuit.ops.length) {
+      var r = QSim.simulateCircuit(app.circuit, { noise: app.params.noise });
+      out += 'Circuit: depth ' + r.depth + ', ' + r.twoQubit + ' two-qubit gates, ' +
+        'max entanglement ' + Math.max.apply(null, r.entropy).toFixed(3) + ' ebit';
+      if (app.params.noise > 0) out += ', state fidelity ' + r.fidelity.toFixed(4);
+      out += '\n';
+    }
+    if (app.net.links.length) {
+      var m = chainFromNet();
+      out += 'Network: ' + m.rate.toPrecision(4) + ' ebit/s, fidelity ' + m.fidelity.toFixed(4) +
+        ', QBER ' + (m.qber * 100).toFixed(2) + ' %, secret key ' + m.keyRate.toPrecision(4) + ' bit/s\n';
+      var qpus = app.net.nodes.filter(function (n) { return n.kind === 'qpu'; });
+      if (qpus.length >= 2 && app.circuit.ops.length) {
+        var owner = [], qi = 0;
+        qpus.forEach(function (n, idx) {
+          for (var c = 0; c < n.qubits && qi < app.circuit.qubits; c++, qi++) owner[qi] = idx;
+        });
+        for (; qi < app.circuit.qubits; qi++) owner[qi] = qpus.length - 1;
+        var cross = app.circuit.ops.filter(function (o) {
+          return o.control !== undefined && owner[o.q] !== owner[o.control];
+        }).length;
+        var d = QNet.distributedMetrics(cross, 0, m);
+        out += 'Distributed: ' + cross + ' cross-node gates, ' + d.ebits + ' ebits, ' +
+          'circuit fidelity ' + d.fidelity.toFixed(4) + '\n';
+      }
+    }
+    return out || 'Nothing built yet.\n';
+  }
+
+  function buildBrief(withJson) {
+    var b = 'I built this in the Qryptonics simulator and would like it modelled properly.\n\n';
+    b += '--- WHAT I BUILT ---\n';
+    b += 'Mode: ' + app.mode + '\n\n';
+    b += 'CIRCUIT\n' + describeCircuit() + '\n';
+    b += 'NETWORK\n' + describeNetwork() + '\n';
+    b += '--- RESULTS THE SIMULATOR GAVE ---\n' + describeResults() + '\n';
+    b += '--- WHAT I ACTUALLY WANT TO KNOW ---\n(your question here)\n';
+    if (withJson) {
+      b += '\n--- MACHINE READABLE ---\n' + JSON.stringify({
+        mode: app.mode, circuit: app.circuit,
+        net: { nodes: app.net.nodes, links: app.net.links },
+        params: app.params
+      });
+    }
+    return b;
+  }
+
+  /* mailto URLs get truncated or dropped by several clients past
+     roughly 2000 characters, so the mail draft carries the readable
+     summary and the full setup goes to the clipboard. */
+  var MAILTO_LIMIT = 1800;
+
+  document.getElementById('btn-send').addEventListener('click', function () {
+    var subject = 'Simulator setup — ' + app.mode +
+      (app.net.links.length ? ' — ' + app.net.links.reduce(function (s, l) { return s + l.km; }, 0) + ' km' : '') +
+      (app.circuit.ops.length ? ' — ' + app.circuit.qubits + ' qubits' : '');
+
+    var full = buildBrief(true);
+    var short = buildBrief(false);
+    var href = 'mailto:hello@qryptonics.com?subject=' + encodeURIComponent(subject) +
+      '&body=' + encodeURIComponent(short);
+    if (href.length > MAILTO_LIMIT) {
+      short = short.slice(0, 900) + '\n\n[full setup is on your clipboard — paste it below]\n';
+      href = 'mailto:hello@qryptonics.com?subject=' + encodeURIComponent(subject) +
+        '&body=' + encodeURIComponent(short);
+    }
+
+    function tell(msg) {
+      hint.textContent = msg;
+      clearTimeout(flash._t);
+      flash._t = setTimeout(function () { hint.textContent = defaultHint(); }, 5000);
+    }
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(full).then(function () {
+        tell('Setup copied to your clipboard and drafted in your mail app. Paste it into the email.');
+      }, function () {
+        tell('Mail draft opened. Clipboard was blocked, so describe the setup in your own words.');
+      });
+    } else {
+      tell('Mail draft opened.');
+    }
+    window.location.href = href;
+  });
+
   /* ── boot ──────────────────────────────────────────────── */
   loadBell();
   loadNet();

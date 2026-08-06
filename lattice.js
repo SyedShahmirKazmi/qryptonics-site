@@ -15,8 +15,8 @@
   var ctx = canvas.getContext('2d');
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  var COLD = 'rgba(70, 104, 154, ';
-  var COPPER = 'rgba(162, 90, 34, ';
+  var COLD = 'rgba(111, 168, 214, ';
+  var COPPER = 'rgba(200, 135, 74, ';
 
   var w = 0, h = 0, dpr = 1;
   var cx = 0, cy = 0;
@@ -79,8 +79,8 @@
         if (px < -20 || px > w + 20 || py < -20 || py > h + 20) continue;
 
         var fade = 1 - d / maxR;
-        var alpha = 0.06 + fade * fade * 0.52;
-        var rad = 1.4 + fade * 2.2;
+        var alpha = 0.10 + fade * fade * 0.78;
+        var rad = 1.5 + fade * 2.4;
 
         ctx.beginPath();
         ctx.arc(px, py, rad, 0, Math.PI * 2);
@@ -99,16 +99,16 @@
     ctx.lineTo(cx + v1x + v2x, cy + v1y + v2y);
     ctx.lineTo(cx + v2x, cy + v2y);
     ctx.closePath();
-    ctx.fillStyle = COPPER + '0.09)';
+    ctx.fillStyle = COPPER + '0.10)';
     ctx.fill();
-    ctx.strokeStyle = COPPER + '0.45)';
+    ctx.strokeStyle = COPPER + '0.40)';
     ctx.lineWidth = 1.25;
     ctx.stroke();
 
     /* Basis vectors — the focal point of the motif */
     ctx.save();
-    ctx.shadowColor = COPPER + '0.35)';
-    ctx.shadowBlur = 10;
+    ctx.shadowColor = COPPER + '0.55)';
+    ctx.shadowBlur = 14;
     [[v1x, v1y], [v2x, v2y]].forEach(function (v) {
       ctx.beginPath();
       ctx.moveTo(cx, cy);
@@ -127,7 +127,7 @@
     /* Origin */
     ctx.beginPath();
     ctx.arc(cx, cy, 2.8, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(12, 18, 32, 0.85)';
+    ctx.fillStyle = 'rgba(233, 237, 247, 0.9)';
     ctx.fill();
   }
 
