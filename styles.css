@@ -734,3 +734,48 @@ fieldset{border:0;padding:0;margin:0;display:grid;gap:.45rem}
    rule outranks it. The touch-target pass gave .sim-tool inline-flex,
    which silently un-hid the network buttons in Circuit mode. */
 [hidden]{display:none !important}
+
+/* ── page-head illustrations ───────────────────────────────
+   Each page carries a figure that means something for that
+   page rather than decorating it. They sit in the empty right
+   column of the page head, and drop out entirely on mobile
+   where that column does not exist.
+   ─────────────────────────────────────────────────────────── */
+.phead__inner--fig{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:2.5rem}
+/* Every text child stays in column one and stacks normally; the figure
+   occupies column two across all rows. Without this the grid would treat
+   each paragraph as its own cell and scatter them. */
+.phead__inner--fig > *:not(.phead__fig){grid-column:1}
+.phead__fig{grid-column:2;grid-row:1/-1;align-self:center;width:min(280px,26vw);justify-self:end}
+.phead__fig svg{width:100%;height:auto;display:block;overflow:visible}
+.il-t{font-family:'IBM Plex Mono',monospace;font-size:12px;fill:var(--muted)}
+.il-g{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:500}
+.il-s{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.04em}
+
+@media (max-width:900px){
+  .phead__inner--fig{grid-template-columns:1fr}
+  .phead__fig{display:none}
+}
+
+/* motion: slow, ambient, and off under reduced-motion */
+@keyframes il-spin-k{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes il-pulse-k{0%,100%{opacity:.45;r:5}50%{opacity:1;r:6.5}}
+@keyframes il-flow-k{to{stroke-dashoffset:-18}}
+.il-spin{transform-origin:110px 90px;animation:il-spin-k 14s linear infinite}
+.il-pulse{animation:il-pulse-k 3.2s ease-in-out infinite}
+.il-flow{stroke-dasharray:5 4;animation:il-flow-k 1.4s linear infinite}
+@media (prefers-reduced-motion:reduce){
+  .il-spin,.il-pulse,.il-flow{animation:none}
+}
+/* Stagger the community nodes without inline style attributes,
+   which the content security policy forbids. */
+.il-nodes .il-pulse:nth-of-type(1){animation-delay:0s}
+.il-nodes .il-pulse:nth-of-type(2){animation-delay:.28s}
+.il-nodes .il-pulse:nth-of-type(3){animation-delay:.56s}
+.il-nodes .il-pulse:nth-of-type(4){animation-delay:.84s}
+.il-nodes .il-pulse:nth-of-type(5){animation-delay:1.12s}
+.il-nodes .il-pulse:nth-of-type(6){animation-delay:1.4s}
+.il-nodes .il-pulse:nth-of-type(7){animation-delay:1.68s}
+.il-nodes .il-pulse:nth-of-type(8){animation-delay:1.96s}
+.il-nodes .il-pulse:nth-of-type(9){animation-delay:2.24s}
+.il-nodes .il-pulse:nth-of-type(10){animation-delay:2.52s}

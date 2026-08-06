@@ -14,7 +14,7 @@ operational problems belong on quantum or hybrid hardware now.
 - [Development](https://qryptonics.com/development.html): Quantum software engineering, post-quantum cryptographic implementation (ML-KEM, ML-DSA, SLH-DSA), enterprise applications, data engineering, HPC.
 - [Services](https://qryptonics.com/services.html): Post-quantum readiness assessment, cryptographic bill of materials, penetration testing, ISO 27001 and SOC 2 readiness, technical due diligence, training.
 - [Simulator](https://qryptonics.com/simulator.html): Free browser-based quantum simulator. Density-matrix circuit simulation with T1/T2 decoherence, quantum network entanglement distribution over fibre, and distributed quantum computing across QPUs. No account, nothing uploaded.
-- [Community](https://qryptonics.com/community.html): Majlis, a free quantum computing community for the Gulf. Tracks in foundations, optimization and machine learning, post-quantum cryptography, and quantum networks.
+- [Q-Majlis](https://qryptonics.com/community.html): A free, global quantum computing community founded in Doha. Tracks in foundations, optimization and machine learning, post-quantum cryptography, and quantum networks.
 - [Research](https://qryptonics.com/research.html): Open research questions in quantum optimization, QML under realistic data, PQC engineering, and hybrid runtimes.
 - [About](https://qryptonics.com/about.html): Who we are and how we work.
 - [Security](https://qryptonics.com/security.html): Vulnerability disclosure policy and scope.
