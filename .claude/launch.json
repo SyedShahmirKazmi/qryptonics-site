@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "qryptonics-site",
-      "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "8000"],
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
       "port": 8000
     }
   ]

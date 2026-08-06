@@ -398,9 +398,25 @@ strong{color:var(--ink)}
    .js class the content renders normally, so a script failure or
    a crawler never sees a blank page.
    ─────────────────────────────────────────────────────────── */
-.js .rv{opacity:0;transform:translateY(14px);transition:opacity .55s ease,transform .55s ease}
-.js .rv.is-in{opacity:1;transform:none}
-@media (prefers-reduced-motion:reduce){.js .rv{opacity:1;transform:none}}
+/* Resting states only. motion.js drives the transition with a spring,
+   so a CSS transition here would fight it. */
+.js .rv{opacity:0}
+.js .rv.is-in{opacity:1}
+@media (prefers-reduced-motion:reduce){.js .rv{opacity:1}}
+
+/* nav condenses once past the fold */
+.nav{transition:padding .22s ease, background-color .22s ease, box-shadow .22s ease}
+.nav.is-scrolled{padding-top:.55rem;padding-bottom:.55rem;box-shadow:0 1px 0 var(--line),0 8px 28px -22px rgba(0,0,0,.9)}
+.nav__brand,.nav__glyph{transition:transform .22s ease}
+.nav.is-scrolled .nav__glyph{transform:scale(.9)}
+
+/* pointer feedback targets need a compositor hint and no layout shift */
+.cell,.track,.collab,.step,.sim-kpi,.post{will-change:auto;transition:background-color .18s ease}
+.btn,.sim-tool,.sim-mode,.figure__play{transform-origin:center}
+
+@media (prefers-reduced-motion:reduce){
+  .nav,.nav__brand,.nav__glyph{transition:none}
+}
 
 /* ══════════════════════════════════════════════════════════
    Simulator workbench
@@ -671,3 +687,26 @@ fieldset{border:0;padding:0;margin:0;display:grid;gap:.45rem}
 .prose p,.prose li{line-height:1.75}
 .prose ul{display:grid;gap:.6rem;padding-left:1.2rem;list-style:disc}
 .prose a{color:var(--cryo);text-decoration:underline;text-underline-offset:2px}
+
+/* ── touch targets ─────────────────────────────────────────
+   Interactive elements need a 44px hit area. Padding grows the
+   hit box while the nav's own padding shrinks to compensate, so
+   the bar keeps its height and the layout does not move.
+   ─────────────────────────────────────────────────────────── */
+@media (min-width:1021px){
+  .nav{padding-top:.35rem;padding-bottom:.35rem}
+  .nav.is-scrolled{padding-top:.2rem;padding-bottom:.2rem}
+  .nav__menu > a,.nav__group-btn{padding-top:.72rem;padding-bottom:.72rem}
+  .nav__cta{padding-top:.72rem;padding-bottom:.72rem}
+  .nav__brand{padding-top:.5rem;padding-bottom:.5rem}
+  .nav__dropdown{top:calc(100% + .35rem)}
+}
+/* min-height is deterministic where padding maths depends on
+   inherited line-height */
+.figure__play,.sim-tool,.sim-mode,.sim-btn{min-height:44px;display:inline-flex;align-items:center;justify-content:center}
+.nav__group-btn{min-height:44px}
+.foot__list{gap:0}
+.foot__list a{display:inline-flex;align-items:center;min-height:44px}
+.foot__legal a{display:inline-flex;align-items:center;min-height:44px;padding:0 .3rem;margin-left:.3rem}
+.check input{width:20px;height:20px}
+.check{min-height:32px;align-items:center}

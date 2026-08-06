@@ -1,0 +1,17 @@
+{
+  "name": "qryptonics-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Qryptonics company website. Static, zero runtime dependencies, no build step.",
+  "homepage": "https://qryptonics.com",
+  "scripts": {
+    "dev": "node dev-server.js",
+    "start": "node dev-server.js",
+    "check": "node scripts/check.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

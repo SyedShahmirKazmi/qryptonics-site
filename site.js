@@ -64,49 +64,7 @@
     }
   });
 
-  /* ── scroll reveal ─────────────────────────────────────
-     The effect is progressive enhancement, so every failure mode
-     has to end with the content visible: no observer support, a
-     zero-height viewport, or reduced-motion all reveal at once.
-     A scroll fallback covers anything the observer misses.
-     ─────────────────────────────────────────────────────── */
-  var revealables = [].slice.call(document.querySelectorAll('.rv'));
-
-  function revealAll() {
-    revealables.forEach(function (el) { el.classList.add('is-in'); });
-  }
-
-  if (reduced || !('IntersectionObserver' in window) || !window.innerHeight) {
-    revealAll();
-  } else {
-    var revealer = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add('is-in');
-        revealer.unobserve(entry.target);
-      });
-    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
-    revealables.forEach(function (el) { revealer.observe(el); });
-
-    /* Fallback: reveal anything that has scrolled into view but was
-       not caught, then stop listening once everything is shown. */
-    var sweep = function () {
-      var pending = 0;
-      revealables.forEach(function (el) {
-        if (el.classList.contains('is-in')) return;
-        if (el.getBoundingClientRect().top < window.innerHeight) el.classList.add('is-in');
-        else pending++;
-      });
-      if (!pending) window.removeEventListener('scroll', sweep);
-    };
-    window.addEventListener('scroll', sweep, { passive: true });
-
-    /* Last resort: if nothing has appeared after two seconds, something
-       is wrong with the observer. Show everything rather than nothing. */
-    setTimeout(function () {
-      if (!document.querySelector('.rv.is-in')) revealAll();
-    }, 2000);
-  }
+  /* Scroll reveal lives in motion.js. */
 
   /* ── circuit figures ─────────────────────────────────── */
   [].slice.call(document.querySelectorAll('.figure')).forEach(function (fig) {

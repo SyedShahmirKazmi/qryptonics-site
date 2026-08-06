@@ -105,3 +105,38 @@ Before choosing a provider, note that it becomes a **data processor** for person
 need a data processing agreement with them, and `privacy.html` must be updated to name them —
 it currently states that nobody else sees the data. Prefer a provider that lets you pick an
 EU or Gulf region.
+
+## Local development
+
+```bash
+npm install     # installs nothing — there are no dependencies
+npm run dev     # http://localhost:8000 with live reload
+npm run check   # pre-deploy checks
+```
+
+`dev-server.js` is Node standard library only. It injects a live-reload client in
+development and adds that client's SHA-256 to the page's existing CSP rather than
+weakening the policy, so the CSP you test locally is the one that ships.
+
+`npm run check` verifies: no broken links or dead anchors, every asset referenced by CSS
+exists, one `h1` per page with no skipped heading levels, no third-party requests, no
+inline style attributes, every page carries a CSP, and all scripts parse. It exits
+non-zero on failure, so it drops straight into CI.
+
+## Motion
+
+`motion.js` implements spring physics without a framework. A damped harmonic oscillator is
+solved numerically, sampled, and emitted as a CSS `linear()` easing function. The spring
+supplies the curve *shape*; duration is set at the call site, which is what keeps genuine
+spring character inside the 150–400 ms interaction guidelines.
+
+Two curves: reveal is near-critically damped so content does not wobble (380 ms, monotonic),
+feedback overshoots ~9% so a press feels physical (190 ms). Everything animates transform and
+opacity only, so it stays on the compositor thread, and all of it is disabled under
+`prefers-reduced-motion`.
+
+**Why not Framer Motion.** It requires React, a build pipeline and roughly 200–300
+transitive packages. This site sells dependency and SBOM analysis, so shipping a marketing
+page with that tree is an own-goal. React would also force `'unsafe-inline'` back into
+`style-src`. The whole homepage including fonts is currently ~145 KB uncompressed; React plus
+Framer Motion alone is ~92 KB gzipped before any content.
