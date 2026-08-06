@@ -7,7 +7,7 @@
 
 global.window = {};
 require(require('path').join(process.cwd(), 'qsim.js'));
-const { QSim, QNet, QDist } = global.window;
+const { QSim, QNet, QDist, QOptics } = global.window;
 
 let fails = 0, total = 0;
 function chk(name, cond, detail) {
@@ -143,9 +143,17 @@ console.log('\nNetwork and routing');
   chk('dark counts degrade fidelity', dark.fidelity < QNet.linkMetrics(200, P).fidelity,
       dark.fidelity.toFixed(4) + ' < ' + QNet.linkMetrics(200, P).fidelity.toFixed(4));
 
-  const ideal = QNet.chainMetrics(10, 1,
-      Object.assign({}, P, { srcFidelity: 1, memoryT2: 1e9, detEff: 1 }));
-  chk('ideal components approach fidelity 1', ideal.fidelity > 0.999, ideal.fidelity.toFixed(6));
+  /* Ideal means every component ideal, including the source. A real
+     SPDC source has g2 around 0.01 and those multi-photon events cost
+     fidelity, so leaving g2 at its default is not an ideal link. */
+  const ideal = QNet.chainMetrics(10, 1, Object.assign({}, P,
+      { srcFidelity: 1, memoryT2: 1e9, detEff: 1, srcG2: 0, detector: 'snspd' }));
+  chk('fully ideal components approach fidelity 1', ideal.fidelity > 0.999, ideal.fidelity.toFixed(6));
+
+  const g2bad = QNet.chainMetrics(10, 1, Object.assign({}, P,
+      { srcFidelity: 1, memoryT2: 1e9, detEff: 1, srcG2: 0.05, detector: 'snspd' }));
+  chk('source multi-photon events cost fidelity', g2bad.fidelity < ideal.fidelity,
+      g2bad.fidelity.toFixed(4) + ' < ' + ideal.fidelity.toFixed(4));
 
   const nodes = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }];
   const edges = [{ a: 1, b: 2, km: 40 }, { a: 2, b: 3, km: 40 },
@@ -252,6 +260,129 @@ const rc=QSim.roleCheck({ops:[]},roles);
 chk('roles counted', rc.data===2&&rc.ancilla===1&&rc.comm===1,
     JSON.stringify(rc));
 
+}
+
+/* ── optical layer ───────────────────────────────────────── */
+console.log('\nOptical layer');
+{
+
+// known engineering values
+const b=QOptics.linkBudget(100,{fibre:'smf28',wavelength:1550,connectors:2});
+chk('SMF-28 @1550 is 0.2 dB/km', close(b.perKm,0.20), b.perKm);
+chk('100 km of fibre = 20 dB', close(b.fibreDb,20), b.fibreDb);
+chk('2 connectors = 0.6 dB', close(b.connectorDb,0.6), b.connectorDb);
+chk('100 km needs 20 splices = 1.0 dB', b.splices===20&&close(b.spliceDb,1.0), b.splices+'/'+b.spliceDb);
+chk('coupling in+out = 2 dB', close(b.couplingDb,2.0));
+chk('total budget = 23.6 dB', close(b.totalDb,23.6,1e-9), b.totalDb);
+chk('transmittance matches 10^(-dB/10)', close(b.transmittance,Math.pow(10,-2.36),1e-12), b.transmittance.toExponential(3));
+
+// wavelength matters
+const at1310=QOptics.linkBudget(100,{wavelength:1310}).totalDb;
+const at1550=QOptics.linkBudget(100,{wavelength:1550}).totalDb;
+chk('1310nm is lossier than 1550nm', at1310>at1550, at1310.toFixed(1)+' > '+at1550.toFixed(1));
+chk('850nm is far worse', QOptics.linkBudget(100,{wavelength:850}).totalDb>200);
+
+// fibre grades
+const ull=QOptics.linkBudget(200,{fibre:'ull'}).totalDb;
+const std=QOptics.linkBudget(200,{fibre:'smf28'}).totalDb;
+const leg=QOptics.linkBudget(200,{fibre:'legacy'}).totalDb;
+chk('ultra-low-loss beats standard beats legacy', ull<std&&std<leg,
+    ull.toFixed(1)+' < '+std.toFixed(1)+' < '+leg.toFixed(1));
+chk('ULL saves ~8 dB over 200 km', close(std-ull,8,0.01), (std-ull).toFixed(2));
+
+// detectors
+const P={fibre:'smf28',wavelength:1550,multiplex:1,srcFidelity:0.98,memoryT2:0.01,source:'spdc'};
+const snspd=QNet.linkMetrics(100,Object.assign({},P,{detector:'snspd'}));
+const apd=QNet.linkMetrics(100,Object.assign({},P,{detector:'apd'}));
+chk('SNSPD beats InGaAs APD on rate', snspd.rate>apd.rate,
+    snspd.rate.toExponential(2)+' > '+apd.rate.toExponential(2));
+chk('SNSPD beats APD on fidelity', snspd.fidelity>apd.fidelity,
+    snspd.fidelity.toFixed(4)+' > '+apd.fidelity.toFixed(4));
+chk('APD dead time caps its rate ceiling', apd.detCeiling===1e6, apd.detCeiling);
+chk('SNSPD ceiling is 50 MHz', close(snspd.detCeiling,5e7), snspd.detCeiling);
+chk('coincidence window is at least 100 ps', snspd.window>=100e-12, (snspd.window*1e12).toFixed(0)+' ps');
+
+// dark counts dominate at long range
+const near=QNet.linkMetrics(20,Object.assign({},P,{detector:'apd'}));
+const far=QNet.linkMetrics(300,Object.assign({},P,{detector:'apd'}));
+chk('SNR collapses with distance', far.snr<near.snr,
+    near.snr.toFixed(4)+' -> '+far.snr.toFixed(6));
+chk('fidelity follows SNR down', far.fidelity<near.fidelity);
+
+// ULL fibre should extend usable range
+const stdF=QNet.linkMetrics(250,Object.assign({},P,{fibre:'smf28',detector:'snspd'})).rate;
+const ullF=QNet.linkMetrics(250,Object.assign({},P,{fibre:'ull',detector:'snspd'})).rate;
+chk('ULL fibre raises rate at 250 km', ullF>stdF, stdF.toExponential(2)+' -> '+ullF.toExponential(2));
+
+// budget must be monotonic in every term
+chk('more connectors cost more', QOptics.linkBudget(50,{connectors:6}).totalDb>QOptics.linkBudget(50,{connectors:2}).totalDb);
+chk('longer span costs more', QOptics.linkBudget(200,{}).totalDb>QOptics.linkBudget(100,{}).totalDb);
+chk('zero length still has fixed losses', QOptics.linkBudget(0,{}).totalDb>0, QOptics.linkBudget(0,{}).totalDb);
+
+}
+
+/* ── invariants that must hold for any input ─────────────── */
+console.log('\nInvariants under adversarial input');
+{
+  const P = { detector: 'snspd', source: 'spdc', fibre: 'smf28', wavelength: 1550,
+              srcFidelity: 0.98, memoryT2: 0.01, swapSuccess: 0.5,
+              swapQuality: 0.97, multiplex: 1 };
+  let finite = true, ranged = true, probs = true, qberOk = true, keyOk = true;
+
+  [[0,1],[0.001,1],[1e5,1],[100,64]].forEach(c => {
+    const m = QNet.chainMetrics(c[0], c[1], P);
+    ['rate','fidelity','qber','keyRate','latency'].forEach(k => {
+      if (!isFinite(m[k])) finite = false;
+    });
+  });
+  chk('no NaN or Infinity for degenerate spans or segment counts', finite);
+
+  [1,10,100,500,1000,5000].forEach(km => {
+    const f = QNet.chainMetrics(km, 4, P).fidelity;
+    if (f < 0.24 || f > 1.0001) ranged = false;
+  });
+  chk('fidelity stays between the mixed-state floor and 1', ranged);
+
+  [1,50,200,1000].forEach(km => {
+    const m = QNet.linkMetrics(km, P);
+    if (m.pSucc < 0 || m.pSucc > 1 || m.snr < 0 || m.snr > 1.0001) probs = false;
+  });
+  chk('success probability and SNR stay in [0,1]', probs);
+
+  [100,1000,5000].forEach(km => { if (QNet.chainMetrics(km,4,P).qber > 0.5001) qberOk = false; });
+  chk('QBER never exceeds a coin flip', qberOk);
+
+  [500,2000].forEach(km => { if (QNet.chainMetrics(km,4,P).keyRate < 0) keyOk = false; });
+  chk('key rate floors at zero rather than going negative', keyOk);
+
+  let survived = true;
+  try { QNet.linkMetrics(50, Object.assign({}, P,
+    { detector: 'nonsense', fibre: 'nope', source: 'bogus' })); }
+  catch (e) { survived = false; }
+  chk('unknown component names fall back instead of crashing', survived);
+}
+
+/* ── detector choice: the reason quantum networks use SNSPDs ─ */
+console.log('\nDetector physics at range');
+{
+  const base = { source: 'spdc', fibre: 'smf28', wavelength: 1550,
+                 srcFidelity: 0.98, memoryT2: 0.01, multiplex: 1, connectors: 2 };
+  const at = (km, d) => QNet.linkMetrics(km, Object.assign({}, base, { detector: d }));
+
+  const near_s = at(50, 'snspd'), near_a = at(50, 'apd');
+  chk('at short range detector choice barely affects fidelity',
+      Math.abs(near_s.fidelity - near_a.fidelity) < 0.01,
+      near_s.fidelity.toFixed(4) + ' vs ' + near_a.fidelity.toFixed(4));
+
+  const far_s = at(500, 'snspd'), far_a = at(500, 'apd');
+  chk('at long range dark counts destroy the APD link',
+      far_a.fidelity < far_s.fidelity - 0.3,
+      far_s.fidelity.toFixed(4) + ' vs ' + far_a.fidelity.toFixed(4));
+  chk('the APD falls below the entanglement threshold at 500 km',
+      far_a.fidelity < 0.5, far_a.fidelity.toFixed(4));
+  chk('the SNSPD stays above it', far_s.fidelity > 0.5, far_s.fidelity.toFixed(4));
+  chk('SNR is what collapses', far_a.snr < 0.2 && far_s.snr > 0.9,
+      far_a.snr.toFixed(4) + ' vs ' + far_s.snr.toFixed(4));
 }
 
 console.log('\n  ' + (fails

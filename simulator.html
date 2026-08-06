@@ -182,7 +182,38 @@
             </details>
           </div>
           <div id="ctl-net" hidden>
-            <details class="sim-fold" open><summary>Memory &amp; source</summary>
+            <details class="sim-fold" open><summary>Fibre &amp; optics</summary>
+              <label class="sim-field"><span>Fibre type</span>
+                <select id="fibre" class="sim-select">
+                  <option value="ull">Ultra-low-loss (0.16 dB/km)</option>
+                  <option value="smf28" selected>Standard SMF-28 (0.20)</option>
+                  <option value="legacy">Legacy field fibre (0.25)</option>
+                  <option value="hollow">Hollow-core (0.50)</option>
+                </select></label>
+              <label class="sim-field"><span>Wavelength</span>
+                <select id="wl" class="sim-select">
+                  <option value="1550" selected>1550 nm (C-band)</option>
+                  <option value="1310">1310 nm (O-band)</option>
+                  <option value="850">850 nm</option>
+                </select></label>
+              <label class="sim-field"><span>Connectors per span <b id="conn-v">2</b></span>
+                <input id="conn" type="range" min="0" max="12" step="1" value="2"></label>
+              <label class="sim-field"><span>Photon source</span>
+                <select id="src" class="sim-select">
+                  <option value="spdc" selected>SPDC</option>
+                  <option value="quantum_dot">Quantum dot</option>
+                  <option value="atomic">Atomic ensemble</option>
+                </select></label>
+              <label class="sim-field"><span>Detector</span>
+                <select id="det" class="sim-select">
+                  <option value="snspd" selected>SNSPD</option>
+                  <option value="snspd_h">SNSPD (warm)</option>
+                  <option value="si">Si APD</option>
+                  <option value="apd">InGaAs APD</option>
+                </select></label>
+              <p class="sim-note">Loss budget counts fibre attenuation, connectors, a fusion splice every 5 km, and coupling in and out.</p>
+            </details>
+            <details class="sim-fold"><summary>Memory &amp; source</summary>
             <label class="sim-field"><span>Memory T&#8322; <b id="memory-v">10 ms</b></span>
               <input id="memory" type="range" min="1" max="500" step="1" value="10"></label>
             <label class="sim-field"><span>Source fidelity <b id="srcfid-v">0.980</b></span>

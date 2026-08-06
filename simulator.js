@@ -82,6 +82,7 @@
 
   /* ── parameters ────────────────────────────────────────── */
   function num(id) { var e = document.getElementById(id); return e ? +e.value : 0; }
+  function sel(id, dflt) { var e = document.getElementById(id); return e ? e.value : dflt; }
 
   var ROLES = ['data', 'ancilla', 'comm'];
   var ROLE_LABEL = { data: 'data', ancilla: 'anc', comm: 'comm' };
@@ -108,7 +109,12 @@
       multiplex: num('mux'),
       swapSuccess: num('swapp') / 100,
       swapQuality: num('swapq') / 1000,
-      sourceRate: 1e7, gateWindow: 1e-9
+      sourceRate: 1e7, gateWindow: 1e-9,
+      fibre: sel('fibre', 'smf28'),
+      wavelength: +sel('wl', '1550'),
+      connectors: num('conn'),
+      source: sel('src', 'spdc'),
+      detector: sel('det', 'snspd')
     };
     var te = document.getElementById('topo');
     if (te) activeCircuit().topology = te.value;
@@ -129,6 +135,7 @@
     set('mux-v', app.params.multiplex);
     set('swapp-v', app.params.swapSuccess.toFixed(2));
     set('swapq-v', app.params.swapQuality.toFixed(3));
+    set('conn-v', app.params.connectors);
   }
 
   /* Live recompute. Short enough to feel immediate, long enough
@@ -836,7 +843,22 @@
     html += kpi('Swap survival', (m.swapSurvival * 100).toFixed(1) + ' %',
                 'across ' + Math.max(0, m.segments - 1) + ' swaps');
     html += kpi('One-way latency', (m.latency * 1000).toFixed(2) + ' ms', 'fibre at 200 000 km/s');
+    var lm = QNet.linkMetrics(m.segmentKm, app.params);
+    html += kpi('Loss per arm', QNet.linkBudget(m.segmentKm / 2, app.params).totalDb.toFixed(1) + ' dB',
+                esc(lm.detectorName) + ' · ' + esc(lm.sourceName));
+    html += kpi('Coincidence window', (lm.window * 1e12).toFixed(0) + ' ps',
+                'set by detector jitter and dispersion');
     html += '</div>';
+
+    var bud = QNet.linkBudget(m.segmentKm / 2, app.params);
+    html += plot('Loss budget per arm · ' + esc(bud.fibreName) + ' at ' + bud.wavelength + ' nm',
+      bars([bud.fibreDb, bud.connectorDb, bud.spliceDb, bud.couplingDb],
+           ['fibre', 'connectors', 'splices', 'coupling'],
+           { aria: 'Optical loss budget in decibels' }),
+      'Total <b>' + bud.totalDb.toFixed(2) + ' dB</b> over ' + bud.km.toFixed(1) +
+      ' km, leaving <b>' + (bud.transmittance * 100).toPrecision(3) + '%</b> transmittance. ' +
+      bud.splices + ' fusion splices at one every 5 km. The source sits at the span midpoint, ' +
+      'so each photon pays this budget once.');
 
     html += plot('Fidelity against total distance',
       lines([{ pts: sw.map(function (p) { return { x: p.km, y: p.fidelity }; }) }],
@@ -1036,11 +1058,15 @@
   });
 
   /* Every parameter recomputes live. */
-  ['t1','t2','g1','g2','d1','d2','ro','shots','memory','srcfid','deteff','dark','mux','swapp','swapq']
+  ['t1','t2','g1','g2','d1','d2','ro','shots','memory','srcfid','deteff','dark','mux','swapp','swapq','conn']
     .forEach(function (id) {
       var e = document.getElementById(id);
       if (e) e.addEventListener('input', live);
     });
+  ['fibre','wl','src','det'].forEach(function (id) {
+    var e = document.getElementById(id);
+    if (e) e.addEventListener('change', live);
+  });
   var qb = document.getElementById('qubits');
   if (qb) qb.addEventListener('input', function () {
     app.circuit.qubits = +qb.value;

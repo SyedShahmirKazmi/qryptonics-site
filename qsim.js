@@ -421,31 +421,50 @@
   function transmittance(km){ return Math.pow(10, -(ATTEN*km)/10); }
   function binEnt(e){ return (e<=0||e>=1) ? 0 : -e*Math.log2(e)-(1-e)*Math.log2(1-e); }
 
-  /* One elementary link, source at the midpoint. */
+  /* One elementary link with the source at the midpoint. Both photons
+     traverse half the span, so each half carries its own loss budget. */
   function linkMetrics(km, p) {
-    var half = transmittance(km/2);
-    var eta = p.detEff === undefined ? 0.9 : p.detEff;
-    var pDet = half*half*eta*eta;
+    var det = DETECTOR[p.detector] || { eff: p.detEff == null ? 0.9 : p.detEff,
+                                        dark: p.darkRate || 0,
+                                        jitter: 50e-12, dead: 20e-9 };
+    var src = SOURCE[p.source] || { herald: 0.8, g2: 0.01, rate: p.sourceRate || 1e7 };
+
+    /* Half-span budget, one per arm. */
+    var half = linkBudget(km / 2, {
+      fibre: p.fibre, wavelength: p.wavelength,
+      connectors: p.connectors, extraDb: p.extraDb
+    });
+
+    var pArm = half.transmittance * det.eff;
+    var pDet = pArm * pArm * src.herald;            // both arms must fire
     var modes = Math.max(1, p.multiplex || 1);
     var pSucc = 1 - Math.pow(1 - pDet, modes);
 
-    var travel = km / C_FIBRE;                     // one-way, s
-    var attemptRate = Math.min(p.sourceRate || 1e7, 1/travel);
+    var travel = km / C_FIBRE;
+    var window = coincidenceWindow(det, half);
+
+    /* Dead time caps how fast a detector can be re-armed. */
+    var detCeiling = 1 / det.dead;
+    var attemptRate = Math.min(src.rate, 1 / travel, detCeiling);
     var rate = pSucc * attemptRate;
 
-    /* Dark counts raise the error floor once the signal is weak. */
-    var dark = (p.darkRate || 0) * (p.gateWindow || 1e-9);
-    var snr = pDet / (pDet + 4*dark + 1e-18);
+    /* Accidental coincidences from dark counts inside the window. */
+    var darkProb = det.dark * window;
+    var accidentals = 2 * darkProb * pArm + darkProb * darkProb;
+    var snr = pDet / (pDet + accidentals + 1e-18);
 
     var srcF = p.srcFidelity === undefined ? 0.98 : p.srcFidelity;
-    var w0 = (4*srcF - 1) / 3;
-    var held = travel;
-    var decay = Math.exp(-held / (p.memoryT2 || 0.01));
-    var w = w0 * decay * snr;
+    var w0 = (4 * srcF - 1) / 3;
+    var decay = Math.exp(-travel / (p.memoryT2 || 0.01));
+    var g2 = p.srcG2 == null ? src.g2 : p.srcG2;
+    var w = w0 * decay * snr * (1 - g2);
 
     return {
       rate: rate, pSucc: pSucc, werner: w,
-      fidelity: (3*w + 1)/4, latency: travel, snr: snr
+      fidelity: (3 * w + 1) / 4, latency: travel, snr: snr,
+      budget: half, window: window, detectorName: det.name || 'custom',
+      sourceName: src.name || 'custom', detCeiling: detCeiling,
+      accidentals: accidentals
     };
   }
 
@@ -737,6 +756,85 @@
     };
   }
 
+
+  /* ══════════════════════════════════════════════════════════
+     Optical layer
+
+     A quantum link is not just kilometres of glass. The loss budget
+     is dominated by fibre attenuation, but connectors, splices and
+     the coupling into and out of the fibre all cost dB, and the
+     detector sets both the floor (dark counts) and the ceiling
+     (dead time). All of it is accounted here in dB, the way an
+     optical engineer would actually size a link.
+     ══════════════════════════════════════════════════════════ */
+
+  /* Attenuation in dB/km at the telecom windows. 1550nm is the
+     minimum-loss window, which is why quantum links live there. */
+  var FIBRE = {
+    smf28:   { name: 'Standard SMF-28',   a1550: 0.20, a1310: 0.34, a850: 2.20, disp: 17 },
+    ull:     { name: 'Ultra-low-loss',    a1550: 0.16, a1310: 0.30, a850: 2.00, disp: 20 },
+    legacy:  { name: 'Legacy G.652 field', a1550: 0.25, a1310: 0.40, a850: 2.50, disp: 17 },
+    hollow:  { name: 'Hollow-core',       a1550: 0.50, a1310: 0.60, a850: 1.50, disp: 2 }
+  };
+
+  var DETECTOR = {
+    snspd:  { name: 'SNSPD',       eff: 0.90, dark: 10,    jitter: 50e-12,  dead: 20e-9 },
+    snspd_h:{ name: 'SNSPD (warm)', eff: 0.75, dark: 100,   jitter: 80e-12,  dead: 50e-9 },
+    apd:    { name: 'InGaAs APD',  eff: 0.25, dark: 1000,  jitter: 200e-12, dead: 1e-6 },
+    si:     { name: 'Si APD',      eff: 0.65, dark: 100,   jitter: 350e-12, dead: 50e-9 }
+  };
+
+  var SOURCE = {
+    spdc:   { name: 'SPDC',          herald: 0.80, g2: 0.01, rate: 1e7 },
+    quantum_dot: { name: 'Quantum dot', herald: 0.65, g2: 0.005, rate: 1e9 },
+    atomic: { name: 'Atomic ensemble', herald: 0.50, g2: 0.02, rate: 1e6 }
+  };
+
+  var CONNECTOR_DB = 0.3;      // a mated pair
+  var SPLICE_DB = 0.05;        // fusion splice
+  var SPLICE_EVERY_KM = 5;     // fibre ships on ~5km drums
+  var COUPLING_DB = 1.0;       // into or out of the fibre
+
+  /* Full loss budget for one span, itemised. */
+  function linkBudget(km, o) {
+    o = o || {};
+    var fib = FIBRE[o.fibre] || FIBRE.smf28;
+    var wl = o.wavelength || 1550;
+    var perKm = wl === 1310 ? fib.a1310 : (wl === 850 ? fib.a850 : fib.a1550);
+
+    var fibreDb = perKm * km;
+    var connectors = o.connectors == null ? 2 : o.connectors;
+    var connectorDb = connectors * CONNECTOR_DB;
+    var splices = Math.max(0, Math.floor(km / SPLICE_EVERY_KM));
+    var spliceDb = splices * SPLICE_DB;
+    var couplingDb = 2 * COUPLING_DB;
+    var extraDb = o.extraDb || 0;
+
+    var totalDb = fibreDb + connectorDb + spliceDb + couplingDb + extraDb;
+    return {
+      perKm: perKm, km: km, wavelength: wl, fibreName: fib.name,
+      fibreDb: fibreDb, connectorDb: connectorDb, spliceDb: spliceDb,
+      couplingDb: couplingDb, extraDb: extraDb, totalDb: totalDb,
+      splices: splices, connectors: connectors,
+      transmittance: Math.pow(10, -totalDb / 10),
+      dispersionPsNm: fib.disp * km
+    };
+  }
+
+  /* Timing: the coincidence window has to be wider than the combined
+     jitter, and a wider window lets in more dark counts. */
+  function coincidenceWindow(det, budget) {
+    var jitter = det.jitter * 2;                        // two detectors
+    var disp = budget ? budget.dispersionPsNm * 0.1e-12 : 0;
+    return Math.max(4 * Math.sqrt(jitter * jitter + disp * disp), 100e-12);
+  }
+
+  root.QOptics = {
+    FIBRE: FIBRE, DETECTOR: DETECTOR, SOURCE: SOURCE,
+    linkBudget: linkBudget, coincidenceWindow: coincidenceWindow,
+    CONNECTOR_DB: CONNECTOR_DB, SPLICE_DB: SPLICE_DB, COUPLING_DB: COUPLING_DB
+  };
+
   root.QSim = {
     simulateCircuit: simulateCircuit, Rho: Rho, Psi: Psi,
     gates: G, matrixFor: matrixFor,
@@ -745,7 +843,7 @@
     adjacency: adjacency, roleCheck: roleCheck, TOPOLOGIES: TOPOLOGIES
   };
   root.QNet = {
-    linkMetrics: linkMetrics, chainMetrics: chainMetrics,
+    linkMetrics: linkMetrics, linkBudget: linkBudget, chainMetrics: chainMetrics,
     sweep: sweep, segmentSweep: segmentSweep,
     shortestPath: shortestPath, transmittance: transmittance,
     C_FIBRE: C_FIBRE
