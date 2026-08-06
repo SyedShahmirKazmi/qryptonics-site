@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Research — Qryptonics</title>
+<meta name="description" content="Research areas at Qryptonics: quantum optimization, quantum machine learning, post-quantum cryptographic engineering and hybrid runtimes.">
+<meta name="theme-color" content="#F6F8FC">
+<link rel="canonical" href="https://qryptonics.com/research.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Research — Qryptonics">
+<meta property="og:description" content="Quantum optimization, quantum machine learning, post-quantum cryptographic engineering and hybrid runtimes.">
+<meta property="og:url" content="https://qryptonics.com/research.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script>document.documentElement.className+=" js"</script>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav" id="top">
+  <a class="nav__brand" href="index.html" aria-label="Qryptonics home">
+    <svg class="nav__glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M2 8 L12 2 L22 8 L12 14 Z"/><path d="M2 16 L12 10 L22 16 L12 22 Z"/>
+    </svg>
+    <span class="nav__word">Qryptonics</span>
+  </a>
+  <button class="nav__toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Toggle menu">
+    <svg class="nav__ico-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    <svg class="nav__ico-close" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>
+  </button>
+  <nav class="nav__menu" id="nav-menu" aria-label="Primary">
+    <a href="index.html">Home</a>
+    <a href="development.html">Development</a>
+    <a href="services.html">Services</a>
+    <a href="about.html">About</a>
+    <div class="nav__group">
+      <button class="nav__group-btn" aria-expanded="false">Insights
+        <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5L6 8.5L10 4.5"/></svg>
+      </button>
+      <div class="nav__dropdown">
+        <a href="blog.html">Blog<small>Notes from the field</small></a>
+        <a href="research.html" aria-current="page">Research<small>Papers and preprints</small></a>
+      </div>
+    </div>
+    <a class="nav__cta" href="index.html#contact">Get in touch</a>
+  </nav>
+</header>
+
+<main id="main">
+
+  <section class="phead">
+    <div class="phead__inner">
+      <p class="eyebrow">Insights · Research</p>
+      <h1 class="phead__title">Work that has to survive review.</h1>
+      <p class="phead__lede">
+        In a field this crowded with claims, peer-reviewed results are the only credential
+        worth having. These are the questions we are working on and the collaborations we are
+        open to.
+      </p>
+      <ul class="phead__meta">
+        <li>Quantum optimization</li><li>QML</li><li>PQC engineering</li><li>Hybrid runtimes</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <h2 class="section-h rv"><span class="section-h__mark">§</span> Active areas</h2>
+
+    <article class="svc rv">
+      <div>
+        <p class="svc__id">R—01</p>
+        <h2 class="svc__title">Quantum optimization on operational problems</h2>
+        <p class="svc__note">Applied rather than asymptotic. Instances taken from live industrial data.</p>
+      </div>
+      <div>
+        <p class="svc__lede">
+          Published QAOA results tend to use synthetic graphs. Real scheduling and allocation
+          problems carry constraints that change the encoding entirely.
+        </p>
+        <div class="svc__grid">
+          <div class="svc__col">
+            <h4>Questions</h4>
+            <ul>
+              <li>Constraint encoding strategies that keep circuit depth tractable</li>
+              <li>Penalty weight selection without exhaustive search</li>
+              <li>Where digital annealing outperforms gate-model QAOA</li>
+              <li>Instance structures that predict quantum benefit</li>
+            </ul>
+          </div>
+          <div class="svc__col">
+            <h4>Method</h4>
+            <ul>
+              <li>Benchmarks against production classical solvers</li>
+              <li>Reproducible harnesses published alongside results</li>
+              <li>Noise-model simulation before hardware runs</li>
+              <li>Negative results reported, not buried</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="svc rv">
+      <div>
+        <p class="svc__id">R—02</p>
+        <h2 class="svc__title">Quantum machine learning under realistic data</h2>
+        <p class="svc__note">Testing whether the quantum feature space earns its cost on data that is not curated.</p>
+      </div>
+      <div>
+        <p class="svc__lede">
+          Quantum kernels demonstrate separation on constructed datasets. Whether that holds on
+          industrial telemetry is an open and testable question.
+        </p>
+        <div class="svc__grid">
+          <div class="svc__col">
+            <h4>Questions</h4>
+            <ul>
+              <li>Feature map design for high-dimensional sensor data</li>
+              <li>Barren plateaus in application-scale circuits</li>
+              <li>Kernel estimation cost against classical alternatives</li>
+              <li>Quantum-assisted anomaly detection in network telemetry</li>
+            </ul>
+          </div>
+          <div class="svc__col">
+            <h4>Method</h4>
+            <ul>
+              <li>Classical baseline established before any quantum run</li>
+              <li>Statistical significance over repeated trials</li>
+              <li>Ablation against equivalent classical kernels</li>
+              <li>Data provenance documented</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="svc rv">
+      <div>
+        <p class="svc__id">R—03</p>
+        <h2 class="svc__title">Post-quantum cryptographic engineering</h2>
+        <p class="svc__note">Deployment questions rather than primitive design. The algorithms are settled; the rollout is not.</p>
+      </div>
+      <div>
+        <p class="svc__lede">
+          Migration at national-infrastructure scale raises engineering problems the standards
+          documents do not address.
+        </p>
+        <div class="svc__grid">
+          <div class="svc__col">
+            <h4>Questions</h4>
+            <ul>
+              <li>Hybrid key exchange behaviour across legacy middleboxes</li>
+              <li>PQC performance on constrained and OT hardware</li>
+              <li>Automated cryptographic discovery at estate scale</li>
+              <li>Crypto-agility patterns that survive the next transition</li>
+            </ul>
+          </div>
+          <div class="svc__col">
+            <h4>Method</h4>
+            <ul>
+              <li>Measurement on production-representative testbeds</li>
+              <li>Interoperability matrices across implementations</li>
+              <li>Open tooling where it does not expose client estates</li>
+              <li>Standards-body engagement</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="svc rv">
+      <div>
+        <p class="svc__id">R—04</p>
+        <h2 class="svc__title">Hybrid runtimes and HPC integration</h2>
+        <p class="svc__note">The classical half of the loop, which is where the wall-clock time goes.</p>
+      </div>
+      <div>
+        <p class="svc__lede">
+          Quantum-classical workloads on shared HPC infrastructure raise scheduling and data
+          movement questions that neither community has fully addressed.
+        </p>
+        <div class="svc__grid">
+          <div class="svc__col">
+            <h4>Questions</h4>
+            <ul>
+              <li>Scheduling variational loops on shared clusters</li>
+              <li>Tensor-network simulation limits for wide circuits</li>
+              <li>Transpilation cost amortisation across iterations</li>
+              <li>Error mitigation overhead at application scale</li>
+            </ul>
+          </div>
+          <div class="svc__col">
+            <h4>Method</h4>
+            <ul>
+              <li>End-to-end profiling, not per-component timing</li>
+              <li>GPU simulation baselines via cuQuantum and CUDA-Q</li>
+              <li>Reproducible container images per experiment</li>
+              <li>Cost modelling alongside performance</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <h2 class="section-h rv"><span class="section-h__mark">§</span> Publications</h2>
+      <div class="empty rv">
+        <h3 class="empty__title">No publications listed yet.</h3>
+        <p class="empty__body">
+          Preprints and papers appear here as they clear review. We would rather show an empty
+          list than pad it.
+        </p>
+        <a class="btn btn--ghost" href="mailto:shahmir.kazmi64@gmail.com">Enquire about collaboration</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <h2 class="section-h rv"><span class="section-h__mark">§</span> Collaboration</h2>
+    <div class="grid grid--3 rv">
+      <article class="cell">
+        <p class="cell__k">Academic</p>
+        <h3 class="cell__title">Joint research</h3>
+        <p class="cell__body">
+          We are open to co-authorship with university groups, particularly where a research
+          question needs industrial data that academic teams cannot access on their own.
+        </p>
+      </article>
+      <article class="cell">
+        <p class="cell__k">Industrial</p>
+        <h3 class="cell__title">Problem donation</h3>
+        <p class="cell__body">
+          If you have an operational problem and want it studied properly, we will work on it
+          under NDA and publish only the anonymised methodology and results.
+        </p>
+      </article>
+      <article class="cell">
+        <p class="cell__k">Funded</p>
+        <h3 class="cell__title">Grant programmes</h3>
+        <p class="cell__body">
+          We participate in open innovation and technology development calls where a named
+          industrial partner brings a real problem and a real deployment target.
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <div class="contact__inner">
+      <p class="eyebrow">Get in touch</p>
+      <h2 class="contact__title">Working on something adjacent?</h2>
+      <p class="contact__body">
+        Research collaborations, joint grant applications and problem donations are all welcome.
+        Tell us what you are studying and where you are stuck.
+      </p>
+      <div class="contact__actions">
+        <a class="btn btn--solid" href="mailto:shahmir.kazmi64@gmail.com">shahmir.kazmi64@gmail.com</a>
+        <a class="btn btn--ghost" href="https://wa.me/97433813027" rel="noopener">WhatsApp +974 3381 3027</a>
+      </div>
+      <p class="contact__loc">Doha, Qatar</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="foot__inner">
+    <div>
+      <p class="foot__brand">Qryptonics</p>
+      <p class="foot__note">Quantum-safe infrastructure and quantum-scale optimization. Doha, Qatar.</p>
+    </div>
+    <div><p class="foot__h">Company</p><ul class="foot__list">
+      <li><a href="index.html">Home</a></li><li><a href="about.html">About</a></li>
+      <li><a href="index.html#contact">Contact</a></li></ul></div>
+    <div><p class="foot__h">What we do</p><ul class="foot__list">
+      <li><a href="development.html">Development</a></li><li><a href="services.html">Services</a></li>
+      <li><a href="index.html#practices">Practices</a></li></ul></div>
+    <div><p class="foot__h">Insights</p><ul class="foot__list">
+      <li><a href="blog.html">Blog</a></li><li><a href="research.html">Research</a></li></ul></div>
+  </div>
+  <p class="foot__legal">© <span id="year">2026</span> Qryptonics. Doha, Qatar.</p>
+</footer>
+
+<script src="site.js" defer></script>
+</body>
+</html>

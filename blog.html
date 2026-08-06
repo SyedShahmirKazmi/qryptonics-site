@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Blog — Qryptonics</title>
+<meta name="description" content="Notes from the field on post-quantum migration, quantum optimization and hybrid engineering.">
+<meta name="theme-color" content="#F6F8FC">
+<link rel="canonical" href="https://qryptonics.com/blog.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Blog — Qryptonics">
+<meta property="og:description" content="Notes from the field on post-quantum migration, quantum optimization and hybrid engineering.">
+<meta property="og:url" content="https://qryptonics.com/blog.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script>document.documentElement.className+=" js"</script>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav" id="top">
+  <a class="nav__brand" href="index.html" aria-label="Qryptonics home">
+    <svg class="nav__glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M2 8 L12 2 L22 8 L12 14 Z"/><path d="M2 16 L12 10 L22 16 L12 22 Z"/>
+    </svg>
+    <span class="nav__word">Qryptonics</span>
+  </a>
+  <button class="nav__toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Toggle menu">
+    <svg class="nav__ico-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    <svg class="nav__ico-close" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>
+  </button>
+  <nav class="nav__menu" id="nav-menu" aria-label="Primary">
+    <a href="index.html">Home</a>
+    <a href="development.html">Development</a>
+    <a href="services.html">Services</a>
+    <a href="about.html">About</a>
+    <div class="nav__group">
+      <button class="nav__group-btn" aria-expanded="false">Insights
+        <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5L6 8.5L10 4.5"/></svg>
+      </button>
+      <div class="nav__dropdown">
+        <a href="blog.html" aria-current="page">Blog<small>Notes from the field</small></a>
+        <a href="research.html">Research<small>Papers and preprints</small></a>
+      </div>
+    </div>
+    <a class="nav__cta" href="index.html#contact">Get in touch</a>
+  </nav>
+</header>
+
+<main id="main">
+
+  <section class="phead">
+    <div class="phead__inner">
+      <p class="eyebrow">Insights · Blog</p>
+      <h1 class="phead__title">Notes from the field.</h1>
+      <p class="phead__lede">
+        Working notes on post-quantum migration, problem encoding and the parts of quantum
+        engineering that turn out to be harder than the physics. Written for engineers, with
+        the details left in.
+      </p>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <div class="empty rv">
+      <h2 class="empty__title">Nothing published yet.</h2>
+      <p class="empty__body">
+        The first posts go up as engagements produce something worth writing down. Until then,
+        send a question directly and you will get the same answer a post would give you.
+      </p>
+      <a class="btn btn--solid" href="mailto:shahmir.kazmi64@gmail.com">Ask a question</a>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <h2 class="section-h rv"><span class="section-h__mark">§</span> What we intend to write about</h2>
+      <div class="grid grid--3 rv">
+        <article class="cell">
+          <p class="cell__k">Cryptography</p>
+          <h3 class="cell__title">Migration in practice</h3>
+          <ul class="cell__list">
+            <li>Building a cryptographic bill of materials from a real estate</li>
+            <li>Where hybrid key exchange breaks middleboxes</li>
+            <li>PQC on constrained and OT devices</li>
+            <li>Reading NIST's standards without a cryptography degree</li>
+          </ul>
+        </article>
+        <article class="cell">
+          <p class="cell__k">Optimization</p>
+          <h3 class="cell__title">Encoding real problems</h3>
+          <ul class="cell__list">
+            <li>Turning a scheduling problem into a QUBO that actually solves</li>
+            <li>Penalty weights and why most formulations fail</li>
+            <li>Benchmarking honestly against classical solvers</li>
+            <li>When digital annealing beats the gate model</li>
+          </ul>
+        </article>
+        <article class="cell">
+          <p class="cell__k">Engineering</p>
+          <h3 class="cell__title">The classical half</h3>
+          <ul class="cell__list">
+            <li>Profiling a variational loop end to end</li>
+            <li>Transpilation cost nobody budgets for</li>
+            <li>Error mitigation that survives contact with hardware</li>
+            <li>Running quantum workloads on shared HPC</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <div class="contact__inner">
+      <p class="eyebrow">Get in touch</p>
+      <h2 class="contact__title">Have a topic you want covered?</h2>
+      <p class="contact__body">
+        If you are stuck on something specific in a migration or a formulation, tell us. It is
+        usually a better prompt than anything we would pick ourselves.
+      </p>
+      <div class="contact__actions">
+        <a class="btn btn--solid" href="https://wa.me/97433813027" rel="noopener">WhatsApp +974 3381 3027</a>
+        <a class="btn btn--ghost" href="mailto:shahmir.kazmi64@gmail.com">shahmir.kazmi64@gmail.com</a>
+      </div>
+      <p class="contact__loc">Doha, Qatar</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="foot__inner">
+    <div>
+      <p class="foot__brand">Qryptonics</p>
+      <p class="foot__note">Quantum-safe infrastructure and quantum-scale optimization. Doha, Qatar.</p>
+    </div>
+    <div><p class="foot__h">Company</p><ul class="foot__list">
+      <li><a href="index.html">Home</a></li><li><a href="about.html">About</a></li>
+      <li><a href="index.html#contact">Contact</a></li></ul></div>
+    <div><p class="foot__h">What we do</p><ul class="foot__list">
+      <li><a href="development.html">Development</a></li><li><a href="services.html">Services</a></li>
+      <li><a href="index.html#practices">Practices</a></li></ul></div>
+    <div><p class="foot__h">Insights</p><ul class="foot__list">
+      <li><a href="blog.html">Blog</a></li><li><a href="research.html">Research</a></li></ul></div>
+  </div>
+  <p class="foot__legal">© <span id="year">2026</span> Qryptonics. Doha, Qatar.</p>
+</footer>
+
+<script src="site.js" defer></script>
+</body>
+</html>

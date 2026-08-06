@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Development — Qryptonics</title>
+<meta name="description" content="Quantum software, post-quantum cryptographic implementation, enterprise applications, data platforms and applied AI. Built and handed over.">
+<meta name="theme-color" content="#F6F8FC">
+<link rel="canonical" href="https://qryptonics.com/development.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Development — Qryptonics">
+<meta property="og:description" content="Quantum software, PQC implementation, enterprise applications, data platforms and applied AI.">
+<meta property="og:url" content="https://qryptonics.com/development.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script>document.documentElement.className+=" js"</script>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav" id="top">
+  <a class="nav__brand" href="index.html" aria-label="Qryptonics home">
+    <svg class="nav__glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M2 8 L12 2 L22 8 L12 14 Z"/><path d="M2 16 L12 10 L22 16 L12 22 Z"/>
+    </svg>
+    <span class="nav__word">Qryptonics</span>
+  </a>
+  <button class="nav__toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Toggle menu">
+    <svg class="nav__ico-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    <svg class="nav__ico-close" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>
+  </button>
+  <nav class="nav__menu" id="nav-menu" aria-label="Primary">
+    <a href="index.html">Home</a>
+    <a href="development.html" aria-current="page">Development</a>
+    <a href="services.html">Services</a>
+    <a href="about.html">About</a>
+    <div class="nav__group">
+      <button class="nav__group-btn" aria-expanded="false">Insights
+        <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5L6 8.5L10 4.5"/></svg>
+      </button>
+      <div class="nav__dropdown">
+        <a href="blog.html">Blog<small>Notes from the field</small></a>
+        <a href="research.html">Research<small>Papers and preprints</small></a>
+      </div>
+    </div>
+    <a class="nav__cta" href="index.html#contact">Get in touch</a>
+  </nav>
+</header>
+
+<main id="main">
+
+  <section class="phead">
+    <div class="phead__inner">
+      <p class="eyebrow">Development</p>
+      <h1 class="phead__title">Software we write, and your team runs.</h1>
+      <p class="phead__lede">
+        Everything on this page ends with working code in your environment, documentation your
+        engineers can follow, and a handover. If a problem is better solved without new
+        software, we say so before the contract starts.
+      </p>
+      <ul class="phead__meta">
+        <li>Quantum &amp; hybrid</li><li>Cryptography</li><li>Enterprise systems</li>
+        <li>Data &amp; AI</li><li>HPC</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="wrap">
+
+    <article class="svc rv">
+      <div>
+        <p class="svc__id">D—01</p>
+        <h2 class="svc__title">Quantum software engineering</h2>
+        <p class="svc__note">Qiskit · PennyLane · CUDA-Q · Cirq. Backend-agnostic, so hardware choices stay open.</p>
+      </div>
+      <div>
+        <p class="svc__lede">
+          We build the algorithm, the encoding and the classical scaffolding around it, then
+          benchmark the result against the solver you run today.
+        </p>
+        <div class="svc__grid">
+          <div class="svc__col">
+            <h4>Algorithms</h4>
+            <ul>
+              <li>QAOA and VQE implementations</li>
+              <li>Application-specific ansatz design</li>
+              <li>Grover and amplitude estimation routines</li>
+              <li>Quantum simulation for chemistry and materials</li>
+            </ul>
+          </div>
+          <div class="svc__col">
+            <h4>Optimization</h4>
+            <ul>
+              <li>QUBO and Ising problem encoding</li>
+              <li>Constraint handling and penalty tuning</li>
+              <li>Annealing and digital-annealer integration</li>
+              <li>Solver benchmarking harnesses</li>
+            </ul>
+          </div>
+          <div class="svc__col">
+            <h4>Machine learning</h4>
+            <ul>
+              <li>Quantum kernels and QSVC</li>
+              <li>Variational classifiers</li>
+              <li>Feature map and encoding design</li>
+              <li>Barren-plateau and trainability analysis</li>
+            </ul>
+          </div>
+          <div class="svc__col">
+            <h4>Circuit engineering</h4>
+            <ul>
+              <li>Synthesis and depth reduction</li>
+              <li>Transpilation for device topology</li>
+              <li>Error mitigation and readout correction</li>
+              <li>Noise characterisation</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="svc rv">
+      <div>
+        <p class="svc__id">D—02</p>
+        <h2 class="svc__title">Post-quantum cryptographic implementation</h2>
+        <p class="svc__note">FIPS 203 / 204 / 205. Hybrid modes first, so nothing depends on a single algorithm surviving.</p>
+      </div>
+      <div>
+        <p class="svc__lede">
+          Migration work, written into your systems rather than described in a report. The
+          assessment that precedes it lives under Services.
+        </p>
+        <div class="svc__grid">
+          <div class="svc__col">
+            <h4>Primitives</h4>
+            <ul>
+              <li>ML-KEM key encapsulation</li>
+              <li>ML-DSA and SLH-DSA signing</li>
+              <li>Hybrid X25519MLKEM768 key exchange</li>
+              <li>HQC as a backup KEM family</li>
+            </ul>
+          </div>
+          <div class="svc__col">
+            <h4>Integration</h4>
+            <ul>
+              <li>TLS termination and protocol upgrades</li>
+              <li>PKI, certificate lifecycle and signing services</li>
+              <li>HSM and key management integration</li>
+              <li>Crypto-agility abstraction layers</li>
+            </ul>
+          </div>
+          <div class="svc__col">
+            <h4>Quantum-native</h4>
+            <ul>
+              <li>QKD link integration alongside PQC</li>
+              <li>QRNG entropy sources and health tests</li>
+              <li>SP 800-90B validation support</li>
+              <li>Key distribution architecture</li>
+            </ul>
+          </div>
+          <div class="svc__col">
+            <h4>Legacy</h4>
+            <ul>
+              <li>Embedded and OT constrained devices</li>
+              <li>Protocol shims where endpoints cannot change</li>
+              <li>Staged rollout with rollback paths</li>
+              <li>Interoperability testing</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="svc rv">
+      <div>
+        <p class="svc__id">D—03</p>
+        <h2 class="svc__title">Enterprise application development</h2>
+        <p class="svc__note">The systems that carry the rest of it. Built secure by default rather than hardened afterwards.</p>
+      </div>
+      <div>
+        <p class="svc__lede">
+          Web, desktop and mobile software, and the integration work that connects it to
+          whatever you already run.
+        </p>
+        <div class="svc__grid">
+          <div class="svc__col">
+            <h4>Applications</h4>
+            <ul>
+              <li>Web platforms and internal tooling</li>
+              <li>Desktop and cross-platform clients</li>
+              <li>iOS and Android applications</li>
+              <li>Dashboards and decision-support interfaces</li>
+            </ul>
+          </div>
+          <div class="svc__col">
+            <h4>Business systems</h4>
+            <ul>
+              <li>ERP implementation and customisation</li>
+              <li>CRM and workflow automation</li>
+              <li>Reporting and operational analytics</li>
+              <li>Document and records systems</li>
+            </ul>
+          </div>
+          <div class="svc__col">
+            <h4>Integration</h4>
+            <ul>
+              <li>Secure API and protocol design</li>
+              <li>Legacy modernisation and migration</li>
+              <li>Message queues and event pipelines</li>
+              <li>Identity, SSO and access control</li>
+            </ul>
+          </div>
+          <div class="svc__col">
+            <h4>Operations</h4>
+            <ul>
+              <li>CI/CD pipelines and release automation</li>
+              <li>Infrastructure as code</li>
+              <li>Observability and logging</li>
+              <li>Network management tooling</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="svc rv">
+      <div>
+        <p class="svc__id">D—04</p>
+        <h2 class="svc__title">Data engineering and applied AI</h2>
+        <p class="svc__note">Classical models where classical models win. Most of the time they do.</p>
+      </div>
+      <div>
+        <p class="svc__lede">
+          Pipelines, models and the governance around them. This is also where quantum machine
+          learning gets its baseline, since a QML result means nothing without one.
+        </p>
+        <div class="svc__grid">
+          <div class="svc__col">
+            <h4>Platform</h4>
+            <ul>
+              <li>Data pipeline and warehouse architecture</li>
+              <li>Streaming and batch ingestion</li>
+              <li>Feature stores and versioning</li>
+              <li>Data quality and lineage</li>
+            </ul>
+          </div>
+          <div class="svc__col">
+            <h4>Models</h4>
+            <ul>
+              <li>Forecasting and demand modelling</li>
+              <li>Anomaly and fraud detection</li>
+              <li>Classification and ranking systems</li>
+              <li>Optimisation-backed decision tooling</li>
+            </ul>
+          </div>
+          <div class="svc__col">
+            <h4>Delivery</h4>
+            <ul>
+              <li>Model deployment and serving</li>
+              <li>Monitoring and drift detection</li>
+              <li>Retraining pipelines</li>
+              <li>Model governance and audit trails</li>
+            </ul>
+          </div>
+          <div class="svc__col">
+            <h4>Language models</h4>
+            <ul>
+              <li>Retrieval systems over internal documents</li>
+              <li>Agent and workflow integration</li>
+              <li>Evaluation harnesses</li>
+              <li>Data residency and privacy controls</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="svc rv">
+      <div>
+        <p class="svc__id">D—05</p>
+        <h2 class="svc__title">HPC and hybrid infrastructure</h2>
+        <p class="svc__note">The classical half of a variational loop dominates wall-clock time. It deserves engineering.</p>
+      </div>
+      <div>
+        <p class="svc__lede">
+          Simulation, orchestration and scheduling for workloads that span quantum backends,
+          GPU clusters and cloud.
+        </p>
+        <div class="svc__grid">
+          <div class="svc__col">
+            <h4>Simulation</h4>
+            <ul>
+              <li>GPU state-vector simulation</li>
+              <li>Tensor-network methods for wide circuits</li>
+              <li>Noise-model simulation</li>
+              <li>cuQuantum and CUDA-Q integration</li>
+            </ul>
+          </div>
+          <div class="svc__col">
+            <h4>Scale</h4>
+            <ul>
+              <li>MPI and multi-node distribution</li>
+              <li>SLURM scheduling and job orchestration</li>
+              <li>Parallel variational loops</li>
+              <li>Cost, latency and throughput modelling</li>
+            </ul>
+          </div>
+          <div class="svc__col">
+            <h4>Orchestration</h4>
+            <ul>
+              <li>Backend-agnostic execution layers</li>
+              <li>Queue management across providers</li>
+              <li>Result caching and replay</li>
+              <li>Failure handling and retry logic</li>
+            </ul>
+          </div>
+          <div class="svc__col">
+            <h4>Classical acceleration</h4>
+            <ul>
+              <li>Solver profiling and tuning</li>
+              <li>GPU-accelerated heuristics</li>
+              <li>Physics-inspired and digital annealing</li>
+              <li>Honest comparison against the quantum route</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <h2 class="section-h rv"><span class="section-h__mark">§</span> How we deliver</h2>
+      <div class="grid grid--4 rv">
+        <article class="cell"><p class="cell__k">01</p><h3 class="cell__title">Scoped in writing</h3>
+          <p class="cell__body">Success criteria and a classical baseline agreed before anyone writes code. We state what we expect to fail.</p></article>
+        <article class="cell"><p class="cell__k">02</p><h3 class="cell__title">Your repo</h3>
+          <p class="cell__body">Code lands in your version control from the first commit. No black boxes, no handover cliff at the end.</p></article>
+        <article class="cell"><p class="cell__k">03</p><h3 class="cell__title">Paired</h3>
+          <p class="cell__body">Your engineers work alongside ours. The capability stays after we leave, which is the point.</p></article>
+        <article class="cell"><p class="cell__k">04</p><h3 class="cell__title">Benchmarked</h3>
+          <p class="cell__body">Every quantum claim carries a classical comparison. If the classical route wins, we tell you and you keep it.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <div class="contact__inner">
+      <p class="eyebrow">Get in touch</p>
+      <h2 class="contact__title">Bring us the problem, not the technology choice.</h2>
+      <p class="contact__body">
+        Describe what your system has to do and where it currently falls short. We will tell
+        you whether quantum, hybrid or plain classical engineering is the answer.
+      </p>
+      <div class="contact__actions">
+        <a class="btn btn--solid" href="https://wa.me/97433813027" rel="noopener">WhatsApp +974 3381 3027</a>
+        <a class="btn btn--ghost" href="mailto:shahmir.kazmi64@gmail.com">shahmir.kazmi64@gmail.com</a>
+      </div>
+      <p class="contact__loc">Doha, Qatar</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="foot__inner">
+    <div>
+      <p class="foot__brand">Qryptonics</p>
+      <p class="foot__note">Quantum-safe infrastructure and quantum-scale optimization. Doha, Qatar.</p>
+    </div>
+    <div><p class="foot__h">Company</p><ul class="foot__list">
+      <li><a href="index.html">Home</a></li><li><a href="about.html">About</a></li>
+      <li><a href="index.html#contact">Contact</a></li></ul></div>
+    <div><p class="foot__h">What we do</p><ul class="foot__list">
+      <li><a href="development.html">Development</a></li><li><a href="services.html">Services</a></li>
+      <li><a href="index.html#practices">Practices</a></li></ul></div>
+    <div><p class="foot__h">Insights</p><ul class="foot__list">
+      <li><a href="blog.html">Blog</a></li><li><a href="research.html">Research</a></li></ul></div>
+  </div>
+  <p class="foot__legal">© <span id="year">2026</span> Qryptonics. Doha, Qatar.</p>
+</footer>
+
+<script src="site.js" defer></script>
+</body>
+</html>

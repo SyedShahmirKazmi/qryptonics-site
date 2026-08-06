@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About — Qryptonics</title>
+<meta name="description" content="Qryptonics is a quantum systems engineering company in Doha, working across post-quantum cryptography, quantum optimization and hybrid computing.">
+<meta name="theme-color" content="#F6F8FC">
+<link rel="canonical" href="https://qryptonics.com/about.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="About — Qryptonics">
+<meta property="og:description" content="A quantum systems engineering company in Doha, Qatar.">
+<meta property="og:url" content="https://qryptonics.com/about.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script>document.documentElement.className+=" js"</script>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav" id="top">
+  <a class="nav__brand" href="index.html" aria-label="Qryptonics home">
+    <svg class="nav__glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M2 8 L12 2 L22 8 L12 14 Z"/><path d="M2 16 L12 10 L22 16 L12 22 Z"/>
+    </svg>
+    <span class="nav__word">Qryptonics</span>
+  </a>
+  <button class="nav__toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Toggle menu">
+    <svg class="nav__ico-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    <svg class="nav__ico-close" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>
+  </button>
+  <nav class="nav__menu" id="nav-menu" aria-label="Primary">
+    <a href="index.html">Home</a>
+    <a href="development.html">Development</a>
+    <a href="services.html">Services</a>
+    <a href="about.html" aria-current="page">About</a>
+    <div class="nav__group">
+      <button class="nav__group-btn" aria-expanded="false">Insights
+        <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5L6 8.5L10 4.5"/></svg>
+      </button>
+      <div class="nav__dropdown">
+        <a href="blog.html">Blog<small>Notes from the field</small></a>
+        <a href="research.html">Research<small>Papers and preprints</small></a>
+      </div>
+    </div>
+    <a class="nav__cta" href="index.html#contact">Get in touch</a>
+  </nav>
+</header>
+
+<main id="main">
+
+  <section class="phead">
+    <div class="phead__inner">
+      <p class="eyebrow">About</p>
+      <h1 class="phead__title">A quantum systems engineering company in Doha.</h1>
+      <p class="phead__lede">
+        We work on two questions. Which cryptographic algorithms will your systems still trust
+        in ten years, and which of your operational problems belong on quantum or hybrid
+        hardware now.
+      </p>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <div class="about__cols">
+      <div class="about__main rv">
+        <p class="about__lead">
+          Post-quantum migration turns out to be mostly an inventory and integration job.
+        </p>
+        <p>
+          That surprises people who expect it to be a cryptography problem. The algorithms are
+          published, standardised and available. What nobody has is a reliable map of where
+          their cryptography actually lives: which services negotiate which cipher suites,
+          which certificates chain to what, which embedded device has a key baked into
+          firmware nobody can rebuild.
+        </p>
+        <p>
+          Our background covers quantum optimization and machine learning research, applied
+          cryptography, network engineering and security assurance. That mix matters more than
+          cryptography alone, because the hard part of this work is the estate, not the maths.
+        </p>
+        <p>
+          The same combination applies on the optimization side. A quantum algorithm is
+          worthless without an honest classical baseline, a correct problem encoding and the
+          surrounding engineering to run it. Most quantum projects fail somewhere in that
+          chain rather than at the physics.
+        </p>
+        <p>
+          We chose Qatar. The national quantum programme, the research base at Education City
+          and a dense concentration of energy, logistics and financial infrastructure give us
+          real systems to work on before we take the practice abroad.
+        </p>
+      </div>
+      <aside class="about__side rv">
+        <h3 class="about__side-h">Principles</h3>
+        <ul class="principles">
+          <li><strong>Benchmark first.</strong> If the classical solver wins, we tell you and you keep it.</li>
+          <li><strong>No vendor lock.</strong> Backend-agnostic by default, on hardware and cloud.</li>
+          <li><strong>Ship to production.</strong> We hand over systems your team can operate.</li>
+          <li><strong>Publish.</strong> Peer-reviewed work is the credential that counts here.</li>
+          <li><strong>Say what fails.</strong> Every scope includes what we expect not to work.</li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <h2 class="section-h rv"><span class="section-h__mark">§</span> How we think about quantum</h2>
+      <div class="grid grid--3 rv">
+        <article class="cell">
+          <p class="cell__k">Position</p>
+          <h3 class="cell__title">The cryptography clock is real</h3>
+          <p class="cell__body">
+            You do not need to believe a fault-tolerant quantum computer arrives on any
+            particular date. Harvest-now-decrypt-later already works, and standards bodies have
+            already set deadlines. The migration is a decade of work regardless.
+          </p>
+        </article>
+        <article class="cell">
+          <p class="cell__k">Position</p>
+          <h3 class="cell__title">Advantage is problem-specific</h3>
+          <p class="cell__body">
+            Quantum hardware will not beat your solver across the board. It might beat it on a
+            particular structure of problem, on a particular instance size. That is worth
+            testing carefully and not worth assuming.
+          </p>
+        </article>
+        <article class="cell">
+          <p class="cell__k">Position</p>
+          <h3 class="cell__title">Most of it is classical</h3>
+          <p class="cell__body">
+            In a variational algorithm the quantum device runs for under a second per
+            iteration. Everything else, the optimiser, the transpilation, the data movement,
+            is ordinary engineering that decides whether the thing works.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <h2 class="section-h rv"><span class="section-h__mark">§</span> Working with us</h2>
+    <ol class="engage__steps rv">
+      <li class="step"><p class="step__n">01</p><h3 class="step__title">Assess</h3>
+        <p class="step__body">Six to eight weeks. We map your cryptographic estate or the target optimisation problem and deliver ranked, costed findings. The output is yours whether you continue or not.</p></li>
+      <li class="step"><p class="step__n">02</p><h3 class="step__title">Design</h3>
+        <p class="step__body">A migration architecture or solution design, with a classical baseline and success criteria agreed before work starts. We also tell you what we expect to fail.</p></li>
+      <li class="step"><p class="step__n">03</p><h3 class="step__title">Build</h3>
+        <p class="step__body">Production increments measured against the stage-two criteria. Your engineers work alongside ours so your team can run the result without us.</p></li>
+      <li class="step"><p class="step__n">04</p><h3 class="step__title">Operate</h3>
+        <p class="step__body">Monitoring, reassessment as standards change, and handover. Done properly, your next migration is a config change.</p></li>
+    </ol>
+  </section>
+
+  <section class="contact" id="contact">
+    <div class="contact__inner">
+      <p class="eyebrow">Get in touch</p>
+      <h2 class="contact__title">We answer technical questions directly.</h2>
+      <p class="contact__body">
+        No discovery call required before you get a useful answer. Send the problem and we
+        will tell you what we think, including when the answer is that you do not need us.
+      </p>
+      <div class="contact__actions">
+        <a class="btn btn--solid" href="https://wa.me/97433813027" rel="noopener">WhatsApp +974 3381 3027</a>
+        <a class="btn btn--ghost" href="mailto:shahmir.kazmi64@gmail.com">shahmir.kazmi64@gmail.com</a>
+      </div>
+      <p class="contact__loc">Doha, Qatar</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="foot__inner">
+    <div>
+      <p class="foot__brand">Qryptonics</p>
+      <p class="foot__note">Quantum-safe infrastructure and quantum-scale optimization. Doha, Qatar.</p>
+    </div>
+    <div><p class="foot__h">Company</p><ul class="foot__list">
+      <li><a href="index.html">Home</a></li><li><a href="about.html">About</a></li>
+      <li><a href="index.html#contact">Contact</a></li></ul></div>
+    <div><p class="foot__h">What we do</p><ul class="foot__list">
+      <li><a href="development.html">Development</a></li><li><a href="services.html">Services</a></li>
+      <li><a href="index.html#practices">Practices</a></li></ul></div>
+    <div><p class="foot__h">Insights</p><ul class="foot__list">
+      <li><a href="blog.html">Blog</a></li><li><a href="research.html">Research</a></li></ul></div>
+  </div>
+  <p class="foot__legal">© <span id="year">2026</span> Qryptonics. Doha, Qatar.</p>
+</footer>
+
+<script src="site.js" defer></script>
+</body>
+</html>
