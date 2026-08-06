@@ -40,6 +40,14 @@
   --f-mono:'IBM Plex Mono', ui-monospace, monospace;
 
   --gutter: clamp(1.25rem, 5vw, 5.5rem);
+  /* Vertical rhythm scales with the viewport the same way the gutter
+     does. Fixed 6rem sections cost a quarter of a phone screen per
+     boundary while looking right on a desktop. */
+  --space-section: clamp(3.25rem, 7.5vw, 6rem);
+  --space-head:    clamp(2.75rem, 6vw, 5rem);
+  --space-head-b:  clamp(2.25rem, 5vw, 4rem);
+  --space-h:       clamp(2rem, 4.2vw, 3.25rem);
+  --measure: 58ch;  /* ch is the width of "0"; Chivo runs narrow, so 58ch renders ~72 real characters */
   --maxw: 1280px;
   --rule: 1px solid var(--line);
   --shadow: 0 2px 6px rgba(0,0,0,.35), 0 16px 40px -18px rgba(0,0,0,.6);
@@ -78,7 +86,7 @@ strong{color:var(--ink)}
 .section-h{
   font-size:clamp(1.5rem,1.2rem + 1.1vw,2.1rem);
   display:flex;align-items:baseline;gap:.85rem;
-  padding-bottom:1.6rem;margin-bottom:3.25rem;border-bottom:var(--rule);
+  padding-bottom:1.6rem;margin-bottom:var(--space-h);border-bottom:var(--rule);
 }
 .section-h__mark{font-family:var(--f-mono);font-weight:400;color:var(--copper);font-size:.7em;letter-spacing:0}
 .lede{font-size:clamp(1.05rem,1rem + .35vw,1.25rem);line-height:1.7;color:var(--body);max-width:62ch}
@@ -178,10 +186,10 @@ strong{color:var(--ink)}
     linear-gradient(100deg,var(--paper) 0%,rgba(22,27,41,.95) 40%,rgba(22,27,41,.68) 58%,rgba(22,27,41,.12) 80%,rgba(22,27,41,0) 93%),
     linear-gradient(180deg,rgba(22,27,41,.75) 0%,transparent 16%,transparent 80%,var(--paper) 100%);
 }
-.hero__inner{width:100%;max-width:var(--maxw);margin:0 auto;padding:6.5rem var(--gutter) 5.5rem}
+.hero__inner{width:100%;max-width:var(--maxw);margin:0 auto;padding:var(--space-head) var(--gutter) var(--space-head-b)}
 .hero__title{font-size:clamp(2.4rem,1.5rem + 4vw,4.75rem);margin:1.5rem 0 0;max-width:19ch}
 .hero__title em{font-style:normal;color:var(--copper)}
-.hero__lede{margin-top:1.8rem;max-width:56ch;font-size:clamp(1.02rem,.98rem + .3vw,1.18rem);color:var(--body);line-height:1.72}
+.hero__lede{margin-top:1.8rem;max-width:60ch;font-size:clamp(1.02rem,.98rem + .3vw,1.18rem);color:var(--body);line-height:1.72}
 .hero__actions{display:flex;flex-wrap:wrap;gap:.85rem;margin-top:2.5rem}
 .hero__facts{display:flex;flex-wrap:wrap;gap:2.75rem;margin:3.75rem 0 0;padding-top:1.75rem;border-top:var(--rule);max-width:62ch}
 .hero__facts div{display:flex;flex-direction:column;gap:.4rem}
@@ -192,15 +200,15 @@ strong{color:var(--ink)}
 
 /* ── page header (inner pages) ─────────────────────────── */
 .phead{border-bottom:var(--rule);background:var(--card)}
-.phead__inner{max-width:var(--maxw);margin:0 auto;padding:5rem var(--gutter) 4rem}
+.phead__inner{max-width:var(--maxw);margin:0 auto;padding:var(--space-head) var(--gutter) var(--space-head-b)}
 .phead__title{font-size:clamp(2.1rem,1.5rem + 2.6vw,3.6rem);margin:1.2rem 0 1.4rem;max-width:20ch}
-.phead__lede{max-width:62ch;font-size:clamp(1.02rem,.98rem + .3vw,1.18rem);line-height:1.72;color:var(--body)}
+.phead__lede{max-width:var(--measure);font-size:clamp(1.02rem,.98rem + .3vw,1.18rem);line-height:1.72;color:var(--body)}
 .phead__meta{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:2.2rem}
 .phead__meta li{font-family:var(--f-mono);font-size:.72rem;color:var(--cryo);background:var(--cryo-bg);padding:.4rem .7rem;border-radius:3px}
 
 /* ── generic section wrapper ───────────────────────────── */
-.wrap{max-width:var(--maxw);margin:0 auto;padding:6rem var(--gutter)}
-.wrap--tight{padding-top:4rem}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:var(--space-section) var(--gutter)}
+.wrap--tight{padding-top:var(--space-head-b)}
 .band{background:var(--card);border-top:var(--rule);border-bottom:var(--rule)}
 
 /* ── stakes ────────────────────────────────────────────── */
@@ -221,7 +229,7 @@ strong{color:var(--ink)}
 .practice:last-of-type{border-bottom:var(--rule)}
 .practice__id{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.18em;color:var(--copper);margin-bottom:.9rem}
 .practice__title{font-size:clamp(1.5rem,1.25rem + .95vw,2rem);max-width:14ch}
-.practice__lede{font-size:1.05rem;line-height:1.72;color:var(--ink);max-width:62ch;margin-bottom:1.8rem;font-weight:500}
+.practice__lede{font-size:1.05rem;line-height:1.72;color:var(--ink);max-width:var(--measure);margin-bottom:1.8rem;font-weight:500}
 .practice__list{display:grid;gap:.8rem}
 .practice__list li{position:relative;padding-left:1.5rem;font-size:.96rem;line-height:1.6}
 .practice__list li::before{content:'';position:absolute;left:0;top:.62em;width:6px;height:6px;border:1px solid var(--copper);transform:rotate(45deg)}
@@ -252,7 +260,7 @@ strong{color:var(--ink)}
 .figure__body{padding:1.25rem 1rem;overflow-x:auto}
 .figure__cap{
   padding:.85rem 1rem;border-top:var(--rule);font-family:var(--f-mono);
-  font-size:.73rem;line-height:1.6;color:var(--muted);min-height:3.1rem;
+  font-size:.73rem;line-height:1.6;color:var(--muted);min-height:3.1rem;max-width:84ch;
 }
 .figure__cap b{color:var(--cryo);font-weight:500}
 @media (max-width:900px){.figure{grid-column:1}}
@@ -313,7 +321,7 @@ strong{color:var(--ink)}
 .svc__id{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.16em;color:var(--copper);margin-bottom:.8rem}
 .svc__title{font-size:clamp(1.3rem,1.15rem + .7vw,1.7rem);max-width:16ch}
 .svc__note{margin-top:.9rem;font-family:var(--f-mono);font-size:.74rem;line-height:1.65;color:var(--faint)}
-.svc__lede{font-size:1.02rem;line-height:1.7;color:var(--ink);font-weight:500;margin-bottom:1.5rem;max-width:60ch}
+.svc__lede{font-size:1.02rem;line-height:1.7;color:var(--ink);font-weight:500;margin-bottom:1.5rem;max-width:var(--measure)}
 .svc__grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr));gap:1.5rem 2.5rem}
 .svc__col h3{font-size:.82rem;font-family:var(--f-mono);font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.8rem}
 .svc__col ul{display:grid;gap:.6rem}
@@ -373,9 +381,9 @@ strong{color:var(--ink)}
 
 /* ── contact ───────────────────────────────────────────── */
 .contact{background:var(--card);border-top:var(--rule)}
-.contact__inner{max-width:var(--maxw);margin:0 auto;padding:6.5rem var(--gutter)}
+.contact__inner{max-width:var(--maxw);margin:0 auto;padding:var(--space-section) var(--gutter)}
 .contact__title{font-size:clamp(1.85rem,1.35rem + 2.3vw,3.2rem);margin:1.3rem 0 1.5rem;max-width:20ch}
-.contact__body{max-width:54ch;font-size:1.04rem;line-height:1.75}
+.contact__body{max-width:58ch;font-size:1.04rem;line-height:1.75}
 .contact__actions{display:flex;flex-wrap:wrap;gap:.85rem;margin-top:2.4rem}
 .contact__loc{margin-top:3.25rem;padding-top:1.4rem;border-top:var(--rule);font-family:var(--f-mono);font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
 
@@ -779,3 +787,26 @@ fieldset{border:0;padding:0;margin:0;display:grid;gap:.45rem}
 .il-nodes .il-pulse:nth-of-type(8){animation-delay:1.96s}
 .il-nodes .il-pulse:nth-of-type(9){animation-delay:2.24s}
 .il-nodes .il-pulse:nth-of-type(10){animation-delay:2.52s}
+
+
+/* ── mobile navigation touch targets ───────────────────────
+   The earlier 44px pass was scoped to min-width 1021px, so the
+   brand link and hamburger were left at 28px and 38px on phones,
+   which is where they matter most.
+   ─────────────────────────────────────────────────────────── */
+@media (max-width:1020px){
+  .nav__brand{min-height:44px;align-items:center}
+  .nav__toggle{min-height:44px;min-width:44px;display:inline-flex;align-items:center;justify-content:center}
+}
+
+/* Section heads sit closer to their content on small screens, where
+   a 3.25rem gap reads as a break rather than a relationship. */
+@media (max-width:640px){
+  .stakes__grid{gap:2.5rem}
+  .sectors__list{gap:2rem}
+  .grid{border-radius:4px}
+  .cell,.track,.step{padding:1.75rem 1.4rem}
+  .form{padding:1.75rem 1.4rem}
+  .contact__actions,.hero__actions{gap:.7rem}
+  .btn{width:100%}
+}
