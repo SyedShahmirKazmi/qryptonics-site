@@ -702,7 +702,7 @@
     groups.forEach(function (grp) {
       var h = document.createElement('div');
       h.className = 'sim-pgroup';
-      h.innerHTML = '<p class="sim-pgroup__h">' + grp.group + '</p>';
+      h.innerHTML = '<p class="sim-pgroup__h">' + esc(grp.group) + '</p>';
       var wrap = document.createElement('div');
       wrap.className = 'sim-pitems';
       grp.items.forEach(function (it) {

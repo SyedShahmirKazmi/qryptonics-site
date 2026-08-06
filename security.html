@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Security — Qryptonics</title>
+<meta name="description" content="How to report a vulnerability in Qryptonics systems, what is in scope, and what to expect.">
+<meta name="theme-color" content="#161B29">
+<link rel="canonical" href="https://qryptonics.com/security.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Security — Qryptonics">
+<meta property="og:description" content="How to report a vulnerability in Qryptonics systems, what is in scope, and what to expect.">
+<meta property="og:url" content="https://qryptonics.com/security.html">
+<meta property="og:site_name" content="Qryptonics">
+<meta property="og:image" content="https://qryptonics.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Qryptonics — quantum-safe infrastructure and quantum-scale optimization, Doha, Qatar">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preload" href="fonts/chivo-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/ibmplexmono-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="fonts.css">
+<script>document.documentElement.className+=" js"</script>
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-pfgOMgfVZwm2ODyms34QYW9h8EwicylhV77q5LHK8c0='; style-src 'self'; font-src 'self'; img-src 'self' data:; connect-src 'none'; form-action 'none'; base-uri 'none'; object-src 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav" id="top">
+  <a class="nav__brand" href="index.html" aria-label="Qryptonics home">
+    <svg class="nav__glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M2 8 L12 2 L22 8 L12 14 Z"/><path d="M2 16 L12 10 L22 16 L12 22 Z"/>
+    </svg>
+    <span class="nav__word">Qryptonics</span>
+  </a>
+  <button class="nav__toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Toggle menu">
+    <svg class="nav__ico-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    <svg class="nav__ico-close" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>
+  </button>
+  <nav class="nav__menu" id="nav-menu" aria-label="Primary">
+    <a href="index.html">Home</a>
+    <a href="development.html">Development</a>
+    <a href="services.html">Services</a>
+    <a href="simulator.html">Simulator</a>
+    <a href="community.html">Community</a>
+    <a href="about.html">About</a>
+    <div class="nav__group">
+      <button class="nav__group-btn" aria-expanded="false">Insights
+        <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5L6 8.5L10 4.5"/></svg>
+      </button>
+      <div class="nav__dropdown">
+        <a href="blog.html">Blog<small>Notes from the field</small></a>
+        <a href="research.html">Research<small>Papers and preprints</small></a>
+      </div>
+    </div>
+    <a class="nav__cta" href="index.html#contact">Get in touch</a>
+  </nav>
+</header>
+
+<main id="main">
+
+  <section class="phead">
+    <div class="phead__inner">
+      <p class="eyebrow">Security</p>
+      <h1 class="phead__title">Vulnerability disclosure.</h1>
+      <p class="phead__lede">
+        We sell security assessment, so it would be strange not to accept one. If you have
+        found a weakness in anything we run, we want to hear about it and we will not come
+        after you for telling us.
+      </p>
+      <ul class="phead__meta">
+        <li>RFC 9116</li><li>Reply within 5 working days</li><li>Safe harbour</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <div class="prose rv">
+      <h2>How to report</h2>
+      <p>
+        Email <a href="mailto:security@qryptonics.com">security@qryptonics.com</a> with enough
+        detail to reproduce: the URL or component, the steps, and what you observed. A short
+        proof of concept is worth more than a scanner export. Machine-readable contact details
+        are at <a href="/.well-known/security.txt">/.well-known/security.txt</a>.
+      </p>
+
+      <h2>What to expect</h2>
+      <ul>
+        <li>Acknowledgement within five working days</li>
+        <li>An assessment and our intended fix within fifteen working days</li>
+        <li>Credit in this page's acknowledgements, if you want it</li>
+        <li>A straight answer if we decide not to fix something, and why</li>
+      </ul>
+
+      <h2>In scope</h2>
+      <ul>
+        <li><code>qryptonics.com</code> and everything served from it</li>
+        <li>The simulator and the community form</li>
+        <li>Our DNS, mail authentication and TLS configuration</li>
+        <li>The public source repository</li>
+      </ul>
+
+      <h2>Out of scope</h2>
+      <p>
+        These are known, accepted, and reporting them will get a polite acknowledgement rather
+        than a fix:
+      </p>
+      <ul>
+        <li><strong>No <code>X-Frame-Options</code> or <code>frame-ancestors</code>.</strong>
+          Both require an HTTP response header and our host does not allow custom headers. The
+          site has no authentication and no state-changing actions, so clickjacking has nothing
+          to steal. Documented rather than hidden.</li>
+        <li><strong>No HSTS header</strong>, for the same reason. HTTPS is enforced and HTTP
+          redirects to it.</li>
+        <li><strong>Self-XSS.</strong> Text you type into your own form or simulator is your
+          own. It is never stored, never served to anyone else, and the content security policy
+          would block injected script regardless.</li>
+        <li>Missing security headers that carry no risk on a static site with no cookies,
+          no sessions and no storage.</li>
+        <li>Findings from an automated scanner with no demonstrated impact.</li>
+        <li>Social engineering of our staff, and anything involving physical access.</li>
+      </ul>
+
+      <h2>Safe harbour</h2>
+      <p>
+        If you act in good faith under this policy we will not pursue legal action, and we will
+        say so to anyone who asks. Good faith means: stay within scope, do not degrade the
+        service, do not access or modify data that is not yours, stop as soon as you have
+        demonstrated the issue, and give us a reasonable chance to fix it before publishing.
+      </p>
+      <p>
+        We do not run a paid bug bounty. We are a small company and would rather be honest about
+        that than imply a reward we cannot pay.
+      </p>
+
+      <h2>How this site is built</h2>
+      <p>
+        Stated plainly, because it saves you time and shows what the attack surface actually is:
+      </p>
+      <ul>
+        <li>Static HTML, CSS and JavaScript. No backend, no database, no authentication.</li>
+        <li>Zero runtime dependencies. Fonts are self-hosted, so the site makes no third-party
+          requests at all.</li>
+        <li>A strict content security policy: <code>default-src 'none'</code>, scripts pinned to
+          same-origin plus SHA-256 hashes of the two inline blocks.</li>
+        <li>Everything you build in the simulator stays in your browser and is never
+          transmitted.</li>
+        <li>The source is public, and every change runs through automated checks before it
+          deploys.</li>
+      </ul>
+
+      <h2>Acknowledgements</h2>
+      <p>Nobody yet. This section will list anyone who reports something we fix.</p>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <div class="contact__inner">
+      <p class="eyebrow">Report</p>
+      <h2 class="contact__title">Found something?</h2>
+      <p class="contact__body">
+        Send it to security@qryptonics.com. If it is serious and you would rather not use email,
+        message the WhatsApp number and we will arrange a channel.
+      </p>
+      <div class="contact__actions">
+        <a class="btn btn--solid" href="mailto:security@qryptonics.com">security@qryptonics.com</a>
+        <a class="btn btn--ghost" href="https://wa.me/97433813027" rel="noopener noreferrer">WhatsApp +974 3381 3027</a>
+      </div>
+      <p class="contact__loc">Doha, Qatar</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="foot__inner">
+    <div>
+      <p class="foot__brand">Qryptonics</p>
+      <p class="foot__note">Quantum-safe infrastructure and quantum-scale optimization. Doha, Qatar.</p>
+    </div>
+    <div><p class="foot__h">Company</p><ul class="foot__list">
+      <li><a href="index.html">Home</a></li><li><a href="community.html">Community</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="index.html#contact">Contact</a></li></ul></div>
+    <div><p class="foot__h">What we do</p><ul class="foot__list">
+      <li><a href="development.html">Development</a></li><li><a href="services.html">Services</a></li>
+      <li><a href="simulator.html">Simulator</a></li></ul></div>
+    <div><p class="foot__h">Insights</p><ul class="foot__list">
+      <li><a href="blog.html">Blog</a></li><li><a href="research.html">Research</a></li></ul></div>
+  </div>
+  <p class="foot__legal">© <span id="year">2026</span> Qryptonics. Doha, Qatar. <a href="privacy.html">Privacy</a> <a href="security.html">Security</a></p>
+</footer>
+
+<script src="site.js" defer></script>
+<script src="motion.js" defer></script>
+</body>
+</html>

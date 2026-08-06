@@ -19,7 +19,9 @@
      displacement curve, and formats it as linear(...). Cached,
      since we only need a handful of springs.
      ─────────────────────────────────────────────────────── */
-  var springCache = {};
+  /* Null prototype: cache keys are numeric and never user-supplied, but a
+     plain object literal is one refactor away from prototype pollution. */
+  var springCache = Object.create(null);
 
   /* The spring gives the curve SHAPE; duration is chosen separately at
      the call site. linear() is normalised over 0..1, so the two are
