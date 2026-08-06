@@ -12,12 +12,55 @@
 <meta property="og:title" content="Qryptonics — Quantum-safe infrastructure and quantum-scale optimization">
 <meta property="og:description" content="Post-quantum cryptographic migration, quantum optimization, quantum machine learning and hybrid HPC. Doha, Qatar.">
 <meta property="og:url" content="https://qryptonics.com/">
+<meta property="og:site_name" content="Qryptonics">
+<meta property="og:image" content="https://qryptonics.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Qryptonics — quantum-safe infrastructure and quantum-scale optimization, Doha, Qatar">
+<meta name="twitter:card" content="summary_large_image">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Chivo:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" href="fonts/chivo-300-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/ibmplexmono-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="fonts.css">
 <script>document.documentElement.className+=" js"</script>
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-pfgOMgfVZwm2ODyms34QYW9h8EwicylhV77q5LHK8c0=' 'sha256-n5ba042htV+W4Cg+JkUQmn5ngIGwCFN9y+SMMjz6lnY='; style-src 'self'; font-src 'self'; img-src 'self' data:; connect-src 'none'; form-action 'none'; base-uri 'none'; object-src 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="stylesheet" href="styles.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Qryptonics",
+  "url": "https://qryptonics.com/",
+  "logo": "https://qryptonics.com/og.png",
+  "description": "Quantum systems engineering: post-quantum cryptographic migration, quantum optimization, quantum machine learning and hybrid HPC.",
+  "email": "hello@qryptonics.com",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Doha",
+    "addressCountry": "QA"
+  },
+  "areaServed": [
+    "QA",
+    "SA",
+    "AE",
+    "KW",
+    "BH",
+    "OM"
+  ],
+  "knowsAbout": [
+    "Post-quantum cryptography",
+    "Quantum optimization",
+    "Quantum machine learning",
+    "Quantum key distribution",
+    "High-performance computing",
+    "Cryptographic inventory"
+  ],
+  "sameAs": [
+    "https://github.com/SyedShahmirKazmi"
+  ]
+}
+</script>
 </head>
 <body>
 
@@ -417,13 +460,13 @@
 
             <g class="gate" data-step="1" data-name="Classical optimiser" data-desc="COBYLA, SPSA or Adam proposes the next parameter set. This runs on your cluster, not on quantum hardware.">
               <rect x="30" y="30" width="120" height="60"/><text x="90" y="53">optimiser</text>
-              <text x="90" y="70" style="font-size:9px;fill:var(--faint)">CPU / GPU</text></g>
+              <text x="90" y="70" class="sub">CPU / GPU</text></g>
             <g class="gate gate--param" data-step="2" data-name="Parameter binding" data-desc="γ and β are bound into the circuit template, then transpiled for the target device topology.">
               <rect x="334" y="30" width="130" height="60"/><text x="399" y="53">bind + transpile</text>
-              <text x="399" y="70" style="font-size:9px;fill:var(--faint)">θ → circuit</text></g>
+              <text x="399" y="70" class="sub">θ → circuit</text></g>
             <g class="gate" data-step="3" data-name="Quantum backend" data-desc="Hardware or simulator. Typically under a second of the loop. The surrounding classical work dominates wall-clock time.">
               <rect x="474" y="30" width="116" height="60"/><text x="532" y="53">QPU / sim</text>
-              <text x="532" y="70" style="font-size:9px;fill:var(--faint)">shots → counts</text></g>
+              <text x="532" y="70" class="sub">shots → counts</text></g>
             <text class="band-lbl" x="345" y="122" text-anchor="middle">EXPECTATION VALUE RETURNS TO THE OPTIMISER · REPEAT UNTIL CONVERGED</text>
           </svg>
         </div>
@@ -457,7 +500,7 @@
             <li>Enterprise, web and mobile applications</li>
             <li>Data engineering and applied AI</li>
           </ul>
-          <p style="margin-top:1.6rem"><a class="btn btn--ghost" href="development.html">Development services</a></p>
+          <p class="cell__cta"><a class="btn btn--ghost" href="development.html">Development services</a></p>
         </article>
         <article class="cell">
           <p class="cell__k">Assure</p>
@@ -472,7 +515,7 @@
             <li>ISO 27001, SOC 2, PCI DSS, GDPR</li>
             <li>Training and technical advisory</li>
           </ul>
-          <p style="margin-top:1.6rem"><a class="btn btn--ghost" href="services.html">Assurance services</a></p>
+          <p class="cell__cta"><a class="btn btn--ghost" href="services.html">Assurance services</a></p>
         </article>
       </div>
     </div>

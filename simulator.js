@@ -37,6 +37,16 @@
   var PARAMETRIC = { RX: 1, RY: 1, RZ: 1 };
 
   /* ── helpers ───────────────────────────────────────────── */
+  /* Escape before any innerHTML interpolation. Nothing user-authored
+     reaches these sinks today, but node labels and gate types are the
+     kind of thing that becomes editable later, and a stored-XSS bug
+     introduced that way is silent. */
+  function esc(v) {
+    return String(v).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
   function el(tag, attrs, parent) {
     var n = document.createElementNS('http://www.w3.org/2000/svg', tag);
     for (var k in attrs) if (attrs[k] !== undefined && attrs[k] !== null) n.setAttribute(k, attrs[k]);
@@ -369,7 +379,7 @@
     if (app.selected.type === 'op') {
       var op = findOp(app.selected.id);
       if (!op) { app.selected = null; return renderInspector(); }
-      var h = '<p class="sim-ins-h">' + op.type + ' gate</p>';
+      var h = '<p class="sim-ins-h">' + esc(op.type) + ' gate</p>';
       h += row('Wire', 'q' + op.q);
       if (op.control !== undefined) h += row('Control', 'q' + op.control);
       h += row('Column', op.col);
@@ -400,7 +410,7 @@
       var n = findNode(app.selected.id);
       if (!n) { app.selected = null; return renderInspector(); }
       var links = app.net.links.filter(function (l) { return l.a === n.id || l.b === n.id; });
-      var html = '<p class="sim-ins-h">' + n.label + '</p>' + row('Type', n.kind);
+      var html = '<p class="sim-ins-h">' + esc(n.label) + '</p>' + row('Type', esc(n.kind));
       if (n.kind === 'qpu') {
         html += '<label class="sim-field"><span>Local qubits <b id="qn-v">' + n.qubits + '</b></span>' +
           '<input id="qn" type="range" min="1" max="6" step="1" value="' + n.qubits + '"></label>';
@@ -434,7 +444,7 @@
       });
     }
   }
-  function row(k, v) { return '<p class="sim-row"><span>' + k + '</span><b>' + v + '</b></p>'; }
+  function row(k, v) { return '<p class="sim-row"><span>' + esc(k) + '</span><b>' + esc(v) + '</b></p>'; }
   function clear2(node) { node.innerHTML = ''; }
 
   /* ── charts ────────────────────────────────────────────── */
@@ -442,7 +452,7 @@
     opts = opts || {};
     var W = 560, H = 170, PAD = 34, BOT = 30;
     var s = '<svg class="sim-chart" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' +
-      (opts.aria || 'chart') + '">';
+      esc(opts.aria || 'chart') + '">';
     var max = Math.max.apply(null, values.concat([1e-9]));
     var n = values.length;
     var bw = (W - PAD - 10) / n;
@@ -457,10 +467,10 @@
       var x = PAD + i * bw + bw * 0.16;
       var w = bw * 0.68;
       s += '<rect class="ch-bar" x="' + x + '" y="' + (H - BOT - h) + '" width="' + w +
-        '" height="' + Math.max(h, 0.5) + '" rx="2"><title>' + labels[i] + ' — ' +
+        '" height="' + Math.max(h, 0.5) + '" rx="2"><title>' + esc(labels[i]) + ' — ' +
         v.toFixed(4) + '</title></rect>';
       if (n <= 16) s += '<text class="ch-lab" x="' + (x + w / 2) + '" y="' + (H - BOT + 14) +
-        '" text-anchor="middle">' + labels[i] + '</text>';
+        '" text-anchor="middle">' + esc(labels[i]) + '</text>';
     });
     return s + '</svg>';
   }
@@ -507,9 +517,9 @@
   }
 
   function kpi(label, value, note) {
-    return '<div class="sim-kpi"><p class="sim-kpi__k">' + label + '</p>' +
-      '<p class="sim-kpi__v">' + value + '</p>' +
-      (note ? '<p class="sim-kpi__n">' + note + '</p>' : '') + '</div>';
+    return '<div class="sim-kpi"><p class="sim-kpi__k">' + esc(label) + '</p>' +
+      '<p class="sim-kpi__v">' + esc(value) + '</p>' +
+      (note ? '<p class="sim-kpi__n">' + esc(note) + '</p>' : '') + '</div>';
   }
 
   /* ── simulation ────────────────────────────────────────── */
@@ -699,8 +709,8 @@
         var b = document.createElement('button');
         b.className = 'sim-pitem' + (it.family === 'node' ? ' is-node' : '');
         b.type = 'button';
-        b.innerHTML = '<span class="sim-pitem__l">' + it.label + '</span>' +
-          '<span class="sim-pitem__d">' + it.desc + '</span>';
+        b.innerHTML = '<span class="sim-pitem__l">' + esc(it.label) + '</span>' +
+          '<span class="sim-pitem__d">' + esc(it.desc) + '</span>';
         b.addEventListener('pointerdown', function (e) { startPaletteDrag(e, it); });
         b.addEventListener('keydown', function (e) {
           if (e.key === 'Enter' || e.key === ' ') {

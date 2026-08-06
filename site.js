@@ -8,6 +8,12 @@
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var desktop = window.matchMedia('(min-width: 1021px)');
 
+  function esc(v) {
+    return String(v).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
   /* ── mobile menu ─────────────────────────────────────── */
   var toggle = document.querySelector('.nav__toggle');
   var menu = document.getElementById('nav-menu');
@@ -115,7 +121,8 @@
     var playing = false;
 
     function describe(gate) {
-      cap.innerHTML = '<b>' + gate.getAttribute('data-name') + '</b> · ' + gate.getAttribute('data-desc');
+      cap.innerHTML = '<b>' + esc(gate.getAttribute('data-name')) + '</b> · ' +
+        esc(gate.getAttribute('data-desc'));
     }
 
     function clearAll() {

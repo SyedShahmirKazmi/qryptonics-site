@@ -10,8 +10,8 @@
 
   --ink:      #E9EDF7;
   --body:     #A8B3CC;
-  --muted:    #7E8AA8;
-  --faint:    #5D6A8C;
+  --muted:    #9AA6C4;
+  --faint:    #7B87A6;
 
   --line:     #1E2740;
   --line-hi:  #2E3C63;
@@ -30,7 +30,7 @@
   --g-phase:  #A78BFA;
   --g-rot:    #C3E453;
   --g-2q:     #E0A468;
-  --g-meter:  #7E8AA8;
+  --g-meter:  #9AA6C4;
 
   --on-copper:#150C03;
 
@@ -313,7 +313,7 @@ strong{color:var(--ink)}
 .svc__note{margin-top:.9rem;font-family:var(--f-mono);font-size:.74rem;line-height:1.65;color:var(--faint)}
 .svc__lede{font-size:1.02rem;line-height:1.7;color:var(--ink);font-weight:500;margin-bottom:1.5rem;max-width:60ch}
 .svc__grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr));gap:1.5rem 2.5rem}
-.svc__col h4{font-size:.82rem;font-family:var(--f-mono);font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.8rem}
+.svc__col h3{font-size:.82rem;font-family:var(--f-mono);font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.8rem}
 .svc__col ul{display:grid;gap:.6rem}
 .svc__col li{font-size:.91rem;line-height:1.55;position:relative;padding-left:1.15rem}
 .svc__col li::before{content:'';position:absolute;left:0;top:.58em;width:5px;height:5px;border:1px solid var(--copper);transform:rotate(45deg)}
@@ -598,3 +598,9 @@ strong{color:var(--ink)}
   margin-top:.9rem;transition:color .18s ease;
 }
 .collab:hover .collab__go{color:var(--cryo-hi)}
+
+/* utility classes replacing inline style attributes, so CSP can
+   forbid 'unsafe-inline' on style-src */
+.cell__cta{margin-top:1.6rem}
+.mb-xl{margin-bottom:2.75rem}
+.circuit .sub{font-size:9px;fill:var(--faint)}
