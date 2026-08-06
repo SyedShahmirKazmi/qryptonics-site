@@ -19,7 +19,10 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       - name: Site checks
-        run: npm run check
+        run: node scripts/check.js
+
+      - name: Physics regression tests
+        run: node scripts/physics-test.js
 
       - name: Assert zero dependencies
         run: |
