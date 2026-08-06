@@ -1,10 +1,15 @@
 /* ══════════════════════════════════════════════════════════
-   Qryptonics — hero lattice
-   Renders a 2D point lattice and animates Lagrange–Gauss basis
-   reduction: a "bad" (long, near-parallel) basis relaxing toward
-   the reduced basis. This is the operation that makes lattice
-   cryptography hard, and the same lattice structure underlies
-   Ising-form optimization. One motif, both practices.
+   Qryptonics — hero lattice, third dimension
+
+   A 3D point lattice under basis reduction: a skewed basis
+   relaxing toward its reduced form, the operation whose hardness
+   ML-KEM rests on. Lattice cryptography lives in high dimension,
+   so depth is more honest than the flat version was.
+
+   The scene is an interactive layer, not a video: it rotates
+   slowly on its own and tilts toward the pointer. Plain canvas,
+   no dependencies, paused off-screen, static under reduced
+   motion.
    ══════════════════════════════════════════════════════════ */
 (function () {
   'use strict';
@@ -14,120 +19,140 @@
 
   var ctx = canvas.getContext('2d');
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var canHover = window.matchMedia('(hover: hover)').matches;
 
   var COLD = 'rgba(111, 168, 214, ';
   var COPPER = 'rgba(200, 135, 74, ';
 
-  var w = 0, h = 0, dpr = 1;
-  var cx = 0, cy = 0;
-  var running = true;
-  var t0 = null;
+  var w = 0, h = 0, cx = 0, cy = 0;
+  var running = true, t0 = null;
 
-  /* Basis pairs: each cycle interpolates from a skewed basis to its
-     reduced form. Values are in unscaled lattice units. */
+  /* Basis triples: each cycle interpolates a long, skewed basis
+     toward a short, near-orthogonal one. */
   var CYCLES = [
-    { from: [[1.00, 0.14], [0.86, 0.42]], to: [[1.00, 0.14], [-0.14, 0.28]] },
-    { from: [[0.92, -0.30], [1.12, 0.18]], to: [[0.92, -0.30], [0.20, 0.48]] },
-    { from: [[1.06, 0.22], [0.74, 0.60]], to: [[1.06, 0.22], [-0.32, 0.38]] }
+    { from: [[1.00, 0.14, 0.12], [0.84, 0.44, -0.10], [0.66, 0.24, 0.78]],
+      to:   [[1.00, 0.14, 0.12], [-0.16, 0.30, 0.06], [-0.04, -0.14, 0.84]] },
+    { from: [[0.92, -0.28, 0.08], [1.10, 0.16, 0.22], [0.52, 0.60, 0.72]],
+      to:   [[0.92, -0.28, 0.08], [0.18, 0.46, -0.08], [-0.10, 0.10, 0.88]] },
+    { from: [[1.04, 0.20, -0.10], [0.72, 0.58, 0.16], [0.80, 0.10, 0.70]],
+      to:   [[1.04, 0.20, -0.10], [-0.30, 0.36, 0.10], [0.06, -0.10, 0.82]] }
   ];
-  var CYCLE_MS = 11000;
-  var HOLD_MS = 2600;
+  var CYCLE_MS = 11000, HOLD_MS = 2600;
+  var SPAN = 3;                       // lattice points per axis: (2*SPAN+1)^3
+  var FOCAL = 3.4;                    // perspective strength
+
+  /* Pointer tilt: target set by the pointer, eased every frame so
+     the scene follows rather than jumps. */
+  var tiltX = 0, tiltY = 0, targetX = 0, targetY = 0;
 
   function resize() {
-    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
     var r = canvas.getBoundingClientRect();
-    w = Math.max(r.width, 1);
-    h = Math.max(r.height, 1);
+    w = Math.max(r.width, 1); h = Math.max(r.height, 1);
     canvas.width = Math.round(w * dpr);
     canvas.height = Math.round(h * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    /* Anchor the lattice origin right of the text column. On narrow
-       viewports the column takes the full width, so push the origin
-       further out and let the veil carry legibility. */
-    if (w < 1000) {
-      /* Narrow: the text column takes the full width, so drop the basis
-         into the empty region below the buttons rather than off-canvas. */
-      cx = w * 0.78;
-      cy = h * 0.80;
-    } else {
-      cx = w * 0.70;
-      cy = h * 0.50;
-    }
+    if (w < 1000) { cx = w * 0.78; cy = h * 0.78; }
+    else { cx = w * 0.70; cy = h * 0.50; }
   }
 
   function easeInOut(x) {
     return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
   }
-
   function lerp(a, b, k) { return a + (b - a) * k; }
+  function lerpV(a, b, k) { return [lerp(a[0], b[0], k), lerp(a[1], b[1], k), lerp(a[2], b[2], k)]; }
 
-  function draw(b1, b2, scale) {
+  /* Rotate about Y (yaw) then X (pitch), project with perspective.
+     Returns screen x, y and a depth factor used for size and alpha. */
+  function project(x, y, z, yaw, pitch, scale) {
+    var cyw = Math.cos(yaw), syw = Math.sin(yaw);
+    var x1 = x * cyw + z * syw, z1 = -x * syw + z * cyw;
+    var cp = Math.cos(pitch), sp = Math.sin(pitch);
+    var y2 = y * cp - z1 * sp, z2 = y * sp + z1 * cp;
+    var d = FOCAL / (FOCAL + z2);
+    return { x: cx + x1 * scale * d, y: cy + y2 * scale * d, d: d, z: z2 };
+  }
+
+  function draw(b1, b2, b3, yaw, pitch, scale) {
     ctx.clearRect(0, 0, w, h);
 
-    var span = Math.ceil(Math.max(w, h) / scale) + 3;
-    var maxR = Math.hypot(w, h) * 0.62;
+    /* Shift so the cell sits at the visual centre of the cloud. */
+    var off = [-(b1[0] + b2[0] + b3[0]) / 2, -(b1[1] + b2[1] + b3[1]) / 2, -(b1[2] + b2[2] + b3[2]) / 2];
+    var maxR = SPAN * 1.15;
 
-    /* Lattice points */
-    for (var i = -span; i <= span; i++) {
-      for (var j = -span; j <= span; j++) {
-        var x = (i * b1[0] + j * b2[0]) * scale;
-        var y = (i * b1[1] + j * b2[1]) * scale;
-        var d = Math.hypot(x, y);
-        if (d > maxR) continue;
-
-        var px = cx + x, py = cy + y;
-        if (px < -20 || px > w + 20 || py < -20 || py > h + 20) continue;
-
-        var fade = 1 - d / maxR;
-        var alpha = 0.09 + fade * fade * 0.66;
-        var rad = 1.5 + fade * 2.4;
-
-        ctx.beginPath();
-        ctx.arc(px, py, rad, 0, Math.PI * 2);
-        ctx.fillStyle = COLD + alpha.toFixed(3) + ')';
-        ctx.fill();
+    /* Point cloud, depth-sorted cheaply by drawing back first:
+       collect, sort by z descending (far first). */
+    var pts = [];
+    for (var i = -SPAN; i <= SPAN; i++) {
+      for (var j = -SPAN; j <= SPAN; j++) {
+        for (var k = -SPAN; k <= SPAN; k++) {
+          var x = i * b1[0] + j * b2[0] + k * b3[0] + off[0];
+          var y = i * b1[1] + j * b2[1] + k * b3[1] + off[1];
+          var z = i * b1[2] + j * b2[2] + k * b3[2] + off[2];
+          var r2 = x * x + y * y + z * z;
+          if (r2 > maxR * maxR) continue;
+          var p = project(x, y, z, yaw, pitch, scale);
+          if (p.x < -20 || p.x > w + 20 || p.y < -20 || p.y > h + 20) continue;
+          p.r2 = r2;
+          pts.push(p);
+        }
       }
     }
+    pts.sort(function (a, b2s) { return b2s.z - a.z; });
 
-    /* Fundamental parallelogram spanned by the current basis */
-    var v1x = b1[0] * scale, v1y = b1[1] * scale;
-    var v2x = b2[0] * scale, v2y = b2[1] * scale;
+    for (var n = 0; n < pts.length; n++) {
+      var p2 = pts[n];
+      var fade = 1 - Math.sqrt(p2.r2) / maxR;
+      var depth = Math.max(0, Math.min(1, (p2.d - 0.62) * 1.9));
+      var alpha = (0.05 + fade * fade * 0.55) * (0.35 + 0.65 * depth);
+      var rad = (0.9 + fade * 1.6) * (0.55 + 0.85 * p2.d);
+      ctx.beginPath();
+      ctx.arc(p2.x, p2.y, rad, 0, Math.PI * 2);
+      ctx.fillStyle = COLD + alpha.toFixed(3) + ')';
+      ctx.fill();
+    }
 
-    ctx.beginPath();
-    ctx.moveTo(cx, cy);
-    ctx.lineTo(cx + v1x, cy + v1y);
-    ctx.lineTo(cx + v1x + v2x, cy + v1y + v2y);
-    ctx.lineTo(cx + v2x, cy + v2y);
-    ctx.closePath();
-    ctx.fillStyle = COPPER + '0.12)';
-    ctx.fill();
-    ctx.strokeStyle = COPPER + '0.40)';
-    ctx.lineWidth = 1.25;
-    ctx.stroke();
+    /* Fundamental cell: the parallelepiped spanned by the basis. */
+    var C = [[0, 0, 0], b1, b2, b3,
+             [b1[0] + b2[0], b1[1] + b2[1], b1[2] + b2[2]],
+             [b1[0] + b3[0], b1[1] + b3[1], b1[2] + b3[2]],
+             [b2[0] + b3[0], b2[1] + b3[1], b2[2] + b3[2]],
+             [b1[0] + b2[0] + b3[0], b1[1] + b2[1] + b3[1], b1[2] + b2[2] + b3[2]]];
+    var P = C.map(function (c) {
+      return project(c[0] + off[0], c[1] + off[1], c[2] + off[2], yaw, pitch, scale);
+    });
+    var EDGES = [[0,1],[0,2],[0,3],[1,4],[1,5],[2,4],[2,6],[3,5],[3,6],[4,7],[5,7],[6,7]];
 
-    /* Basis vectors — the focal point of the motif */
+    ctx.strokeStyle = COPPER + '0.38)';
+    ctx.lineWidth = 1.1;
+    EDGES.forEach(function (e) {
+      ctx.beginPath();
+      ctx.moveTo(P[e[0]].x, P[e[0]].y);
+      ctx.lineTo(P[e[1]].x, P[e[1]].y);
+      ctx.stroke();
+    });
+
+    /* Basis vectors from the origin corner, the focal object. */
     ctx.save();
     ctx.shadowColor = COPPER + '0.55)';
-    ctx.shadowBlur = 14;
-    [[v1x, v1y], [v2x, v2y]].forEach(function (v) {
+    ctx.shadowBlur = 12;
+    [1, 2, 3].forEach(function (ci) {
       ctx.beginPath();
-      ctx.moveTo(cx, cy);
-      ctx.lineTo(cx + v[0], cy + v[1]);
+      ctx.moveTo(P[0].x, P[0].y);
+      ctx.lineTo(P[ci].x, P[ci].y);
       ctx.strokeStyle = COPPER + '0.92)';
       ctx.lineWidth = 2;
       ctx.stroke();
-
       ctx.beginPath();
-      ctx.arc(cx + v[0], cy + v[1], 4.2, 0, Math.PI * 2);
+      ctx.arc(P[ci].x, P[ci].y, 3.6 * P[ci].d, 0, Math.PI * 2);
       ctx.fillStyle = COPPER + '1)';
       ctx.fill();
     });
     ctx.restore();
 
-    /* Origin */
     ctx.beginPath();
-    ctx.arc(cx, cy, 2.8, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(233, 237, 247, 0.9)';
+    ctx.arc(P[0].x, P[0].y, 2.8, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(237, 240, 247, 0.9)';
     ctx.fill();
   }
 
@@ -135,34 +160,43 @@
     if (!running) return;
     if (t0 === null) t0 = ts;
 
-    var scale = Math.max(Math.min(w, h) * 0.088, 52);
+    var scale = Math.max(Math.min(w, h) * 0.16, 90);
     var total = CYCLE_MS + HOLD_MS;
     var elapsed = ts - t0;
     var index = Math.floor(elapsed / total) % CYCLES.length;
     var local = Math.min((elapsed % total) / CYCLE_MS, 1);
-
     var c = CYCLES[index];
     var k = easeInOut(local);
 
-    var b1 = [lerp(c.from[0][0], c.to[0][0], k), lerp(c.from[0][1], c.to[0][1], k)];
-    var b2 = [lerp(c.from[1][0], c.to[1][0], k), lerp(c.from[1][1], c.to[1][1], k)];
+    /* Ease the tilt toward the pointer target. */
+    tiltX += (targetX - tiltX) * 0.06;
+    tiltY += (targetY - tiltY) * 0.06;
 
-    draw(b1, b2, scale);
+    var yaw = elapsed * 0.00006 + tiltX;
+    var pitch = -0.24 + tiltY;
+
+    draw(lerpV(c.from[0], c.to[0], k),
+         lerpV(c.from[1], c.to[1], k),
+         lerpV(c.from[2], c.to[2], k),
+         yaw, pitch, scale);
     requestAnimationFrame(frame);
   }
 
   function renderStatic() {
-    var scale = Math.max(Math.min(w, h) * 0.088, 52);
+    var scale = Math.max(Math.min(w, h) * 0.16, 90);
     var c = CYCLES[0];
-    draw(c.to[0], c.to[1], scale);
+    draw(c.to[0], c.to[1], c.to[2], 0.5, -0.24, scale);
   }
 
-  function start() {
-    resize();
-    if (reduced) { renderStatic(); return; }
-    running = true;
-    t0 = null;
-    requestAnimationFrame(frame);
+  /* Pointer parallax on the hero itself, hover devices only. */
+  if (canHover && !reduced) {
+    var hero = canvas.closest('.hero') || canvas.parentElement;
+    hero.addEventListener('pointermove', function (e) {
+      var r = hero.getBoundingClientRect();
+      targetX = ((e.clientX - r.left) / r.width - 0.5) * 0.35;
+      targetY = ((e.clientY - r.top) / r.height - 0.5) * 0.28;
+    });
+    hero.addEventListener('pointerleave', function () { targetX = 0; targetY = 0; });
   }
 
   var resizeTimer;
@@ -174,26 +208,22 @@
     }, 150);
   });
 
-  /* Stop painting when the hero is off-screen or the tab is hidden. */
   if ('IntersectionObserver' in window) {
     new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
         if (e.isIntersecting) {
           if (!running && !reduced) { running = true; t0 = null; requestAnimationFrame(frame); }
-        } else {
-          running = false;
-        }
+        } else running = false;
       });
     }, { threshold: 0 }).observe(canvas);
   }
 
   document.addEventListener('visibilitychange', function () {
-    if (document.hidden) {
-      running = false;
-    } else if (!reduced) {
-      running = true; t0 = null; requestAnimationFrame(frame);
-    }
+    if (document.hidden) running = false;
+    else if (!reduced) { running = true; t0 = null; requestAnimationFrame(frame); }
   });
 
-  start();
+  resize();
+  if (reduced) { renderStatic(); return; }
+  requestAnimationFrame(frame);
 })();

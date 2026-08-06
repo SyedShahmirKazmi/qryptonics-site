@@ -898,11 +898,20 @@
     html += kpi('End-to-end fidelity', fmt(d.fidelity, 4),
                 'local ' + fmt(d.localFidelity, 3) + ' × link ' + fmt(d.linkFidelity, 3),
                 d.fidelity > 0.8 ? 'good' : d.fidelity > 0.5 ? 'warn' : 'bad');
+    if (d.noComm) {
+      html += kpi('Interface gaps', d.noComm,
+                  'QPU ' + d.commWarnings.join(', ') + ' has no comm qubit', 'bad');
+    }
     html += kpi('Distribution time', isFinite(d.distributionTime) ? sci(d.distributionTime, 's') : '∞',
                 'at ' + sci(net.rate, 'ebit/s'));
     html += kpi('Local circuit time', (d.localTimeNs / 1000).toFixed(2) + ' µs',
                 'slowest QPU');
     html += '</div>';
+    if (d.noComm) {
+      html += '<p class="sim-warn">' + esc(d.commWarnings.join(' and ')) +
+              ' has no communication qubit, so every teleported gate interrupts a data qubit — ' +
+              'about three CNOTs of extra local noise per gate. Mark one wire as comm inside the QPU.</p>';
+    }
 
     html += plot('Fidelity contributed by each QPU',
       bars(d.local.map(function (l) { return l.result.fidelity; }),

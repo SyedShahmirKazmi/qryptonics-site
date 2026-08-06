@@ -577,18 +577,45 @@
       };
     });
 
+    /* A QPU takes part in a teleported gate through its optical
+       interface. With a dedicated communication qubit the delivered
+       pair lands there and is consumed locally. Without one, a data
+       qubit has to be interrupted and shuttled to the interface,
+       which costs roughly three CNOTs of extra local work per end.
+       The constraint only binds once roles are declared - a QPU with
+       no roles array is treated as unspecified hardware. */
+    function hasComm(node) {
+      if (!node || !node.roles || !node.roles.length) return null;   // unspecified
+      return node.roles.indexOf('comm') >= 0;
+    }
+    var byId = {};
+    nodes.forEach(function (n) { byId[n.id] = n; });
+    var interfacePenalty = Math.pow(1 - (p.depol2 == null ? 0.01 : p.depol2), 3);
+    var noComm = 0;
+    var commWarnings = [];
+
     /* Each cut is a two-qubit gate spanning two QPUs. Route it. */
     var routed = cuts.map(function (cut) {
       var r = shortestPath(nodes, edges, cut.a, cut.b);
       if (!r) return { cut: cut, reachable: false };
       var m = chainMetrics(r.km, Math.max(1, r.hops), p);
-      return { cut: cut, reachable: true, km: r.km, hops: r.hops, path: r.path, net: m };
+      var penalty = 1;
+      [cut.a, cut.b].forEach(function (id) {
+        if (hasComm(byId[id]) === false) {
+          penalty *= interfacePenalty;
+          noComm++;
+          var lbl = byId[id].label || id;
+          if (commWarnings.indexOf(lbl) < 0) commWarnings.push(lbl);
+        }
+      });
+      return { cut: cut, reachable: true, km: r.km, hops: r.hops, path: r.path,
+               net: m, interfacePenalty: penalty };
     });
 
     var usable = routed.filter(function (r) { return r.reachable; });
     var ebits = usable.length;
     var linkF = usable.length
-      ? usable.reduce(function (a, r) { return a * r.net.fidelity; }, 1)
+      ? usable.reduce(function (a, r) { return a * r.net.fidelity * (r.interfacePenalty || 1); }, 1)
       : 1;
 
     /* Teleported gate fidelity is bounded by the pair it consumes. */
@@ -605,6 +632,8 @@
       local: local, routed: routed,
       ebits: ebits, classicalBits: ebits*2,
       unreachable: routed.length - usable.length,
+      noComm: noComm, commWarnings: commWarnings,
+      interfacePenalty: interfacePenalty,
       linkFidelity: linkF, localFidelity: localF, fidelity: endToEnd,
       distributionTime: slowest * ebits,
       networkLatency: netLatency,

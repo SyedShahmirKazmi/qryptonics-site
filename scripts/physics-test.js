@@ -385,6 +385,40 @@ console.log('\nDetector physics at range');
       far_a.snr.toFixed(4) + ' vs ' + far_s.snr.toFixed(4));
 }
 
+/* ── communication qubits gate the optical interface ─────── */
+console.log('\nCommunication qubit constraint');
+{
+  const P = { detector: 'snspd', source: 'spdc', fibre: 'smf28', wavelength: 1550,
+              srcFidelity: 0.98, memoryT2: 0.01, swapSuccess: 0.5,
+              swapQuality: 0.97, multiplex: 1, depol2: 0.01 };
+  const edges = [{ a: 1, b: 2, km: 60 }];
+  const mk = roles => [
+    { id: 1, label: 'A', qubits: 2, ops: [], roles: roles },
+    { id: 2, label: 'B', qubits: 2, ops: [], roles: ['data', 'comm'] }];
+
+  const equipped = QDist.distributed(
+    { qpus: mk(['data', 'comm']), nodes: mk(['data', 'comm']), edges, cuts: [{ a: 1, b: 2 }] }, P);
+  const missing = QDist.distributed(
+    { qpus: mk(['data', 'data']), nodes: mk(['data', 'data']), edges, cuts: [{ a: 1, b: 2 }] }, P);
+
+  chk('a QPU without a comm qubit pays an interface penalty',
+      missing.fidelity < equipped.fidelity,
+      missing.fidelity.toFixed(4) + ' < ' + equipped.fidelity.toFixed(4));
+  chk('the missing interface is counted and named',
+      missing.noComm === 1 && missing.commWarnings[0] === 'A',
+      JSON.stringify(missing.commWarnings));
+  chk('an equipped pair pays nothing', equipped.noComm === 0);
+  chk('the penalty is three CNOTs of local noise',
+      close(missing.interfacePenalty, Math.pow(0.99, 3), 1e-12),
+      missing.interfacePenalty.toFixed(6));
+
+  const legacy = [{ id: 1, label: 'A', qubits: 2, ops: [] },
+                  { id: 2, label: 'B', qubits: 2, ops: [] }];
+  const unspec = QDist.distributed({ qpus: legacy, nodes: legacy, edges, cuts: [{ a: 1, b: 2 }] }, P);
+  chk('undeclared roles stay unconstrained (identity preserved)',
+      close(unspec.fidelity, unspec.localFidelity * unspec.linkFidelity, 1e-12) && unspec.noComm === 0);
+}
+
 console.log('\n  ' + (fails
   ? fails + ' FAILURE(S) of ' + total
   : 'all ' + total + ' physics tests passed') + '\n');

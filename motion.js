@@ -230,11 +230,44 @@
     });
   }
 
+  /* ── figure parallax ───────────────────────────────────
+     Page-head illustrations tilt gently toward the pointer, so
+     they read as an object in the page rather than a print.
+     Transform-only, hover devices only, off under reduced motion.
+     ─────────────────────────────────────────────────────── */
+  function initFigParallax() {
+    if (reduced.matches || window.matchMedia('(hover: none)').matches) return;
+    var fig = document.querySelector('.phead__fig');
+    if (!fig) return;
+    var head = fig.closest('.phead__inner') || fig.parentElement;
+    var raf = null, tx = 0, ty = 0;
+
+    head.addEventListener('pointermove', function (e) {
+      var r = head.getBoundingClientRect();
+      tx = ((e.clientX - r.left) / r.width - 0.5);
+      ty = ((e.clientY - r.top) / r.height - 0.5);
+      if (raf) return;
+      raf = requestAnimationFrame(function () {
+        raf = null;
+        fig.style.transform = 'translate3d(' + (tx * 10).toFixed(1) + 'px,' +
+          (ty * 8).toFixed(1) + 'px,0) rotate(' + (tx * 1.6).toFixed(2) + 'deg)';
+      });
+    });
+    head.addEventListener('pointerleave', function () {
+      tx = 0; ty = 0;
+      var anim = animate(fig, [{ transform: 'translate3d(0,0,0) rotate(0deg)' }],
+        { duration: SNAP.duration, easing: SNAP.easing });
+      if (anim) anim.finished.then(function () { fig.style.transform = ''; }, function () {});
+      else fig.style.transform = '';
+    });
+  }
+
   initReveal();
   initHero();
   initHover();
   initNav();
   initAnchors();
+  initFigParallax();
 
   /* Expose the spring generator for the simulator and any future
      component that wants the same feel. */
