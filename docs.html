@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simulator Documentation — Qryptonics</title>
+<meta name="description" content="How the Qryptonics quantum simulator computes its results: density-matrix noise, optical loss budgets, coupling maps, and its limits.">
+<meta name="theme-color" content="#161B29">
+<link rel="canonical" href="https://qryptonics.com/docs.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Simulator Documentation — Qryptonics">
+<meta property="og:description" content="How the Qryptonics quantum simulator computes its results: density-matrix noise, optical loss budgets, coupling maps, and its limits.">
+<meta property="og:url" content="https://qryptonics.com/docs.html">
+<meta property="og:site_name" content="Qryptonics">
+<meta property="og:image" content="https://qryptonics.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Qryptonics — quantum-safe infrastructure and quantum-scale optimization, Doha, Qatar">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preload" href="fonts/chivo-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/ibmplexmono-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="fonts.css">
+<script>document.documentElement.className+=" js"</script>
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-pfgOMgfVZwm2ODyms34QYW9h8EwicylhV77q5LHK8c0=' 'sha256-FodmYSLaPm+NyHiRV7dHMmQ0cwSkn5k0aJR16zq1Se0='; style-src 'self'; font-src 'self'; img-src 'self' data:; connect-src 'none'; form-action 'none'; base-uri 'none'; object-src 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="stylesheet" href="styles.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://qryptonics.com/docs.html#page",
+      "url": "https://qryptonics.com/docs.html",
+      "name": "Simulator Documentation \u2014 Qryptonics",
+      "description": "How the Qryptonics quantum simulator computes its results: density-matrix noise, optical loss budgets, coupling maps, and its limits.",
+      "isPartOf": {
+        "@type": "WebSite",
+        "@id": "https://qryptonics.com/#site",
+        "url": "https://qryptonics.com/",
+        "name": "Qryptonics",
+        "inLanguage": "en",
+        "publisher": {
+          "@id": "https://qryptonics.com/#org"
+        }
+      },
+      "publisher": {
+        "@id": "https://qryptonics.com/#org"
+      }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://qryptonics.com/#org",
+      "name": "Qryptonics",
+      "url": "https://qryptonics.com/",
+      "email": "hello@qryptonics.com",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Doha",
+        "addressCountry": "QA"
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "name": "Qryptonics Quantum Simulator",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any browser",
+      "url": "https://qryptonics.com/simulator.html",
+      "description": "Density-matrix quantum circuit, network and distributed simulator.",
+      "publisher": {
+        "@id": "https://qryptonics.com/#org"
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav" id="top">
+  <a class="nav__brand" href="index.html" aria-label="Qryptonics home">
+    <svg class="nav__glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M2 8 L12 2 L22 8 L12 14 Z"/><path d="M2 16 L12 10 L22 16 L12 22 Z"/>
+    </svg>
+    <span class="nav__word">Qryptonics</span>
+  </a>
+  <button class="nav__toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Toggle menu">
+    <svg class="nav__ico-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    <svg class="nav__ico-close" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>
+  </button>
+  <nav class="nav__menu" id="nav-menu" aria-label="Primary">
+    <a href="index.html">Home</a>
+    <a href="development.html">Development</a>
+    <a href="services.html">Services</a>
+    <a href="simulator.html">Simulator</a>
+    <a href="community.html">Q-Majlis</a>
+    <a href="about.html">About</a>
+    <div class="nav__group">
+      <button class="nav__group-btn" aria-expanded="false">Insights
+        <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5L6 8.5L10 4.5"/></svg>
+      </button>
+      <div class="nav__dropdown">
+        <a href="blog.html">Blog<small>Notes from the field</small></a>
+        <a href="research.html">Research<small>Papers and preprints</small></a>
+        <a href="whitepaper.html">Whitepaper<small>Working papers</small></a>
+        <a href="docs.html">Docs<small>Simulator reference</small></a>
+      </div>
+    </div>
+    <a class="nav__cta" href="index.html#contact">Get in touch</a>
+  </nav>
+</header>
+
+<main id="main">
+  <section class="phead">
+    <div class="phead__inner">
+      <p class="eyebrow">Insights · Docs</p>
+      <h1 class="phead__title">How the simulator computes what it shows.</h1>
+      <p class="phead__lede">
+        The simulator on this site is not a mock-up. Every number comes from physics
+        implemented in the browser and checked against known analytic results. This page
+        documents the models, the formulas and the limits, so you can judge the output rather
+        than trust it.
+      </p>
+      <ul class="phead__meta">
+        <li>Density-matrix engine</li><li>Optical loss budget</li><li>100 regression tests</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <h2 class="section-h rv"><span class="section-h__mark">§</span> The circuit engine</h2>
+    <div class="prose rv">
+      <p>
+        Circuits evolve a full density matrix <b>ρ</b>, not a state vector, so mixed states
+        from decoherence are represented exactly rather than sampled. Unitary gates act as
+        ρ → UρU†. Noise enters as Kraus channels, which is what a Lindblad master equation
+        reduces to over a fixed gate duration.
+      </p>
+      <ul>
+        <li><b>Amplitude damping</b> from T₁, applied per gate against its real duration, with
+          γ = 1 − e<sup>−t/T₁</sup>.</li>
+        <li><b>Pure dephasing</b> from T₂, with the rate following 1/T<sub>φ</sub> = 1/T₂ − 1/2T₁.</li>
+        <li><b>Depolarizing</b>, separate rates for one- and two-qubit gates.</li>
+        <li><b>Readout error</b> as a symmetric bit flip over the outcome distribution.</li>
+      </ul>
+      <p>
+        Reported quantities: state fidelity F = ⟨ψ|ρ|ψ⟩ against the noiseless reference,
+        purity Tr(ρ²), and per-qubit von Neumann entropy against the rest. The density matrix
+        is 4ⁿ, so above six qubits the engine falls back to the pure-state path rather than
+        becoming unusable.
+      </p>
+
+      <h2>Connectivity and routing</h2>
+      <p>
+        Real processors are not all-to-all. Each QPU carries a coupling map — linear, ring,
+        grid, heavy-hex or all-to-all. A two-qubit gate between non-adjacent qubits is routed
+        with SWAPs found by breadth-first search over the coupling graph, and those SWAPs are
+        inserted into the circuit and genuinely simulated. Each SWAP is three CNOTs, so its
+        cost lands in the depth and the fidelity rather than being counted and ignored.
+      </p>
+      <p>
+        Qubits are typed <b>data</b>, <b>ancilla</b> or <b>communication</b>. Communication
+        qubits are the ones coupled to the optical interface; using one for local work raises
+        a warning, and in distributed mode a QPU with no comm qubit pays an interface penalty
+        on every teleported gate.
+      </p>
+
+      <h2>The optical layer</h2>
+      <p>
+        A link is sized as an optical engineer would size it. The loss budget is itemised:
+        fibre attenuation at the chosen grade and wavelength, connectors at 0.3 dB a pair, a
+        fusion splice every 5 km at 0.05 dB, and 1 dB coupling at each end. Transmittance is
+        10<sup>−dB/10</sup>.
+      </p>
+      <ul>
+        <li><b>Fibre grades</b>: ultra-low-loss 0.16, standard SMF-28 0.20, legacy field 0.25,
+          hollow-core 0.50 dB/km at 1550 nm.</li>
+        <li><b>Detectors</b>: SNSPD, warm SNSPD, Si APD, InGaAs APD, each with efficiency, dark
+          count rate, timing jitter and dead time. Dead time caps the achievable rate; jitter
+          and dispersion set the coincidence window, which decides how many dark counts get in.</li>
+        <li><b>Sources</b>: SPDC, quantum dot, atomic ensemble, with heralding efficiency and
+          a g² multi-photon quality that feeds the fidelity.</li>
+      </ul>
+      <p>
+        This reproduces, from physics alone, why quantum networks use superconducting
+        detectors: at 50 km detector choice barely matters, but at 500 km an InGaAs APD falls
+        below the entanglement threshold while an SNSPD holds, because signal-to-noise
+        collapses as dark counts overtake a weak signal.
+      </p>
+
+      <h2>Networks and distributed computing</h2>
+      <p>
+        Entanglement distribution over a repeater chain multiplies Werner parameters through
+        each swap and applies the coincidence penalty for waiting on multiple links. QBER
+        follows from the end-to-end fidelity, and the secret key rate collapses to zero past
+        the 11 % QBER limit of BB84. Routing between QPUs uses Dijkstra over fibre length, so a
+        path through repeaters is found the way a control plane would find it. End-to-end
+        fidelity of a distributed circuit is the product of every local circuit fidelity and
+        every entangled pair consumed.
+      </p>
+
+      <h2>What it does not model</h2>
+      <p>
+        The models are standard and the physics is real, but they are idealised. There is no
+        detector afterpulsing, no wavelength multiplexing beyond a simple mode count, no
+        quantum error correction, and a uniform depolarising noise model rather than a
+        device-specific one. Use it to build intuition and size a problem. For a procurement
+        decision, we model your actual topology with the noise characteristics of the devices
+        you would deploy.
+      </p>
+
+      <h2>Verification</h2>
+      <p>
+        The engine ships with 100 regression tests, each asserting against a known analytic
+        answer: trace preservation, hermiticity, channel limits, noise monotonicity, fibre
+        attenuation, the 11 % QBER threshold, that SWAP routing permutes qubits without
+        changing the noiseless distribution, and invariants that no input produces a NaN or a
+        fidelity outside the physical range. They run on every commit.
+      </p>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <div class="contact__inner">
+      <p class="eyebrow">Questions</p>
+      <h2 class="contact__title">Want it run against your hardware?</h2>
+      <p class="contact__body">
+        Send us the device parameters or the network you are planning, and we model it with the
+        real noise figures rather than the defaults here.
+      </p>
+      <div class="contact__actions">
+        <a class="btn btn--solid" href="mailto:hello@qryptonics.com">hello@qryptonics.com</a>
+        <a class="btn btn--ghost" href="simulator.html">Open the simulator</a>
+      </div>
+      <p class="contact__loc">Doha, Qatar</p>
+    </div>
+  </section>
+</main>
+
+
+<footer class="foot">
+  <div class="foot__inner">
+    <div>
+      <p class="foot__brand">Qryptonics</p>
+      <p class="foot__note">Quantum-safe infrastructure and quantum-scale optimization. Doha, Qatar.</p>
+    </div>
+    <div><p class="foot__h">Company</p><ul class="foot__list">
+      <li><a href="index.html">Home</a></li><li><a href="community.html">Q-Majlis</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="index.html#contact">Contact</a></li></ul></div>
+    <div><p class="foot__h">What we do</p><ul class="foot__list">
+      <li><a href="development.html">Development</a></li><li><a href="services.html">Services</a></li>
+      <li><a href="simulator.html">Simulator</a></li></ul></div>
+    <div><p class="foot__h">Insights</p><ul class="foot__list">
+      <li><a href="blog.html">Blog</a></li><li><a href="research.html">Research</a></li><li><a href="whitepaper.html">Whitepaper</a></li><li><a href="docs.html">Docs</a></li></ul></div>
+  </div>
+  <p class="foot__legal">© <span id="year">2026</span> Qryptonics. Doha, Qatar. <a href="privacy.html">Privacy</a> <a href="security.html">Security</a></p>
+</footer>
+
+<script src="site.js" defer></script>
+<script src="motion.js" defer></script>
+</body>
+</html>

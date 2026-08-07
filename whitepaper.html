@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Whitepaper: Cryptographic Inventory — Qryptonics</title>
+<meta name="description" content="A working paper on building a cryptographic bill of materials before post-quantum migration, at national-infrastructure scale.">
+<meta name="theme-color" content="#161B29">
+<link rel="canonical" href="https://qryptonics.com/whitepaper.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Whitepaper: Cryptographic Inventory — Qryptonics">
+<meta property="og:description" content="A working paper on building a cryptographic bill of materials before post-quantum migration, at national-infrastructure scale.">
+<meta property="og:url" content="https://qryptonics.com/whitepaper.html">
+<meta property="og:site_name" content="Qryptonics">
+<meta property="og:image" content="https://qryptonics.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Qryptonics — quantum-safe infrastructure and quantum-scale optimization, Doha, Qatar">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preload" href="fonts/chivo-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/ibmplexmono-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="fonts.css">
+<script>document.documentElement.className+=" js"</script>
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-pfgOMgfVZwm2ODyms34QYW9h8EwicylhV77q5LHK8c0=' 'sha256-NotdZtPQ9rs4wSN8s/kzScay9JDPWX7k9LRs+3eJk2E='; style-src 'self'; font-src 'self'; img-src 'self' data:; connect-src 'none'; form-action 'none'; base-uri 'none'; object-src 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="stylesheet" href="styles.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://qryptonics.com/whitepaper.html#page",
+      "url": "https://qryptonics.com/whitepaper.html",
+      "name": "Whitepaper: Cryptographic Inventory \u2014 Qryptonics",
+      "description": "A working paper on building a cryptographic bill of materials before post-quantum migration, at national-infrastructure scale.",
+      "isPartOf": {
+        "@type": "WebSite",
+        "@id": "https://qryptonics.com/#site",
+        "url": "https://qryptonics.com/",
+        "name": "Qryptonics",
+        "inLanguage": "en",
+        "publisher": {
+          "@id": "https://qryptonics.com/#org"
+        }
+      },
+      "publisher": {
+        "@id": "https://qryptonics.com/#org"
+      }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://qryptonics.com/#org",
+      "name": "Qryptonics",
+      "url": "https://qryptonics.com/",
+      "email": "hello@qryptonics.com",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Doha",
+        "addressCountry": "QA"
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav" id="top">
+  <a class="nav__brand" href="index.html" aria-label="Qryptonics home">
+    <svg class="nav__glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M2 8 L12 2 L22 8 L12 14 Z"/><path d="M2 16 L12 10 L22 16 L12 22 Z"/>
+    </svg>
+    <span class="nav__word">Qryptonics</span>
+  </a>
+  <button class="nav__toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Toggle menu">
+    <svg class="nav__ico-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    <svg class="nav__ico-close" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>
+  </button>
+  <nav class="nav__menu" id="nav-menu" aria-label="Primary">
+    <a href="index.html">Home</a>
+    <a href="development.html">Development</a>
+    <a href="services.html">Services</a>
+    <a href="simulator.html">Simulator</a>
+    <a href="community.html">Q-Majlis</a>
+    <a href="about.html">About</a>
+    <div class="nav__group">
+      <button class="nav__group-btn" aria-expanded="false">Insights
+        <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5L6 8.5L10 4.5"/></svg>
+      </button>
+      <div class="nav__dropdown">
+        <a href="blog.html">Blog<small>Notes from the field</small></a>
+        <a href="research.html">Research<small>Papers and preprints</small></a>
+        <a href="whitepaper.html">Whitepaper<small>Working papers</small></a>
+        <a href="docs.html">Docs<small>Simulator reference</small></a>
+      </div>
+    </div>
+    <a class="nav__cta" href="index.html#contact">Get in touch</a>
+  </nav>
+</header>
+
+<main id="main">
+  <section class="phead">
+    <div class="phead__inner">
+      <p class="eyebrow">Insights · Whitepaper</p>
+      <h1 class="phead__title">Cryptographic inventory before migration.</h1>
+      <p class="phead__lede">
+        A working paper on the part of post-quantum migration nobody budgets for: finding
+        where your cryptography actually lives, at national-infrastructure scale, before a
+        single algorithm is replaced.
+      </p>
+      <ul class="phead__meta">
+        <li>Working paper</li><li>PQC migration</li><li>Draft, 2026</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <div class="prose rv">
+      <h2>Abstract</h2>
+      <p>
+        NIST's post-quantum standards are final and migration deadlines are set, yet most
+        organisations cannot answer the first question a migration asks: where is our
+        cryptography? Algorithms are published and available, so the bottleneck is not
+        cryptographic. It is an inventory and integration problem — which services negotiate
+        which cipher suites, which certificates chain to what, which embedded device holds a
+        key in firmware nobody can rebuild. This paper sets out a method for building a
+        cryptographic bill of materials across a large regulated estate, ranking exposure by
+        data confidentiality lifetime rather than by system, and sequencing a crypto-agile
+        migration that treats the next algorithm change as a configuration rather than a
+        rebuild.
+      </p>
+
+      <h2>What the paper covers</h2>
+      <ul>
+        <li>Discovery across code, network traffic, certificates, protocols and hardware, and
+          where each method goes blind.</li>
+        <li>Modelling harvest-now-decrypt-later exposure by how long each dataset must stay
+          confidential, not by how sensitive it looks today.</li>
+        <li>Hybrid key establishment and staged rollout with rollback, including where hybrid
+          modes break legacy middleboxes.</li>
+        <li>A crypto-agility target architecture, and the organisational conditions under which
+          it survives the transition after this one.</li>
+        <li>What changes when the estate is national infrastructure — energy, telecom, finance,
+          defence — rather than a single application.</li>
+      </ul>
+
+      <h2>Who it is for</h2>
+      <p>
+        Heads of security and infrastructure architects at organisations that will have to
+        migrate under a regulatory deadline, and the technical teams who will do the work. It
+        assumes familiarity with PKI and TLS, and no prior background in quantum computing.
+      </p>
+    </div>
+
+    <div class="empty rv">
+      <h2 class="empty__title">The full paper is in draft.</h2>
+      <p class="empty__body">
+        We would rather send a considered draft than post a thin one. Request it and we will
+        share the current version, and tell you honestly which sections are still being
+        revised.
+      </p>
+      <a class="btn btn--solid" href="mailto:hello@qryptonics.com?subject=Whitepaper%20request%20%E2%80%94%20cryptographic%20inventory">Request the paper</a>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <div class="contact__inner">
+      <p class="eyebrow">Get in touch</p>
+      <h2 class="contact__title">Working on a migration already?</h2>
+      <p class="contact__body">
+        If you are mid-inventory and stuck, tell us where. The specific problem is a better
+        conversation than the general paper.
+      </p>
+      <div class="contact__actions">
+        <a class="btn btn--solid" href="mailto:hello@qryptonics.com">hello@qryptonics.com</a>
+        <a class="btn btn--ghost" href="services.html">Readiness assessment</a>
+      </div>
+      <p class="contact__loc">Doha, Qatar</p>
+    </div>
+  </section>
+</main>
+
+
+<footer class="foot">
+  <div class="foot__inner">
+    <div>
+      <p class="foot__brand">Qryptonics</p>
+      <p class="foot__note">Quantum-safe infrastructure and quantum-scale optimization. Doha, Qatar.</p>
+    </div>
+    <div><p class="foot__h">Company</p><ul class="foot__list">
+      <li><a href="index.html">Home</a></li><li><a href="community.html">Q-Majlis</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="index.html#contact">Contact</a></li></ul></div>
+    <div><p class="foot__h">What we do</p><ul class="foot__list">
+      <li><a href="development.html">Development</a></li><li><a href="services.html">Services</a></li>
+      <li><a href="simulator.html">Simulator</a></li></ul></div>
+    <div><p class="foot__h">Insights</p><ul class="foot__list">
+      <li><a href="blog.html">Blog</a></li><li><a href="research.html">Research</a></li><li><a href="whitepaper.html">Whitepaper</a></li><li><a href="docs.html">Docs</a></li></ul></div>
+  </div>
+  <p class="foot__legal">© <span id="year">2026</span> Qryptonics. Doha, Qatar. <a href="privacy.html">Privacy</a> <a href="security.html">Security</a></p>
+</footer>
+
+<script src="site.js" defer></script>
+<script src="motion.js" defer></script>
+</body>
+</html>
