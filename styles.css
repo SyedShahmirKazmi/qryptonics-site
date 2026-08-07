@@ -897,3 +897,28 @@ fieldset{border:0;padding:0;margin:0;display:grid;gap:.45rem}
 @media (prefers-reduced-motion:reduce){
   .scroll-progress{transition:none}
 }
+
+/* ── tooltips (accessible refined-reveal) ─────────────────── */
+.tip{
+  position:absolute;z-index:80;max-width:22rem;pointer-events:none;
+  background:var(--card);color:var(--body);border:1px solid var(--line-hi);
+  border-radius:5px;box-shadow:var(--shadow);padding:.6rem .75rem;
+  font-family:var(--f-mono);font-size:.72rem;line-height:1.55;
+}
+.tip::after{
+  content:'';position:absolute;left:50%;margin-left:-5px;
+  border:5px solid transparent;border-top-color:var(--line-hi);bottom:-10px;
+}
+.tip.is-below::after{border-top-color:transparent;border-bottom-color:var(--line-hi);top:-10px;bottom:auto}
+
+/* a small info affordance beside a control label */
+.sim-info{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:16px;height:16px;margin-left:.35rem;border-radius:50%;
+  border:1px solid var(--line-hi);background:none;color:var(--faint);
+  font-family:var(--f-mono);font-size:.62rem;cursor:help;padding:0;
+  transition:border-color .15s ease,color .15s ease;flex:0 0 auto;
+}
+.sim-info:hover,.sim-info:focus-visible{border-color:var(--copper);color:var(--copper)}
+.sim-field span{display:flex;align-items:center}
+.sim-kpi[data-tip]{cursor:help}

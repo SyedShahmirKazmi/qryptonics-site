@@ -184,6 +184,87 @@
     energy();
   });
 
+  /* ── tooltips ──────────────────────────────────────────
+     One floating tooltip shared by every [data-tip] element, in
+     the refined-reveal style of the component libraries but built
+     to be accessible: it answers to focus as well as hover, wires
+     aria-describedby so a screen reader announces it, and dismisses
+     on Escape. Positioned through the CSSOM, so nothing inline is
+     parsed and the strict style-src holds.
+     ─────────────────────────────────────────────────────── */
+  (function () {
+    var triggers = [].slice.call(document.querySelectorAll('[data-tip]'));
+
+    var tipReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var tip = document.createElement('div');
+    tip.className = 'tip';
+    tip.id = 'tip-live';
+    tip.setAttribute('role', 'tooltip');
+    tip.hidden = true;
+    document.body.appendChild(tip);
+
+    var current = null, hideTimer = null;
+
+    function place(el) {
+      var text = el.getAttribute('data-tip');
+      if (!text) return;
+      clearTimeout(hideTimer);
+      tip.textContent = text;
+      tip.hidden = false;
+      el.setAttribute('aria-describedby', 'tip-live');
+      current = el;
+
+      var r = el.getBoundingClientRect();
+      var tr = tip.getBoundingClientRect();
+      var pad = 8;
+      var left = r.left + r.width / 2 - tr.width / 2;
+      left = Math.max(pad, Math.min(left, window.innerWidth - tr.width - pad));
+
+      /* Prefer above; flip below when there is no room. */
+      var above = r.top - tr.height - 10;
+      var below = r.bottom + 10;
+      var top = above > pad ? above : below;
+      tip.classList.toggle('is-below', above <= pad);
+
+      tip.style.left = Math.round(left) + 'px';
+      tip.style.top = Math.round(top + window.scrollY) + 'px';
+
+      if (tipReduced || !tip.animate) { tip.style.opacity = '1'; return; }
+      tip.animate(
+        [{ opacity: 0, transform: 'translateY(' + (above > pad ? 4 : -4) + 'px)' },
+         { opacity: 1, transform: 'translateY(0)' }],
+        { duration: 160, easing: 'ease-out', fill: 'both' });
+    }
+
+    function hide() {
+      if (current) current.removeAttribute('aria-describedby');
+      current = null;
+      hideTimer = setTimeout(function () { tip.hidden = true; }, 60);
+    }
+
+    triggers.forEach(function (el) {
+      el.addEventListener('pointerenter', function () { place(el); });
+      el.addEventListener('pointerleave', hide);
+      el.addEventListener('focus', function () { place(el); });
+      el.addEventListener('blur', hide);
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && current) hide();
+    });
+    window.addEventListener('scroll', function () { if (current) hide(); }, { passive: true });
+
+    /* Expose so scripts that build DOM later (the simulator) can
+       register new triggers. */
+    window.QTip = {
+      bind: function (el) {
+        el.addEventListener('pointerenter', function () { place(el); });
+        el.addEventListener('pointerleave', hide);
+        el.addEventListener('focus', function () { place(el); });
+        el.addEventListener('blur', hide);
+      }
+    };
+  })();
+
   /* ── footer year ─────────────────────────────────────── */
   var year = document.getElementById('year');
   if (year) year.textContent = new Date().getFullYear();

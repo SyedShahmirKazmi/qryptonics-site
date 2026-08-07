@@ -138,6 +138,45 @@
     set('conn-v', app.params.connectors);
   }
 
+  /* Physics behind each control, shown as a tooltip so the meaning
+     is one hover away instead of buried in a footnote. */
+  var TIPS = {
+    t1: 'T\u2081 energy relaxation. How long a qubit holds |1\u27e9 before decaying to |0\u27e9. Longer is better.',
+    t2: 'T\u2082 dephasing. How long a superposition keeps its phase. Physically bounded by 2\u00b7T\u2081.',
+    g1: 'Single-qubit gate duration. Longer gates sit under decoherence for longer.',
+    g2: 'Two-qubit gate duration. Usually the dominant source of error in a circuit.',
+    d1: 'Depolarizing error per single-qubit gate: the chance the qubit is replaced by noise.',
+    d2: 'Depolarizing error per two-qubit gate. Two-qubit gates are far noisier than one-qubit.',
+    ro: 'Readout error: the probability a measurement reports the wrong bit.',
+    shots: 'Measurement repetitions. Zero gives the exact distribution from the density matrix.',
+    topo: 'Physical qubit connectivity. Two-qubit gates between non-adjacent qubits are routed with SWAPs.',
+    fibre: 'Fibre grade sets attenuation per km. Ultra-low-loss buys range; hollow-core cuts latency.',
+    wl: 'Wavelength. 1550 nm is the minimum-loss telecom window, which is why quantum links live there.',
+    conn: 'Mated connector pairs on the span. Each adds 0.3 dB of loss.',
+    src: 'Photon source. Heralding efficiency and g\u00b2 multi-photon quality both feed the fidelity.',
+    det: 'Detector. Efficiency, dark counts, jitter and dead time all follow from this choice.',
+    memory: 'Quantum memory T\u2082. How long a stored qubit survives while the heralding signal travels.',
+    srcfid: 'Raw fidelity of the entangled pair the source emits, before any loss.',
+    deteff: 'Detector efficiency: the chance an arriving photon is registered.',
+    dark: 'Dark count rate. Spurious clicks that raise the error floor once the signal is weak.',
+    mux: 'Multiplexed modes. Parallel attempts per cycle, which raises the success probability.',
+    swapp: 'Entanglement-swap success probability. Compounds across every repeater hop.',
+    swapq: 'Swap gate quality. How much fidelity survives each entanglement swap.'
+  };
+  var KPI_TIPS = {
+    'State fidelity': 'Overlap of the noisy state with the ideal one: F = \u27e8\u03c8|\u03c1|\u03c8\u27e9. 1 is perfect.',
+    'Purity Tr(\u03c1\u00b2)': 'Tr(\u03c1\u00b2). 1 for a pure state, 1/2\u207f for the maximally mixed state.',
+    'Depth': 'Longest chain of dependent gates, after routing onto the coupling map.',
+    'SWAP overhead': 'Extra SWAP gates inserted to satisfy connectivity. Each is three CNOTs.',
+    'Circuit time': 'Total wall time of the gate sequence, compared against T\u2081.',
+    'Entanglement rate': 'Entangled pairs delivered end to end per second.',
+    'End-to-end fidelity': 'Fidelity of the delivered pair after loss, decoherence and every swap.',
+    'QBER': 'Quantum bit error rate. Above 11 % no secret key can be extracted.',
+    'Secret key rate': 'Extractable secure key per second after error correction and privacy amplification.',
+    'Coincidence window': 'Timing gate for a valid pair. Wider windows admit more dark counts.',
+    'Loss per arm': 'Optical loss budget for one arm of the link, source at the midpoint.'
+  };
+
   /* Live recompute. Short enough to feel immediate, long enough
      that dragging a slider does not queue a hundred density
      matrices. */
@@ -1136,9 +1175,52 @@
   });
 
   /* ── boot ──────────────────────────────────────────────── */
+  /* Attach an info affordance to every parameter that has physics
+     copy, and register it with the shared tooltip engine. */
+  function wireTips() {
+    Object.keys(TIPS).forEach(function (id) {
+      var input = document.getElementById(id);
+      if (!input) return;
+      var field = input.closest('.sim-field');
+      if (!field || field.querySelector('.sim-info')) return;
+      var span = field.querySelector('span');
+      var host = span || field;
+      var info = document.createElement('button');
+      info.type = 'button';
+      info.className = 'sim-info';
+      info.textContent = 'i';
+      info.setAttribute('aria-label', 'What is this?');
+      info.setAttribute('data-tip', TIPS[id]);
+      host.appendChild(info);
+      if (window.QTip) window.QTip.bind(info);
+    });
+  }
+
+  /* KPIs are rebuilt on every simulate(); tag them as they appear. */
+  function wireKpiTips() {
+    [].forEach.call(results.querySelectorAll('.sim-kpi'), function (k) {
+      var label = k.querySelector('.sim-kpi__k');
+      if (!label) return;
+      var tip = KPI_TIPS[label.textContent];
+      if (!tip) return;
+      k.setAttribute('data-tip', tip);
+      k.setAttribute('tabindex', '0');
+      if (window.QTip) window.QTip.bind(k);
+    });
+  }
+
   readParams();
   loadGHZ();
   loadNetwork();
   applyView();
   setMode('circuit');
+  wireTips();
+
+  /* After every render the KPI tiles are new DOM, so re-tag them.
+     A MutationObserver keeps this in one place rather than at each
+     simulate() return. */
+  if ('MutationObserver' in window) {
+    new MutationObserver(wireKpiTips).observe(results, { childList: true });
+    wireKpiTips();
+  }
 })();
