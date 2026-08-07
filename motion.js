@@ -262,8 +262,69 @@
     });
   }
 
+  /* ── spotlight cards ───────────────────────────────────
+     A radial highlight follows the pointer across the card grid,
+     the signature effect of skiper-ui / vengeance-ui, done with a
+     CSS custom property set through the CSSOM so it stays inside
+     the strict style-src. Hover devices only.
+     ─────────────────────────────────────────────────────── */
+  function initSpotlight() {
+    if (window.matchMedia('(hover: none)').matches) return;
+    var cards = [].slice.call(document.querySelectorAll(
+      '.cell, .track, .step, .sim-kpi, .collab, .post'));
+    if (!cards.length) return;
+
+    cards.forEach(function (card) { card.classList.add('has-spot'); });
+
+    var raf = null, queue = [];
+    function flush() {
+      raf = null;
+      queue.forEach(function (q) {
+        q.el.style.setProperty('--mx', q.x + '%');
+        q.el.style.setProperty('--my', q.y + '%');
+      });
+      queue = [];
+    }
+    cards.forEach(function (card) {
+      card.addEventListener('pointermove', function (e) {
+        var r = card.getBoundingClientRect();
+        queue.push({ el: card,
+          x: (((e.clientX - r.left) / r.width) * 100).toFixed(1),
+          y: (((e.clientY - r.top) / r.height) * 100).toFixed(1) });
+        if (!raf) raf = requestAnimationFrame(flush);
+      });
+    });
+  }
+
+  /* ── scroll progress ───────────────────────────────────
+     A thin copper line under the nav showing read position on
+     the long pages. scaleX on the compositor, one rAF per scroll.
+     ─────────────────────────────────────────────────────── */
+  function initProgress() {
+    var bar = document.createElement('div');
+    bar.className = 'scroll-progress';
+    bar.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(bar);
+    var ticking = false;
+    function update() {
+      ticking = false;
+      var h = document.documentElement;
+      var max = h.scrollHeight - h.clientHeight;
+      var frac = max > 0 ? Math.min(1, h.scrollTop / max) : 0;
+      bar.style.transform = 'scaleX(' + frac.toFixed(4) + ')';
+    }
+    window.addEventListener('scroll', function () {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(update);
+    }, { passive: true });
+    update();
+  }
+
   initReveal();
   initHero();
+  initSpotlight();
+  initProgress();
   initHover();
   initNav();
   initAnchors();
