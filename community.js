@@ -71,7 +71,9 @@
   function collect() {
     var d = {};
     ['name', 'email', 'country', 'city', 'affiliation', 'role', 'level', 'goal'].forEach(function (k) {
-      d[k] = String(form.elements[k].value || '').trim();
+      var el = form.elements[k];
+      // maxlength only governs typing; enforce it on whatever value arrives
+      d[k] = String(el.value || '').trim().slice(0, el.maxLength > 0 ? el.maxLength : 200);
     });
     d.interests = [].map.call(form.querySelectorAll('input[name="interest"]:checked'),
       function (c) { return c.value; });

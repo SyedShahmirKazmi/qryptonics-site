@@ -55,6 +55,8 @@
 
 *,*::before,*::after{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-padding-top:5rem}
+/* set by site.js when a foreign origin frames the page */
+html.is-framed body{display:none}
 body{
   margin:0;background:var(--paper);color:var(--body);
   font-family:var(--f-display);font-weight:400;

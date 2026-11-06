@@ -1,0 +1,15 @@
+# GitHub Pages runs Jekyll on this repo only to keep tooling off the
+# public site. Every page here has no front matter, so Jekyll copies it
+# byte for byte and processes nothing. Hidden files (.claude/,
+# .gitignore, .indexnow-key) are skipped by default; .well-known is the
+# one hidden folder the site needs.
+include:
+  - .well-known
+exclude:
+  - README.md
+  - SECURITY.md
+  - dev-server.js
+  - package.json
+  - package-lock.json
+  - scripts/
+  - node_modules/

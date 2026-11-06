@@ -1,10 +1,11 @@
 # Qryptonics vulnerability disclosure
 # https://datatracker.ietf.org/doc/html/rfc9116
 
+Contact: https://github.com/SyedShahmirKazmi/qryptonics-site/security/advisories/new
 Contact: mailto:security@qryptonics.com
 Contact: https://qryptonics.com/security.html
 Expires: 2027-08-06T00:00:00.000Z
-Preferred-Languages: en, ar
+Preferred-Languages: en
 Canonical: https://qryptonics.com/.well-known/security.txt
 Policy: https://qryptonics.com/security.html
 

@@ -1,2 +1,5 @@
 node_modules/
 .DS_Store
+# local Claude tooling; only the preview config is shared
+.claude/*
+!.claude/launch.json

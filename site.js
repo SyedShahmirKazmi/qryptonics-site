@@ -5,6 +5,16 @@
 (function () {
   'use strict';
 
+  /* Anti-framing. GitHub Pages cannot send X-Frame-Options, and a meta
+     CSP ignores frame-ancestors, so the page hides itself when another
+     site frames it (clickjacking). Reading window.top.location throws
+     cross-origin, which is what marks a hostile frame. */
+  if (window.top !== window.self) {
+    var foreign = true;
+    try { foreign = window.top.location.origin !== window.location.origin; } catch (e) {}
+    if (foreign) document.documentElement.classList.add('is-framed');
+  }
+
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var desktop = window.matchMedia('(min-width: 1021px)');
 

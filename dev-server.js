@@ -78,9 +78,19 @@ function watch(dir) {
 }
 
 /* ── request handling ────────────────────────────────────── */
+/* Returns null for anything outside the site: a malformed escape (which
+   would otherwise throw and kill the server), a path escaping the root
+   (checked against root + separator, so a sibling folder sharing the
+   name prefix does not pass), or a hidden file such as .git/ or .claude/.
+   .well-known is the one hidden folder the site serves. */
 function safeJoin(root, urlPath) {
-  const p = path.normalize(path.join(root, decodeURIComponent(urlPath)));
-  return p.startsWith(root) ? p : null;   // no traversal above the root
+  let decoded;
+  try { decoded = decodeURIComponent(urlPath); } catch { return null; }
+  const p = path.normalize(path.join(root, decoded));
+  if (p !== root && !p.startsWith(root + path.sep)) return null;
+  const hidden = path.relative(root, p).split(path.sep)
+    .some(seg => seg.startsWith('.') && seg !== '.well-known');
+  return hidden ? null : p;
 }
 
 const server = http.createServer((req, res) => {
@@ -125,7 +135,9 @@ const server = http.createServer((req, res) => {
   fs.createReadStream(file).pipe(res);
 });
 
-server.listen(PORT, () => {
+/* Loopback only. Without a host Node listens on every interface, which
+   puts the working copy on any shared Wi-Fi the laptop joins. */
+server.listen(PORT, '127.0.0.1', () => {
   watch(ROOT);
   process.stdout.write(
     `\n  Qryptonics dev server\n` +
