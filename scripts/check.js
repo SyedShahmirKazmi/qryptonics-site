@@ -32,7 +32,7 @@ for (const page of html) {
   const refs = new Set([...src.matchAll(/(?:href|src)="([^"]+)"/g)].map(m => m[1]));
   for (const ref of refs) {
     if (/^(https?:|mailto:|#|data:)/.test(ref)) continue;
-    const target = ref.split('#')[0];
+    const target = ref.split(/[?#]/)[0];
     if (target && !fs.existsSync(path.join(ROOT, path.dirname(page), target))) {
       fail(`${page} references missing ${ref}`);
       broken++;
@@ -55,6 +55,13 @@ for (const m of css.matchAll(/url\(['"]?([^'")]+)['"]?\)/g)) {
 }
 checks++;
 if (!cssMissing) pass('every asset referenced by css exists');
+
+/* ── cache-busting stamps ────────────────────────────────── */
+section('Asset versions');
+const stale = require('./stamp.js').stamp(true);
+for (const s of stale) fail(`${s.page}: ${s.ref} needs ${s.want} — run npm run stamp`);
+checks++;
+if (!stale.length) pass('every css/js reference carries its current ?v= hash');
 
 /* ── heading order ───────────────────────────────────────── */
 section('Heading hierarchy');

@@ -111,8 +111,14 @@ the data region.
 ```bash
 npm install     # installs nothing — there are no dependencies
 npm run dev     # http://localhost:8000 with live reload
+npm run stamp   # refresh ?v= cache-busting hashes after editing any .css/.js
 npm run check   # pre-deploy checks
 ```
+
+GitHub Pages serves every file with `max-age=600`, so without versioning a browser can
+show new HTML with a stale stylesheet for ten minutes. Every local CSS/JS reference is
+written as `styles.css?v=<first 8 hex of its SHA-256>`; the URL changes only when the
+file does. `npm run check` fails if any stamp is stale.
 
 `dev-server.js` is Node standard library only. It injects a live-reload client in
 development and adds that client's SHA-256 to the page's existing CSP rather than
@@ -120,7 +126,8 @@ weakening the policy, so the CSP you test locally is the one that ships.
 
 `npm run check` verifies: no broken links or dead anchors, every asset referenced by CSS
 exists, one `h1` per page with no skipped heading levels, no third-party requests, no
-inline style attributes, every page carries a CSP, and all scripts parse. It exits
+inline style attributes, every page carries a CSP, all scripts parse, and every CSS/JS
+reference carries its current `?v=` hash. It exits
 non-zero on failure, so it drops straight into CI.
 
 ## Motion
