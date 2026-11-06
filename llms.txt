@@ -21,6 +21,7 @@ operational problems belong on quantum or hybrid hardware now.
 - [Docs](https://qryptonics.com/docs.html): How the quantum simulator computes its results — density-matrix noise, optical loss budgets, coupling maps, limits.
 - [Research](https://qryptonics.com/research.html): Open research questions in quantum optimization, QML under realistic data, PQC engineering, and hybrid runtimes.
 - [About](https://qryptonics.com/about.html): Who we are and how we work.
+- [Get in touch](https://qryptonics.com/contact.html): WhatsApp, email and location.
 - [Security](https://qryptonics.com/security.html): Vulnerability disclosure policy and scope.
 
 ## Facts
