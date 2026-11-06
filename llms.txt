@@ -12,7 +12,7 @@ operational problems belong on quantum or hybrid hardware now.
 
 - [Home](https://qryptonics.com/): Practices, interactive quantum circuit figures, sectors served.
 - [Development](https://qryptonics.com/development.html): Quantum software engineering, post-quantum cryptographic implementation (ML-KEM, ML-DSA, SLH-DSA), enterprise applications, data engineering, HPC.
-- [Services](https://qryptonics.com/services.html): Post-quantum readiness assessment, cryptographic bill of materials, penetration testing, ISO management system readiness and certification through accredited partners (27001, 42001, 9001, 22301 and more), SAMA and PDPL compliance, source code review, technical due diligence, training.
+- [Services](https://qryptonics.com/services.html): Post-quantum readiness assessment, cryptographic bill of materials, penetration testing, ISO management system readiness and certification through accredited partners (27001, 42001, 9001, 22301 and more), SOC 1 and SOC 2 readiness, PCI DSS, NIST CSF, GDPR, HIPAA and HITRUST, SAMA and PDPL compliance, supply-chain risk, source code review, technical due diligence, training.
 - [PQC solutions](https://qryptonics.com/pqc-solutions.html): Post-quantum cryptography as a managed solution (page in preparation).
 - [Software solutions](https://qryptonics.com/software-solutions.html): Quantum, hybrid and classical software, built and handed over (page in preparation).
 - [Simulator](https://qryptonics.com/simulator.html): Free browser-based quantum simulator. Density-matrix circuit simulation with T1/T2 decoherence, quantum network entanglement distribution over fibre, and distributed quantum computing across QPUs. No account, nothing uploaded.
