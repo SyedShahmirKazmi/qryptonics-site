@@ -1,0 +1,605 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quantum Machine Learning and Optimisation: What Is Real and Why Everyone Is Racing — Qryptonics</title>
+<meta name="description" content="What quantum machine learning and quantum optimisation are, how they differ from classical methods, where they can help, what blocks deployment, and why governments and investors are racing.">
+<meta name="theme-color" content="#161B29">
+<link rel="canonical" href="https://qryptonics.com/blog/quantum-machine-learning-and-optimisation.html">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2026-11-06">
+<meta property="og:title" content="Quantum machine learning and optimisation: what is real, what is hype, and why everyone is racing">
+<meta property="og:description" content="What quantum machine learning and quantum optimisation are, how they differ from classical methods, where they can help, what blocks deployment, and why governments and investors are racing.">
+<meta property="og:url" content="https://qryptonics.com/blog/quantum-machine-learning-and-optimisation.html">
+<meta property="og:site_name" content="Qryptonics">
+<meta property="og:image" content="https://qryptonics.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Qryptonics — quantum-safe infrastructure and quantum-scale optimization">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preload" href="../fonts/chivo-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../fonts/ibmplexmono-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../fonts.css?v=66401886">
+<script>document.documentElement.className+=" js"</script>
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-pfgOMgfVZwm2ODyms34QYW9h8EwicylhV77q5LHK8c0=' 'sha256-BFEAJNple/hg1gqaR3I3KSEsXV6lTTimizbNntwU+TA='; style-src 'self'; font-src 'self'; img-src 'self' data:; connect-src 'none'; form-action 'none'; base-uri 'none'; object-src 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="stylesheet" href="../styles.css?v=07336b45">
+<script src="../reader.js?v=15d220dc"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BlogPosting",
+      "@id": "https://qryptonics.com/blog/quantum-machine-learning-and-optimisation.html#post",
+      "mainEntityOfPage": "https://qryptonics.com/blog/quantum-machine-learning-and-optimisation.html",
+      "headline": "Quantum machine learning and optimisation: what is real, what is hype, and why everyone is racing",
+      "description": "What quantum machine learning and quantum optimisation are, how they differ from classical methods, where they can help, what blocks deployment, and why governments and investors are racing.",
+      "datePublished": "2026-11-06",
+      "dateModified": "2026-11-06",
+      "image": "https://qryptonics.com/og.png",
+      "inLanguage": "en",
+      "keywords": [
+        "quantum machine learning",
+        "quantum optimisation",
+        "QAOA",
+        "quantum annealing",
+        "barren plateaus",
+        "quantum advantage",
+        "variational quantum algorithms"
+      ],
+      "author": {
+        "@id": "https://qryptonics.com/#org"
+      },
+      "publisher": {
+        "@id": "https://qryptonics.com/#org"
+      },
+      "isPartOf": {
+        "@type": "Blog",
+        "@id": "https://qryptonics.com/blog.html#blog",
+        "url": "https://qryptonics.com/blog.html",
+        "name": "Qryptonics Blog"
+      }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://qryptonics.com/#org",
+      "name": "Qryptonics",
+      "url": "https://qryptonics.com/",
+      "logo": "https://qryptonics.com/og.png",
+      "email": "hello@qryptonics.com"
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav" id="top">
+  <a class="nav__brand" href="../index.html" aria-label="Qryptonics home">
+    <svg class="nav__glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M2 8 L12 2 L22 8 L12 14 Z"/><path d="M2 16 L12 10 L22 16 L12 22 Z"/>
+    </svg>
+    <span class="nav__word">Qryptonics</span>
+  </a>
+  <button class="nav__toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Toggle menu">
+    <svg class="nav__ico-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    <svg class="nav__ico-close" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>
+  </button>
+  <nav class="nav__menu" id="nav-menu" aria-label="Primary">
+    <a href="../index.html">Home</a>
+    <div class="nav__group">
+      <button class="nav__group-btn" aria-expanded="false">Our technology
+        <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5L6 8.5L10 4.5"/></svg>
+      </button>
+      <div class="nav__dropdown">
+        <a href="../services.html">Services<small>Assessment, testing, audit</small></a>
+        <a href="../development.html">Development<small>Software we build</small></a>
+      </div>
+    </div>
+    <div class="nav__group">
+      <button class="nav__group-btn" aria-expanded="false">Products
+        <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5L6 8.5L10 4.5"/></svg>
+      </button>
+      <div class="nav__dropdown">
+        <a href="../simulator.html">Simulator<small>Browser-based, free</small></a>
+        <a href="../pqc-solutions.html">PQC solutions<small>Quantum-safe cryptography</small></a>
+        <a href="../software-solutions.html">Software solutions<small>Quantum &amp; hybrid software</small></a>
+      </div>
+    </div>
+    <a href="../community.html">Q-Majlis</a>
+    <div class="nav__group">
+      <button class="nav__group-btn" aria-expanded="false">News
+        <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5L6 8.5L10 4.5"/></svg>
+      </button>
+      <div class="nav__dropdown">
+        <a href="../blog.html">Blog<small>Notes from the field</small></a>
+        <a href="../research.html">Research<small>Papers and preprints</small></a>
+        <a href="../whitepaper.html">Whitepaper<small>Working papers</small></a>
+        <a href="../docs.html">Docs<small>Simulator reference</small></a>
+      </div>
+    </div>
+    <div class="nav__group">
+      <button class="nav__group-btn" aria-expanded="false">About
+        <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5L6 8.5L10 4.5"/></svg>
+      </button>
+      <div class="nav__dropdown">
+        <a href="../about.html">About<small>Who we are</small></a>
+        <a href="../contact.html">Get in touch<small>Start a conversation</small></a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<main id="main">
+  <section class="phead phead--post">
+    <div class="phead__inner">
+      <p class="eyebrow"><a href="../blog.html">Blog</a> · Quantum computing</p>
+      <h1 class="phead__title">Quantum machine learning and optimisation: what is real, what is hype, and why everyone is racing.</h1>
+      <p class="phead__lede">
+        Machine learning and optimisation use more computing power than almost anything
+        else, so any machine that might do them faster attracts attention and money. Quantum
+        computers are that machine on paper. This post explains what quantum machine learning
+        and quantum optimisation are, how they differ from the classical versions, where they
+        can help, what still blocks them, and why governments and investors are moving fast
+        anyway.
+      </p>
+      <ul class="phead__meta">
+        <li><time datetime="2026-11-06">6 November 2026</time></li><li>15 min read</li><li>Quantum computing</li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="post-layout">
+    <nav class="post-toc" aria-label="On this page">
+      <p class="post-toc__h">On this page</p>
+      <ol>
+        <li><a href="#interest">Why the interest</a></li>
+        <li><a href="#qml">What quantum machine learning is</a></li>
+        <li><a href="#qopt">What quantum optimisation is</a></li>
+        <li><a href="#differ">How they differ from the classical versions</a></li>
+        <li><a href="#lessons">What the last decade taught</a></li>
+        <li><a href="#help">Where they can help</a></li>
+        <li><a href="#open">What remains open before deployment</a></li>
+        <li><a href="#impact">The impact if it works</a></li>
+        <li><a href="#race">Why the global race</a></li>
+        <li><a href="#now">What to do now</a></li>
+        <li><a href="#reading">Further reading</a></li>
+      </ol>
+    </nav>
+    <article class="prose prose--post" id="post">
+
+      <aside class="post-tldr" aria-labelledby="tldr-h">
+        <h2 class="post-tldr__h" id="tldr-h">In short</h2>
+        <ul>
+          <li>A quantum computer works with an enormous space of possibilities at once, which
+            sounds ideal for learning from data and for searching for the best option among
+            billions.</li>
+          <li>The catch is getting data in and answers out. Reading a quantum computer gives
+            only a few bits per run, so most of the theoretical power never reaches the
+            user.</li>
+          <li>The clearest gains are for <em>quantum</em> data, such as molecules, materials
+            and quantum sensors, and for a few problems with special structure. For everyday
+            business data, classical methods still win today.</li>
+          <li>Governments and investors are racing because the same machines will also break
+            today's encryption and reshape chemistry and materials science. Nobody wants to be
+            the one who arrived late.</li>
+        </ul>
+      </aside>
+
+      <h2 id="interest">Why the interest</h2>
+      <p>
+        Two kinds of computing work dominate modern data centres. One is machine learning:
+        training models on data so they can classify, predict or generate. The other is
+        optimisation: finding the best route, schedule, portfolio or design from a very large
+        number of options. Both are expensive, both keep growing, and both are limited by how
+        fast computers can do
+        <span class="term" tabindex="0" data-tip="The arithmetic of vectors and matrices. Most machine learning is matrix multiplication at very large scale.">linear algebra</span>
+        and search.
+      </p>
+      <p>
+        A quantum computer looks well suited to both on paper. A register of
+        <span class="term" tabindex="0" data-tip="The basic unit of quantum information. Unlike a bit, it can hold a mix of 0 and 1 until it is measured.">qubits</span>
+        describes its state with a list of numbers that doubles in length with every qubit
+        added. Fifty qubits carry more than a million billion of them. Quantum gates act on
+        that whole list at once, and the device can
+        <span class="term" tabindex="0" data-tip="Producing random outcomes that follow a particular probability distribution. Generative models are samplers.">sample</span>
+        from probability distributions that classical computers struggle to reproduce. Machine
+        learning is about vectors, matrices and distributions, so the overlap invites
+        attention.
+      </p>
+      <p>
+        That is the promise. The rest of this post is about the fine print, which matters as
+        much as the promise.
+      </p>
+
+      <h2 id="qml">What quantum machine learning is</h2>
+      <p>
+        “Quantum machine learning” covers several different ideas. A useful way to sort them is
+        by asking two questions: is the data classical or quantum, and is the computer doing the
+        learning classical or quantum?
+      </p>
+      <figure class="post-fig">
+        <div class="quad" role="img" aria-label="Four kinds of quantum machine learning. Classical data on a classical computer is ordinary machine learning, including quantum-inspired methods. Classical data on a quantum computer is what most people mean by quantum machine learning. Quantum data on a classical computer means using classical machine learning to study quantum systems. Quantum data on a quantum computer is learning directly from quantum states, where the clearest advantages are proven.">
+          <div class="quad__c"><b>Classical data · classical computer</b><span>Ordinary machine learning, plus <em>quantum-inspired</em> algorithms borrowed from quantum ideas</span></div>
+          <div class="quad__c quad__c--q1"><b>Classical data · quantum computer</b><span>What most people mean by QML: images, text or prices fed into a quantum circuit</span></div>
+          <div class="quad__c quad__c--q1"><b>Quantum data · classical computer</b><span>Neural networks that model molecules, control qubits or decode errors</span></div>
+          <div class="quad__c quad__c--q2"><b>Quantum data · quantum computer</b><span>Learning directly from quantum states. The strongest proven advantages live here</span></div>
+        </div>
+        <figcaption>The label “quantum machine learning” is used for all four. Most of the
+          headlines are about the top right; most of the proven results are in the bottom
+          right.</figcaption>
+      </figure>
+      <p>Within the quantum column, four approaches come up again and again:</p>
+      <ul>
+        <li><strong>Variational circuits.</strong> A
+          <span class="term" tabindex="0" data-tip="A quantum circuit with adjustable settings, usually rotation angles, that a classical optimiser tunes.">parameterised quantum circuit</span>
+          plays the role of a neural network. A classical computer adjusts its settings in a
+          loop until the output fits the data. This is the most common approach on today's
+          noisy hardware.</li>
+        <li><strong>Quantum kernels.</strong> The circuit maps each data point into the huge
+          quantum state space, and the computer measures how similar two points look there.
+          A classical
+          <span class="term" tabindex="0" data-tip="A support vector machine: a classical method that separates data into classes using a similarity measure called a kernel.">support vector machine</span>
+          then does the learning. Havlíček and colleagues, and separately Schuld and
+          Killoran, proposed this in 2019.</li>
+        <li><strong>Quantum linear algebra.</strong> Algorithms such as HHL, from Harrow,
+          Hassidim and Lloyd in 2009, solve certain systems of linear equations exponentially
+          faster than classical methods, under strict conditions. Many early QML proposals were
+          built on them.</li>
+        <li><strong>Quantum generative models.</strong> A circuit's measurement results are
+          themselves random samples, so the circuit can be trained to generate data that
+          follows a target distribution. These are sometimes called
+          <span class="term" tabindex="0" data-tip="A generative model whose samples come from measuring a quantum state. The name comes from the Born rule, which gives the probabilities of measurement outcomes.">Born machines</span>.</li>
+      </ul>
+
+      <h2 id="qopt">What quantum optimisation is</h2>
+      <p>
+        Many hard optimisation problems, from vehicle routing to portfolio selection, can be
+        rewritten as finding the lowest-energy arrangement of a set of interacting spins. This
+        form is called an
+        <span class="term" tabindex="0" data-tip="A model of magnetic spins that each point up or down and pull on their neighbours. Finding its lowest-energy arrangement is a standard hard problem.">Ising problem</span>,
+        or
+        <span class="term" tabindex="0" data-tip="Quadratic unconstrained binary optimisation: choose yes or no for each variable to minimise a sum of pairwise costs.">QUBO</span>.
+        Quantum hardware is made of spins, so the match is natural. There are four main
+        families of method:
+      </p>
+      <ul>
+        <li><strong>Quantum annealing.</strong> Start with a simple problem whose answer is
+          known, then slowly change it into the hard one, letting the system stay near its
+          lowest energy. Kadowaki and Nishimori described it in 1998. Commercial annealers with
+          thousands of qubits exist today.</li>
+        <li><strong>QAOA.</strong> The quantum approximate optimisation algorithm, from Farhi,
+          Goldstone and Gutmann in 2014, runs a short alternating circuit on a gate-based
+          computer and tunes it classically. It is the gate-model cousin of annealing.</li>
+        <li><strong>Search speedups.</strong>
+          <span class="term" tabindex="0" data-tip="A quantum algorithm that searches unsorted data faster than any classical method can, in about the square root of the number of steps.">Grover's algorithm</span>
+          and its relatives find a marked item, or a minimum, in about the square root of the
+          classical number of steps. The same idea speeds up
+          <span class="term" tabindex="0" data-tip="Estimating an average by running many random trials. It is widely used in finance and physics.">Monte Carlo</span>
+          estimation, which is why finance has paid close attention.</li>
+        <li><strong>New structured algorithms.</strong> Decoded quantum interferometry, from
+          Jordan and colleagues and published in <em>Nature</em> in 2025, turns some
+          optimisation problems into decoding problems and gives a large speedup for one class
+          of polynomial-fitting problems.</li>
+      </ul>
+
+      <h2 id="differ">How they differ from the classical versions</h2>
+      <p>
+        The difference is not just speed. Quantum computers handle information under rules
+        that change how learning and search have to be designed.
+      </p>
+      <figure class="post-fig">
+        <div class="post-tab">
+          <table>
+            <thead>
+              <tr><th scope="col"></th><th scope="col">Classical ML and optimisation</th><th scope="col">Quantum ML and optimisation</th></tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">Working space</th><td>Numbers held in memory, as many as you can afford</td><td>Amplitudes of a quantum state, 2ⁿ of them for n qubits</td></tr>
+              <tr><th scope="row">Getting data in</th><td>Load it from disk</td><td>Encode it into a circuit, which can cost as much as the computation it was meant to speed up</td></tr>
+              <tr><th scope="row">Getting answers out</th><td>Read any value directly</td><td>Each run returns n bits; estimating a number needs many repeated runs</td></tr>
+              <tr><th scope="row">Copying</th><td>Free and unlimited</td><td>Impossible for unknown quantum states, so every copy must be prepared again</td></tr>
+              <tr><th scope="row">Training</th><td>Backpropagation computes all gradients in one pass</td><td>Each gradient needs its own set of circuit runs</td></tr>
+              <tr><th scope="row">Noise</th><td>Hardware is effectively error-free</td><td>Errors build up with every gate until error correction matures</td></tr>
+              <tr><th scope="row">Typical speedup</th><td>Better hardware and better algorithms, steadily</td><td>Exponential for a few structured problems, quadratic for search, none known for many</td></tr>
+              <tr><th scope="row">Maturity</th><td>Runs the world's products</td><td>Research, pilots and small demonstrations</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <figcaption>Most of the gap between the promise and the results comes from the second,
+          third and fifth rows.</figcaption>
+      </figure>
+      <p>
+        The read-out limit is the one people miss most often. A 50-qubit state holds about a
+        million billion amplitudes, but measuring it gives you 50 bits and destroys the state.
+        Training a variational circuit means estimating many expectation values, each from
+        thousands of
+        <span class="term" tabindex="0" data-tip="One run of a quantum circuit followed by a measurement. Results are random, so estimates need many shots.">shots</span>,
+        and computing gradients with methods such as the
+        <span class="term" tabindex="0" data-tip="A way to get a circuit's gradient by running it twice with one setting shifted up and down. It needs two circuit evaluations per parameter.">parameter-shift rule</span>
+        that need extra runs for every parameter. A classical network with a billion
+        parameters gets all its gradients from one backward pass. A quantum model with a
+        thousand parameters needs thousands of separate estimates.
+      </p>
+
+      <h2 id="lessons">What the last decade taught</h2>
+      <p>
+        The field has been through a useful correction. Several early claims did not hold up,
+        and the reasons explain where quantum advantage can and cannot come from.
+      </p>
+      <ul class="timeline">
+        <li><span>1998</span> Kadowaki and Nishimori propose quantum annealing.</li>
+        <li><span>2009</span> The HHL algorithm promises exponential speedups for linear systems, under strict conditions.</li>
+        <li><span>2014</span> QAOA is introduced for gate-based optimisation.</li>
+        <li><span>2015</span> Aaronson's “Read the fine print” sets out the conditions HHL-style speedups depend on.</li>
+        <li><span>2018</span> McClean and colleagues identify barren plateaus in variational training.</li>
+        <li><span>2019</span> Tang gives a classical algorithm matching a celebrated quantum recommendation algorithm. Quantum kernels are proposed.</li>
+        <li><span>2021</span> Liu, Arunachalam and Temme prove a quantum speedup for a learning task built on discrete logarithms.</li>
+        <li><span>2022</span> Huang and colleagues show an exponential advantage in learning from quantum experiments, on real hardware.</li>
+        <li><span>2024</span> Simulations of QAOA show better scaling than leading exact solvers on one hard problem class.</li>
+        <li><span>2025</span> Error correction runs below threshold on superconducting hardware; decoded quantum interferometry appears in <em>Nature</em>; a scaling advantage is reported for approximate optimisation with annealing.</li>
+      </ul>
+      <p>Four lessons stand out.</p>
+      <h3>Many speedups disappear when classical algorithms are given the same help</h3>
+      <p>
+        Quantum linear-algebra algorithms usually assume the data is already loaded into a
+        quantum state through
+        <span class="term" tabindex="0" data-tip="Quantum random-access memory: a hypothetical device that loads classical data into a quantum state quickly. No large-scale version exists.">QRAM</span>.
+        In 2019 Ewin Tang showed that if a classical computer gets a comparable way to sample
+        from the data, the quantum recommendation algorithm loses its exponential edge. The
+        work started a line of
+        <span class="term" tabindex="0" data-tip="Finding a classical algorithm that matches a claimed quantum speedup, showing the advantage came from assumptions rather than quantum effects.">dequantisation</span>
+        results that removed several claimed advantages.
+      </p>
+      <h3>Training can get stuck on flat ground</h3>
+      <p>
+        McClean and colleagues showed in 2018 that randomly initialised variational circuits
+        suffer from
+        <span class="term" tabindex="0" data-tip="Regions where a model's loss is almost perfectly flat, so gradients vanish exponentially with the number of qubits and training cannot find a direction.">barren plateaus</span>.
+        As circuits grow, the gradient becomes exponentially small, and no realistic number
+        of shots can find a direction to move in. Fixes exist, but a 2025 perspective by
+        Cerezo and colleagues argued that many of the models that avoid barren plateaus do so
+        by working in a small space that a classical computer can also simulate. Trainable and
+        quantum-hard may be difficult to get at the same time.
+      </p>
+      <h3>Quadratic speedups are not enough on early hardware</h3>
+      <p>
+        Grover-style speedups are real, but error-corrected quantum operations are slow and
+        expensive compared with classical ones. Babbush and colleagues estimated in 2021 that,
+        with current error-correction overheads, a quantum computer would need very long runs
+        before a quadratic speedup overtook a classical machine, so the gain is unlikely to pay
+        off on early fault-tolerant computers. Larger speedups are needed. A study
+        of quantum derivative pricing the same year put the threshold for advantage at about
+        7,500 error-corrected qubits running at clock rates well beyond today's.
+      </p>
+      <h3>Benchmarks need strong classical baselines</h3>
+      <p>
+        Bowles, Ahmed and Schuld tested popular quantum models against simple classical ones
+        in 2024 and found that the classical models generally did as well or better on the
+        small datasets typically used. Removing the entanglement from some quantum models did
+        not hurt them either. Small, carefully chosen examples can make almost anything look
+        promising.
+      </p>
+
+      <h2 id="help">Where they can help</h2>
+      <p>
+        The correction did not end the field. It made the claims more precise. These are the
+        places where the case is strongest, from the most solid to the most speculative.
+      </p>
+      <ul>
+        <li><strong>Learning from quantum systems.</strong> When the data is itself quantum,
+          from a molecule, a material or a quantum sensor, a quantum computer can work with it
+          directly instead of measuring it first. Huang and colleagues proved, and showed on
+          hardware in 2022, that some properties can be learned with exponentially fewer
+          experiments this way. This is the clearest form of quantum advantage in learning.</li>
+        <li><strong>Problems with hidden structure.</strong> Some learning and optimisation
+          problems have algebraic structure that quantum algorithms exploit, as in the 2021
+          discrete-logarithm result and the polynomial-fitting problems in decoded quantum
+          interferometry. The open question is how many real problems have that structure.</li>
+        <li><strong>Hard optimisation where good is good enough.</strong> Many business
+          problems need a very good answer, not a perfect one. The 2024 QAOA study on the
+          <span class="term" tabindex="0" data-tip="Low autocorrelation binary sequences: a hard search problem from radar and communications, used as a benchmark.">LABS problem</span>
+          and the 2025 annealing study by Munoz-Bauza and Lidar both report better scaling than
+          strong classical solvers on approximate solutions. Neither yet solves a commercial
+          problem faster than a classical machine.</li>
+        <li><strong>Sampling and simulation inside larger pipelines.</strong> A quantum
+          computer may produce samples, energies or training data that a classical model then
+          uses. For chemistry and materials, the quantum part is usually simulation rather
+          than learning, with classical machine learning around it.</li>
+        <li><strong>Ideas that run on classical hardware.</strong>
+          <span class="term" tabindex="0" data-tip="Classical methods that represent large quantum-like states compactly as networks of small tensors.">Tensor networks</span>
+          and quantum-inspired sampling methods grew out of this research and already run on
+          GPUs today.</li>
+      </ul>
+
+      <h2 id="open">What remains open before deployment</h2>
+      <h3>Error-corrected qubits at scale</h3>
+      <p>
+        Most algorithms with proven speedups need
+        <span class="term" tabindex="0" data-tip="A qubit encoded across many physical qubits so that errors can be detected and corrected faster than they build up.">logical qubits</span>
+        and millions of reliable operations. In results published in 2025, Google showed a surface-code memory
+        whose errors fell as the code grew, the
+        <span class="term" tabindex="0" data-tip="The error rate below which adding more qubits to an error-correcting code makes it better rather than worse.">threshold</span>
+        behaviour the field had waited decades for. Getting from a handful of logical qubits
+        to thousands, with fast logical gates, is the main engineering task of the next
+        decade.
+      </p>
+      <h3>Loading data</h3>
+      <p>
+        Big classical datasets have to be turned into quantum states. Without fast QRAM,
+        loading can erase the speedup, and building QRAM that is large, fast and
+        error-tolerant is unsolved. This is the main reason the strongest results involve
+        quantum data, which needs no loading.
+      </p>
+      <h3>Trainability without simulability</h3>
+      <p>
+        The field needs model families that can be trained without barren plateaus and that a
+        classical computer still cannot simulate. Good initialisations, problem-inspired
+        circuits and new cost functions are all being tried. A clear answer would decide
+        whether variational QML has a future at scale.
+      </p>
+      <h3>Finding the right problems</h3>
+      <p>
+        Speedups are proven for problems with special structure. Matching that structure to
+        problems a company actually has, in logistics, finance or drug design, is mostly
+        undone. Much current work is the slow job of checking, one application at a time,
+        whether any advantage survives end-to-end costs.
+      </p>
+      <h3>Honest benchmarks</h3>
+      <p>
+        Results need to be compared against the best classical method run on modern
+        hardware, at problem sizes that matter, counting every cost, including data loading,
+        repeated shots and error correction. Shared benchmark suites and standard reporting
+        rules are only starting to appear.
+      </p>
+      <h3>Noise on today's machines</h3>
+      <p>
+        Before full error correction, results depend on
+        <span class="term" tabindex="0" data-tip="Techniques that reduce the effect of hardware errors after the fact, usually by running extra circuits, instead of correcting them as they happen.">error mitigation</span>,
+        whose cost grows quickly with circuit size. Mitigation stretches what noisy machines
+        can do, but it cannot scale indefinitely.
+      </p>
+      <h3>Fitting into classical computing</h3>
+      <p>
+        Useful systems will be hybrid. Quantum processors will sit next to CPUs and GPUs,
+        often in the same data centre, with tight loops between them. Scheduling, software,
+        latency between the two, and the skills to use both are all still being built.
+      </p>
+      <h3>Verifying the answer</h3>
+      <p>
+        For optimisation a good answer can usually be checked. For learning and sampling it is
+        harder to confirm that a quantum model did what was claimed, especially when no
+        classical computer can reproduce it. Verification methods for quantum learning are an
+        active research area.
+      </p>
+
+      <h2 id="impact">The impact if it works</h2>
+      <p>
+        If error-corrected machines arrive and the right problems are matched to them, the
+        largest gains are expected where nature itself is quantum. Better simulation of
+        molecules and materials would help with catalysts, battery chemistry, fertiliser
+        production and drug candidates. In finance, faster risk estimation would change how
+        often portfolios can be re-evaluated. In logistics and energy, better approximate
+        optimisation on very large instances could save fuel and balance power grids with
+        more renewable supply. In science, quantum computers linked to quantum sensors could
+        learn from experiments in ways classical computers cannot.
+      </p>
+      <p>
+        The economic estimates are large and should be read with care. They depend on
+        hardware timelines that have slipped before. A safer statement is that the potential
+        is big enough that waiting until it is certain is itself a risk.
+      </p>
+
+      <h2 id="race">Why the global race</h2>
+      <p>
+        If the near-term results are mixed, why is the money moving so fast? Several reasons
+        reinforce each other.
+      </p>
+      <ul>
+        <li><strong>It is one race, not several.</strong> The machines that would run QML and
+          optimisation are the same machines that, at scale, run
+          <span class="term" tabindex="0" data-tip="A quantum algorithm that can break RSA and elliptic-curve cryptography on a large enough quantum computer.">Shor's algorithm</span>
+          and break today's public-key encryption. A lead in one is a lead in all, which makes
+          quantum computing a security question as much as a commercial one.</li>
+        <li><strong>Governments are treating it as strategic.</strong> The OECD counted 18 of
+          its members, plus the European Union, with national quantum strategies by November
+          2025, and around 250 quantum policies across about 40 countries.</li>
+        <li><strong>Private money has arrived.</strong> McKinsey's 2026 Quantum Technology
+          Monitor puts investment in quantum start-ups at 12.6 billion dollars in 2025, 6.3
+          times the 2024 figure, with almost all of it from private investors.</li>
+        <li><strong>Talent and supply chains are scarce.</strong> There are few people who
+          understand both quantum hardware and machine learning, and few suppliers of
+          specialist parts such as
+          <span class="term" tabindex="0" data-tip="Refrigerators that cool superconducting qubits to a few thousandths of a degree above absolute zero.">dilution refrigerators</span>,
+          lasers and control electronics. Early movers hire first and lock in suppliers.</li>
+        <li><strong>Standards and platforms are being set now.</strong> The software
+          frameworks, programming interfaces and benchmarks chosen in the next few years will
+          shape who builds on whom later.</li>
+        <li><strong>Fear of arriving late.</strong> Companies remember being slow to adopt
+          the cloud and deep learning. Small bets now are cheaper than catching up later,
+          even if the payoff is uncertain.</li>
+      </ul>
+      <p>
+        The race has a downside. Money that arrives faster than results invites overstated
+        claims, and the history above shows how often bold early claims have been revised.
+        The healthiest projects are the ones that publish careful benchmarks against strong
+        classical baselines.
+      </p>
+
+      <h2 id="now">What to do now</h2>
+      <p>
+        For most organisations, the useful work today is preparation rather than deployment.
+        Identify which of your hardest problems are optimisation, sampling or simulation, and
+        write them down precisely. Measure how well the best classical methods do on them,
+        because that is the bar any quantum method must clear. Try quantum-inspired and
+        tensor-network methods, which can pay off on current hardware. Build a small team that
+        can read the research critically.
+      </p>
+      <p>
+        One item cannot wait for the hardware: encryption. Data captured today can be
+        decrypted later by the same machines this post describes, so moving to
+        <a href="../pqc-solutions.html">post-quantum cryptography</a> is the quantum
+        preparation with a deadline.
+      </p>
+
+      <h2 id="reading">Further reading</h2>
+      <ol class="refs">
+        <li>J. Biamonte et al. Quantum machine learning. <em>Nature</em>, 2017.</li>
+        <li>M. Cerezo et al. Variational quantum algorithms. <em>Nature Reviews Physics</em>, 2021.</li>
+        <li>A. Abbas et al. Challenges and opportunities in quantum optimization. <em>Nature Reviews Physics</em>, 2024.</li>
+        <li>T. Kadowaki, H. Nishimori. Quantum annealing in the transverse Ising model. <em>Physical Review E</em>, 1998.</li>
+        <li>A. W. Harrow, A. Hassidim, S. Lloyd. Quantum algorithm for linear systems of equations. <em>Physical Review Letters</em>, 2009.</li>
+        <li>E. Farhi, J. Goldstone, S. Gutmann. A quantum approximate optimization algorithm. <a href="https://arxiv.org/abs/1411.4028" rel="noopener">arXiv:1411.4028</a>, 2014.</li>
+        <li>S. Aaronson. Read the fine print. <em>Nature Physics</em>, 2015.</li>
+        <li>J. R. McClean et al. Barren plateaus in quantum neural network training landscapes. <em>Nature Communications</em>, 2018.</li>
+        <li>E. Tang. A quantum-inspired classical algorithm for recommendation systems. <em>ACM STOC</em>, 2019.</li>
+        <li>V. Havlíček et al. Supervised learning with quantum-enhanced feature spaces. <em>Nature</em>, 2019.</li>
+        <li>M. Schuld, N. Killoran. Quantum machine learning in feature Hilbert spaces. <em>Physical Review Letters</em>, 2019.</li>
+        <li>R. Babbush et al. Focus beyond quadratic speedups for error-corrected quantum advantage. <em>PRX Quantum</em>, 2021.</li>
+        <li>S. Chakrabarti et al. A threshold for quantum advantage in derivative pricing. <em>Quantum</em>, 2021.</li>
+        <li>Y. Liu, S. Arunachalam, K. Temme. A rigorous and robust quantum speed-up in supervised machine learning. <em>Nature Physics</em>, 2021.</li>
+        <li>H.-Y. Huang et al. Power of data in quantum machine learning. <em>Nature Communications</em>, 2021.</li>
+        <li>H.-Y. Huang et al. Quantum advantage in learning from experiments. <em>Science</em>, 2022.</li>
+        <li>R. Shaydulin et al. Evidence of scaling advantage for the quantum approximate optimization algorithm on a classically intractable problem. <em>Science Advances</em>, 2024.</li>
+        <li>J. Bowles, S. Ahmed, M. Schuld. Better than classical? The subtle art of benchmarking quantum machine learning models. <a href="https://arxiv.org/abs/2403.07059" rel="noopener">arXiv:2403.07059</a>, 2024.</li>
+        <li>Google Quantum AI and collaborators. Quantum error correction below the surface code threshold. <em>Nature</em>, 2025.</li>
+        <li>S. P. Jordan et al. Optimization by decoded quantum interferometry. <em>Nature</em>, 2025.</li>
+        <li>H. Munoz-Bauza, D. Lidar. Scaling advantage in approximate optimization with quantum annealing. <em>Physical Review Letters</em>, 2025.</li>
+        <li>M. Cerezo et al. Does provable absence of barren plateaus imply classical simulability? <em>Nature Communications</em>, 2025.</li>
+        <li>OECD. An overview of national strategies and policies for quantum technologies. <em>OECD Digital Economy Papers</em> No. 379, 2025.</li>
+        <li>McKinsey &amp; Company. <a href="https://www.mckinsey.com/featured-insights/charts/quantum-investment-surge" rel="noopener">Quantum Technology Monitor</a>, 2026.</li>
+      </ol>
+
+      <p class="post-back"><a href="../blog.html">← All posts</a></p>
+    </article>
+  </div>
+</main>
+
+
+<footer class="foot">
+  <div class="foot__inner">
+    <div>
+      <p class="foot__brand">Qryptonics</p>
+      <p class="foot__note">Quantum-safe infrastructure and quantum-scale optimization.</p>
+    </div>
+    <div><p class="foot__h">Company</p><ul class="foot__list">
+      <li><a href="../index.html">Home</a></li><li><a href="../community.html">Q-Majlis</a></li>
+      <li><a href="../about.html">About</a></li>
+      <li><a href="../contact.html">Contact</a></li></ul></div>
+    <div><p class="foot__h">What we do</p><ul class="foot__list">
+      <li><a href="../development.html">Development</a></li><li><a href="../services.html">Services</a></li>
+      <li><a href="../simulator.html">Simulator</a></li></ul></div>
+    <div><p class="foot__h">News</p><ul class="foot__list">
+      <li><a href="../blog.html">Blog</a></li><li><a href="../research.html">Research</a></li><li><a href="../whitepaper.html">Whitepaper</a></li><li><a href="../docs.html">Docs</a></li></ul></div>
+  </div>
+  <p class="foot__legal">© <span id="year">2026</span> Qryptonics. <a href="../privacy.html">Privacy</a> <a href="../security.html">Security</a></p>
+</footer>
+
+<script src="../site.js?v=19363ea3" defer></script>
+<script src="../motion.js?v=9066a66d" defer></script>
+</body>
+</html>

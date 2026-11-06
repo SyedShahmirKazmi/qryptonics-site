@@ -21,6 +21,7 @@ operational problems belong on quantum or hybrid hardware now.
 - [Docs](https://qryptonics.com/docs.html): How the quantum simulator computes its results — density-matrix noise, optical loss budgets, coupling maps, limits.
 - [Research](https://qryptonics.com/research.html): Open research questions in quantum optimization, QML under realistic data, PQC engineering, and hybrid runtimes.
 - [Blog](https://qryptonics.com/blog.html): Engineering notes on quantum networks, post-quantum migration and optimization.
+- [Quantum machine learning and optimisation](https://qryptonics.com/blog/quantum-machine-learning-and-optimisation.html): How quantum learning and optimisation differ from classical methods, where they can help, what blocks deployment, and why the race is on.
 - [Fingerprints, PUFs and quantum PUFs](https://qryptonics.com/blog/fingerprinting-pufs-and-quantum-pufs.html): How device fingerprinting and physical unclonable functions work, how they are attacked, what quantum PUFs improve, and the open problems.
 - [Full-stack quantum networks](https://qryptonics.com/blog/full-stack-quantum-networks.html): Why layered quantum network stacks matter, what they make possible, and the open problems before deployment.
 - [About](https://qryptonics.com/about.html): Who we are and how we work.
