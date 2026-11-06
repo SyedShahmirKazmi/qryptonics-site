@@ -379,7 +379,18 @@ a.post:focus-visible{outline:2px solid var(--copper);outline-offset:-2px}
 .prose h3{font-size:1.05rem;margin-top:.8rem;color:var(--ink)}
 .prose strong{color:var(--ink)}
 .post-fig{margin:1rem 0}
-.post-fig svg{display:block;width:100%;height:auto}
+.stack{display:grid;grid-template-columns:minmax(0,1fr) 9rem;gap:.75rem}
+.prose .stack__layers{display:grid;gap:.5rem;list-style:none;padding:0}
+.stack__l{background:var(--card);border:1px solid var(--line-hi);border-left:3px solid var(--sl);border-radius:4px;padding:.7rem 1rem}
+.stack__l b{display:block;font-family:var(--f-mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--sl)}
+.stack__l span{display:block;margin-top:.2rem;font-size:.86rem;line-height:1.5;color:var(--body)}
+.stack__l--app{--sl:var(--g-phase)}
+.stack__l--tra{--sl:var(--g-rot)}
+.stack__l--net{--sl:var(--g-2q)}
+.stack__l--lnk{--sl:var(--g-1q)}
+.stack__l--phy{--sl:var(--g-meter)}
+.stack__ctl{display:grid;place-items:center;text-align:center;background:var(--sunk);border:1px dashed var(--line-hi);border-radius:4px;padding:1rem;font-family:var(--f-mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+@media (max-width:600px){.stack{grid-template-columns:1fr}}
 .post-fig figcaption{margin-top:.8rem;font-size:.85rem;line-height:1.6;color:var(--muted)}
 .prose .timeline{list-style:none;padding-left:0}
 .timeline li{display:grid;grid-template-columns:3.6rem minmax(0,1fr);gap:1rem;padding:.7rem 0;border-top:var(--rule)}

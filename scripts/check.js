@@ -17,7 +17,12 @@ function fail(msg) { failures++; console.log('  FAIL  ' + msg); }
 function pass(msg) { console.log('  ok    ' + msg); }
 function section(name) { console.log('\n' + name); }
 
-const html = fs.readdirSync(ROOT).filter(f => f.endsWith('.html'));
+/* Root pages plus posts under blog/. Paths stay relative to ROOT, and
+   links are resolved from each page's own folder. */
+const html = fs.readdirSync(ROOT).filter(f => f.endsWith('.html'))
+  .concat(fs.existsSync(path.join(ROOT, 'blog'))
+    ? fs.readdirSync(path.join(ROOT, 'blog')).filter(f => f.endsWith('.html')).map(f => 'blog/' + f)
+    : []);
 
 /* ── links and referenced assets ─────────────────────────── */
 section('Links and assets');
@@ -28,7 +33,7 @@ for (const page of html) {
   for (const ref of refs) {
     if (/^(https?:|mailto:|#|data:)/.test(ref)) continue;
     const target = ref.split('#')[0];
-    if (target && !fs.existsSync(path.join(ROOT, target))) {
+    if (target && !fs.existsSync(path.join(ROOT, path.dirname(page), target))) {
       fail(`${page} references missing ${ref}`);
       broken++;
     }

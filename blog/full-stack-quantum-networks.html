@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Full-Stack Quantum Networks: What They Solve and What Is Still Open — Qryptonics</title>
+<meta name="description" content="Why layered, full-stack quantum networks matter, what they make possible from device-independent QKD to distributed quantum computing, and the open problems researchers are solving before deployment.">
+<meta name="theme-color" content="#161B29">
+<link rel="canonical" href="https://qryptonics.com/blog/full-stack-quantum-networks.html">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2026-11-06">
+<meta property="og:title" content="Full-stack quantum networks: what they solve, and what still stands in the way">
+<meta property="og:description" content="Why layered, full-stack quantum networks matter, what they make possible from device-independent QKD to distributed quantum computing, and the open problems researchers are solving before deployment.">
+<meta property="og:url" content="https://qryptonics.com/blog/full-stack-quantum-networks.html">
+<meta property="og:site_name" content="Qryptonics">
+<meta property="og:image" content="https://qryptonics.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Qryptonics — quantum-safe infrastructure and quantum-scale optimization">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preload" href="../fonts/chivo-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../fonts/ibmplexmono-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../fonts.css">
+<script>document.documentElement.className+=" js"</script>
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-pfgOMgfVZwm2ODyms34QYW9h8EwicylhV77q5LHK8c0=' 'sha256-ibhNwFRGwLqTlEDFY0Y5lhQDwWW21mZ69psLS7ce6uM='; style-src 'self'; font-src 'self'; img-src 'self' data:; connect-src 'none'; form-action 'none'; base-uri 'none'; object-src 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="stylesheet" href="../styles.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BlogPosting",
+      "@id": "https://qryptonics.com/blog/full-stack-quantum-networks.html#post",
+      "mainEntityOfPage": "https://qryptonics.com/blog/full-stack-quantum-networks.html",
+      "headline": "Full-stack quantum networks: what they solve, and what still stands in the way",
+      "description": "Why layered, full-stack quantum networks matter, what they make possible from device-independent QKD to distributed quantum computing, and the open problems researchers are solving before deployment.",
+      "datePublished": "2026-11-06",
+      "dateModified": "2026-11-06",
+      "image": "https://qryptonics.com/og.png",
+      "inLanguage": "en",
+      "keywords": [
+        "quantum networks",
+        "quantum internet",
+        "quantum repeaters",
+        "entanglement distribution",
+        "quantum key distribution",
+        "distributed quantum computing"
+      ],
+      "author": {
+        "@id": "https://qryptonics.com/#org"
+      },
+      "publisher": {
+        "@id": "https://qryptonics.com/#org"
+      },
+      "isPartOf": {
+        "@type": "Blog",
+        "@id": "https://qryptonics.com/blog.html#blog",
+        "url": "https://qryptonics.com/blog.html",
+        "name": "Qryptonics Blog"
+      }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://qryptonics.com/#org",
+      "name": "Qryptonics",
+      "url": "https://qryptonics.com/",
+      "logo": "https://qryptonics.com/og.png",
+      "email": "hello@qryptonics.com"
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav" id="top">
+  <a class="nav__brand" href="../index.html" aria-label="Qryptonics home">
+    <svg class="nav__glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M2 8 L12 2 L22 8 L12 14 Z"/><path d="M2 16 L12 10 L22 16 L12 22 Z"/>
+    </svg>
+    <span class="nav__word">Qryptonics</span>
+  </a>
+  <button class="nav__toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Toggle menu">
+    <svg class="nav__ico-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    <svg class="nav__ico-close" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>
+  </button>
+  <nav class="nav__menu" id="nav-menu" aria-label="Primary">
+    <a href="../index.html">Home</a>
+    <div class="nav__group">
+      <button class="nav__group-btn" aria-expanded="false">Our technology
+        <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5L6 8.5L10 4.5"/></svg>
+      </button>
+      <div class="nav__dropdown">
+        <a href="../services.html">Services<small>Assessment, testing, audit</small></a>
+        <a href="../development.html">Development<small>Software we build</small></a>
+      </div>
+    </div>
+    <div class="nav__group">
+      <button class="nav__group-btn" aria-expanded="false">Products
+        <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5L6 8.5L10 4.5"/></svg>
+      </button>
+      <div class="nav__dropdown">
+        <a href="../simulator.html">Simulator<small>Browser-based, free</small></a>
+        <a href="../pqc-solutions.html">PQC solutions<small>Quantum-safe cryptography</small></a>
+        <a href="../software-solutions.html">Software solutions<small>Quantum &amp; hybrid software</small></a>
+      </div>
+    </div>
+    <a href="../community.html">Q-Majlis</a>
+    <div class="nav__group">
+      <button class="nav__group-btn" aria-expanded="false">News
+        <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5L6 8.5L10 4.5"/></svg>
+      </button>
+      <div class="nav__dropdown">
+        <a href="../blog.html">Blog<small>Notes from the field</small></a>
+        <a href="../research.html">Research<small>Papers and preprints</small></a>
+        <a href="../whitepaper.html">Whitepaper<small>Working papers</small></a>
+        <a href="../docs.html">Docs<small>Simulator reference</small></a>
+      </div>
+    </div>
+    <div class="nav__group">
+      <button class="nav__group-btn" aria-expanded="false">About
+        <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5L6 8.5L10 4.5"/></svg>
+      </button>
+      <div class="nav__dropdown">
+        <a href="../about.html">About<small>Who we are</small></a>
+        <a href="../contact.html">Get in touch<small>Start a conversation</small></a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<main id="main">
+  <section class="phead">
+    <div class="phead__inner">
+      <p class="eyebrow"><a href="../blog.html">Blog</a> · Quantum networks</p>
+      <h1 class="phead__title">Full-stack quantum networks: what they solve, and what still stands in the way.</h1>
+      <p class="phead__lede">
+        For most of its history, quantum networking meant one link between two labs. The field
+        has moved on to a harder question: how many nodes, built by different teams on
+        different hardware, can share entanglement on demand? This post covers why that shift
+        matters, what a working network would make possible, and the problems that still need
+        solving before anyone deploys one.
+      </p>
+      <ul class="phead__meta">
+        <li><time datetime="2026-11-06">6 November 2026</time></li><li>14 min read</li><li>Quantum networks</li>
+      </ul>
+    </div>
+  </section>
+
+  <article class="wrap">
+    <div class="prose prose--post">
+
+      <h2 id="carries">What a quantum network actually carries</h2>
+      <p>
+        A classical network moves bits. A quantum network's main job is different: it
+        distributes <strong>entanglement</strong> between qubits in different places. Once two
+        nodes share an entangled pair, they can use it to teleport a quantum state, run a key
+        distribution protocol, or apply a gate between qubits that sit in separate machines.
+        Entanglement is the resource, and everything else is built on top of it.
+      </p>
+      <p>
+        That one difference rules out most of what makes the classical internet work. Quantum
+        states cannot be copied, so there is no amplifier and no resending the same packet. A
+        photon lost in a fibre is gone, along with whatever it carried. Standard telecom fibre
+        loses about 0.2&nbsp;dB per kilometre at 1550&nbsp;nm. After 100&nbsp;km roughly one
+        photon in a hundred survives. After 500&nbsp;km it is about one in ten billion.
+        Pirandola and colleagues showed in 2017 that without repeaters there is a hard ceiling
+        on how fast entanglement or secret key can cross a lossy channel, and that the ceiling
+        falls exponentially with distance.
+      </p>
+      <p>
+        A long-distance network therefore needs <strong>quantum repeaters</strong>: nodes that
+        hold entanglement in memory, wait until neighbouring links succeed, and then join them
+        by entanglement swapping. This is where the networking problem starts, because a
+        repeater chain is a distributed system whose resources decay while they wait.
+      </p>
+
+      <h2 id="stack">What “full stack” means</h2>
+      <p>
+        Early experiments were built end to end for one purpose: one source, one fibre, one
+        detector, one protocol. A full-stack network splits the job into layers, the way
+        TCP/IP does, so that each layer can be built and improved without rewriting the
+        others. An application should not need to know whether the link underneath uses
+        trapped ions, colour centres in diamond or clouds of cold atoms.
+      </p>
+
+      <figure class="post-fig">
+        <div class="stack" role="img" aria-label="The quantum network stack: application, transport, network, link and physical layers, with a classical control plane alongside every layer">
+          <ol class="stack__layers">
+            <li class="stack__l stack__l--app"><b>Application</b><span>QKD · blind computing · distributed algorithms · sensing</span></li>
+            <li class="stack__l stack__l--tra"><b>Transport</b><span>end-to-end qubit delivery · teleportation · distillation</span></li>
+            <li class="stack__l stack__l--net"><b>Network</b><span>entanglement swapping · routing · scheduling</span></li>
+            <li class="stack__l stack__l--lnk"><b>Link</b><span>heralded pairs as a service, with fidelity and deadline</span></li>
+            <li class="stack__l stack__l--phy"><b>Physical</b><span>sources · memories · conversion · fibre · detectors</span></li>
+          </ol>
+          <p class="stack__ctl">Classical control plane</p>
+        </div>
+        <figcaption>Every layer depends on classical messages: heralding signals, swap outcomes, routing decisions. Their latency is part of the quantum error budget.</figcaption>
+      </figure>
+
+      <ul>
+        <li><strong>Physical layer.</strong> Generating entanglement between neighbouring
+          nodes. Photon sources, quantum memories, frequency conversion, fibre or free-space
+          channels, detectors, and the timing that tells each node whether an attempt
+          worked.</li>
+        <li><strong>Link layer.</strong> Turning unreliable physical attempts into a service.
+          A node asks for “an entangled pair with this neighbour, at this fidelity, within this
+          time” and gets back either a pair or a clear failure. Dahlberg and colleagues
+          proposed the first such protocol in 2019, and Pompili and colleagues ran it on
+          hardware in 2022.</li>
+        <li><strong>Network layer.</strong> Extending entanglement beyond neighbours through
+          swapping, which means deciding which links to build, in what order and over which
+          route.</li>
+        <li><strong>Transport layer.</strong> Delivering qubits reliably from end to end, for
+          example by teleportation, with whatever distillation or error correction the
+          application needs.</li>
+        <li><strong>Application layer.</strong> Key distribution, blind computation,
+          distributed algorithms and sensing.</li>
+      </ul>
+      <p>
+        The layer boundaries matter more than they look. A classical router can hold a packet
+        for as long as it likes. In a quantum network every stored qubit is losing fidelity,
+        so one layer's delay becomes the next layer's noise. Designing the interfaces is part
+        of the physics problem.
+      </p>
+      <p>
+        The software side has started to catch up. In 2025 a team led from Delft published
+        QNodeOS, an operating system for quantum network nodes. Applications written once in
+        platform-independent code ran on nodes built from nitrogen-vacancy centres in diamond,
+        and the same design was shown on a trapped-ion node. In parallel, the IRTF's Quantum
+        Internet Research Group has written down architectural principles
+        (<a href="https://www.rfc-editor.org/rfc/rfc9340.html" rel="noopener">RFC 9340</a>) and
+        application scenarios (<a href="https://www.rfc-editor.org/rfc/rfc9583.html" rel="noopener">RFC 9583</a>).
+        Both are early work, but they are the first signs of a network being designed as a
+        network.
+      </p>
+
+      <h2 id="why">Why it matters</h2>
+      <p>
+        The honest answer is narrower than most headlines suggest. It is also more
+        interesting.
+      </p>
+
+      <h3>Key distribution that does not rest on hard mathematics</h3>
+      <p>
+        Public-key cryptography depends on problems we believe are hard to solve.
+        Post-quantum algorithms swap out the problems that Shor's algorithm breaks, and they
+        are the right answer for almost every system today. Quantum key distribution offers
+        something different: security that follows from physics, where an eavesdropper shows
+        up as errors. Device-independent QKD, demonstrated in 2022 with trapped ions and with
+        neutral atoms, goes further and does not even require trusting the devices. Those
+        experiments ran at very low rates over short distances. Entanglement-based networks
+        are what would let them scale.
+      </p>
+      <p>
+        QKD does not replace post-quantum cryptography. It still needs an authenticated
+        classical channel. Most deployed QKD networks rely on trusted relay nodes that see the
+        key. Several national security agencies currently advise PQC over QKD for general use.
+        The case for QKD is strongest for long-lived secrets on a few links where the
+        hardware cost is justified.
+      </p>
+
+      <h3>Using a remote quantum computer without revealing the computation</h3>
+      <p>
+        Blind quantum computing, proposed by Broadbent, Fitzsimons and Kashefi in 2009, lets
+        a client with very modest quantum capability run a computation on a remote server
+        while hiding the input, the algorithm and the output. Verifiable versions also let the
+        client check that the server did the work honestly. In 2024 an Oxford team
+        demonstrated verifiable blind computing with a trapped-ion server and a client
+        connected by optical fibre. If quantum computers end up in the cloud, as classical
+        ones did, this is how users with sensitive workloads would use them.
+      </p>
+
+      <h3>Scaling quantum computers by linking them</h3>
+      <p>
+        Building one ever-larger processor runs into limits on wiring, cooling and crosstalk.
+        Linking smaller modules through entanglement is the alternative. In 2025 an Oxford
+        team connected two trapped-ion modules about two metres apart with a photonic link,
+        teleported a controlled-Z gate between them and ran Grover's search across both. The
+        distance is small, but it is the mechanism a datacentre-scale machine would use. The
+        first serious customer for quantum networking may well be quantum computing
+        itself.
+      </p>
+
+      <h3>Measurement beyond what one site can do</h3>
+      <p>
+        Shared entanglement can synchronise clocks more precisely than classical methods
+        allow, and could in principle let separate telescopes combine light as if they were
+        one larger instrument. These are longer-term goals, but no classical network can offer
+        them at any price.
+      </p>
+      <p>
+        What a quantum network will not do is make the internet faster or carry ordinary
+        data. It sits beside the classical internet and depends on it.
+      </p>
+
+      <h2 id="now">Where things stand</h2>
+      <ul class="timeline">
+        <li><span>2017</span> The Micius satellite distributed entanglement between ground
+          stations 1,200&nbsp;km apart.</li>
+        <li><span>2021</span> A three-node network of diamond spin qubits in Delft shared
+          entanglement among all three nodes.</li>
+        <li><span>2021</span> A space-to-ground QKD network spanning 4,600&nbsp;km went into
+          operation, using trusted relay nodes.</li>
+        <li><span>2022</span> Teleportation between two Delft nodes that are not directly
+          connected, passing through the third.</li>
+        <li><span>2023</span> Twin-field QKD over 1,002&nbsp;km of fibre, without repeaters
+          or trusted relays.</li>
+        <li><span>2024</span> Heralded entanglement between memory nodes over deployed city
+          fibre, reported by three groups: silicon-vacancy centres over a 35&nbsp;km loop in
+          Boston, diamond nodes 10&nbsp;km apart between Delft and The Hague, and atomic
+          ensembles up to 12.5&nbsp;km apart in Hefei.</li>
+        <li><span>2025</span> QNodeOS runs network applications on real nodes. Distributed
+          quantum computing across an optical link.</li>
+      </ul>
+      <p>
+        The pattern is clear. Links work. Small networks work, in the lab and on city fibre. A
+        software stack exists as a prototype. What does not exist yet is a network that
+        delivers high-fidelity entanglement at useful rates over long distances to
+        applications that pay for it.
+      </p>
+
+      <h2 id="open">The open problems</h2>
+      <p>
+        These are the problems research groups and standards bodies are working on now. Most
+        come down to one tension: entanglement is slow to make and quick to decay.
+      </p>
+
+      <h3>1. Memories that outlast the network's response time</h3>
+      <p>
+        Every heralded attempt needs a classical signal to say whether it worked. Light in
+        fibre travels about 200&nbsp;km per millisecond, so a node waiting on a neighbour
+        100&nbsp;km away spends at least a millisecond per round trip, and a multi-hop chain
+        far longer. The memory has to hold entanglement through all of that while staying
+        efficient to write and read. Each platform sits at a different point on this
+        trade-off: some store well but couple to light poorly, others the reverse. Two main
+        lines of attack are multiplexed memories, which run many attempts in parallel, and
+        long-lived nuclear-spin registers sitting next to the communication qubit.
+      </p>
+
+      <h3>2. Repeaters that beat bare fibre at a useful rate</h3>
+      <p>
+        A repeater only helps if the chain delivers more than the fibre would on its own.
+        Memory-assisted links have beaten the repeaterless limit in controlled experiments,
+        notably at Harvard in 2020. A chain that does so over hundreds of kilometres, at rates
+        an application can use, has not been shown. Repeater designs are usually grouped into
+        generations by how they handle loss and errors: heralded entanglement with
+        distillation, then error correction on each link, then fully encoded one-way schemes.
+        Each generation needs better hardware than the one before.
+      </p>
+
+      <h3>3. Connecting different kinds of qubits</h3>
+      <p>
+        The qubits that store information best rarely emit light at telecom wavelengths, so
+        most nodes need quantum frequency conversion, which adds loss and noise.
+        Superconducting processors face a harder version of the problem. Their qubits work at
+        microwave frequencies, and converting a single microwave photon to an optical one
+        without destroying it, known as transduction, is still far below the efficiency a
+        network needs. Until transduction improves, the most mature quantum computers cannot
+        easily join an optical network.
+      </p>
+
+      <h3>4. Fidelity budgets and distillation</h3>
+      <p>
+        Each swap compounds the errors of the links it joins. Distillation turns several noisy
+        pairs into fewer good ones, but it uses up pairs that took a long time to make. How
+        much fidelity each application really needs, and where in the stack to spend effort
+        to reach it, is still being worked out. Key distribution tolerates fairly noisy pairs.
+        Distributed computing needs pairs good enough to sit inside an error-corrected
+        algorithm.
+      </p>
+
+      <h3>5. Routing with resources that decay</h3>
+      <p>
+        Classical routing assumes a packet can wait without harm. A quantum router must decide
+        which links to build, which pairs to swap and which to throw away, knowing that every
+        stored pair is getting worse. This is a real-time optimization problem with partial
+        information. The classical control plane that coordinates it, with its own latency
+        and clock synchronisation, is part of the network's quantum performance. Simulators
+        such as NetSquid and SeQUeNCe exist largely to explore these protocols before hardware
+        can run them.
+      </p>
+
+      <h3>6. Sharing fibre with classical traffic</h3>
+      <p>
+        Operators will not lay dedicated fibre for every quantum link. Single photons sharing
+        a fibre with bright classical channels pick up noise, mostly from Raman scattering,
+        and that raises error rates. Wavelength planning, narrow filtering and tight timing
+        windows are active engineering problems rather than solved ones.
+      </p>
+
+      <h3>7. Standards and interoperability</h3>
+      <p>
+        A network built by one lab on one hardware platform is an experiment. A network that
+        different vendors can join needs agreed interfaces: what a link-layer request looks
+        like, how fidelity is reported, how nodes authenticate each other. The IRTF documents,
+        ETSI's QKD specifications and ITU-T's work on QKD networks are a start. Most of the
+        hard questions are still open.
+      </p>
+
+      <h3>8. Security of the network itself</h3>
+      <p>
+        Physics-based security covers the quantum channel, not the devices or the software
+        that controls them. Commercial QKD systems have been broken through detector side
+        channels. Trusted relays are only as trustworthy as whoever runs them. The control
+        plane needs authentication, which today means classical or post-quantum cryptography.
+        A secure quantum network still needs conventional security engineering done well.
+      </p>
+
+      <h3>9. Applications worth the cost</h3>
+      <p>
+        The last open problem is economic. Entanglement distribution is expensive and will
+        stay that way for a while. The first networks to be built will be the ones attached to
+        a clear use: linking processors inside one facility, protecting a handful of very
+        high-value links, or serving a scientific instrument. Working out which uses justify
+        the cost, and which are better served by post-quantum cryptography and ordinary
+        networks, matters as much as the physics.
+      </p>
+
+      <h2 id="engineers">What this means if you build systems</h2>
+      <p>
+        For most organisations the practical steps today are classical. Migrate to
+        post-quantum cryptography, because it protects data now and does not depend on any
+        network being built. If a use case might need quantum networking later, model it
+        before buying anything. Link distances, loss budgets, memory lifetimes and rate
+        requirements show very quickly whether an idea can work.
+      </p>
+      <p>
+        That kind of modelling is what our <a href="../simulator.html">simulator</a> is for.
+        It runs entanglement distribution over fibre with loss, detector noise and memory
+        decoherence, and models distributed computing across QPUs with dedicated
+        communication qubits, all in the browser. It is a quick way to see why a 500&nbsp;km
+        link without repeaters does not close, or how much a single repeater buys you. The
+        <a href="../docs.html">docs</a> explain the models and where they stop being
+        accurate.
+      </p>
+
+      <h2 id="reading">Further reading</h2>
+      <ol class="refs">
+        <li>S. Wehner, D. Elkouss, R. Hanson. Quantum internet: a vision for the road ahead. <em>Science</em>, 2018.</li>
+        <li>S. Pirandola, R. Laurenza, C. Ottaviani, L. Banchi. Fundamental limits of repeaterless quantum communications. <em>Nature Communications</em>, 2017.</li>
+        <li>A. Dahlberg et al. A link layer protocol for quantum networks. <em>ACM SIGCOMM</em>, 2019.</li>
+        <li>M. Pompili et al. Experimental demonstration of entanglement delivery using a quantum network stack. <em>npj Quantum Information</em>, 2022.</li>
+        <li>C. Delle Donne et al. An operating system for executing applications on quantum network nodes. <em>Nature</em>, 2025.</li>
+        <li>W. Kozlowski et al. Architectural principles for a quantum internet. <a href="https://www.rfc-editor.org/rfc/rfc9340.html" rel="noopener">RFC 9340</a>, IRTF, 2023.</li>
+        <li>C. Wang et al. Application scenarios for the quantum internet. <a href="https://www.rfc-editor.org/rfc/rfc9583.html" rel="noopener">RFC 9583</a>, IRTF, 2024.</li>
+        <li>J. Yin et al. Satellite-based entanglement distribution over 1200 kilometers. <em>Science</em>, 2017.</li>
+        <li>M. Pompili et al. Realization of a multinode quantum network of remote solid-state qubits. <em>Science</em>, 2021.</li>
+        <li>Y.-A. Chen et al. An integrated space-to-ground quantum communication network over 4,600 kilometres. <em>Nature</em>, 2021.</li>
+        <li>S. L. N. Hermans et al. Qubit teleportation between non-neighbouring nodes in a quantum network. <em>Nature</em>, 2022.</li>
+        <li>Y. Liu et al. Experimental twin-field quantum key distribution over 1000 km fiber distance. <em>Physical Review Letters</em>, 2023.</li>
+        <li>C. M. Knaut et al. Entanglement of nanophotonic quantum memory nodes in a telecom network. <em>Nature</em>, 2024.</li>
+        <li>A. J. Stolk et al. Metropolitan-scale heralded entanglement of solid-state qubits. <em>Science Advances</em>, 2024.</li>
+        <li>J.-L. Liu et al. Creation of memory–memory entanglement in a metropolitan quantum network. <em>Nature</em>, 2024.</li>
+        <li>D. Main et al. Distributed quantum computing across an optical network link. <em>Nature</em>, 2025.</li>
+        <li>D. P. Nadlinger et al. Experimental quantum key distribution certified by Bell's theorem. <em>Nature</em>, 2022.</li>
+        <li>W. Zhang et al. A device-independent quantum key distribution system for distant users. <em>Nature</em>, 2022.</li>
+        <li>A. Broadbent, J. Fitzsimons, E. Kashefi. Universal blind quantum computation. <em>IEEE FOCS</em>, 2009.</li>
+        <li>P. Drmota et al. Verifiable blind quantum computing with trapped ions and single photons. <em>Physical Review Letters</em>, 2024.</li>
+        <li>M. K. Bhaskar et al. Experimental demonstration of memory-enhanced quantum communication. <em>Nature</em>, 2020.</li>
+        <li>S. Muralidharan et al. Optimal architectures for long distance quantum communication. <em>Scientific Reports</em>, 2016.</li>
+        <li>P. Kómár et al. A quantum network of clocks. <em>Nature Physics</em>, 2014.</li>
+        <li>D. Gottesman, T. Jennewein, S. Croke. Longer-baseline telescopes using quantum repeaters. <em>Physical Review Letters</em>, 2012.</li>
+        <li>T. Coopmans et al. NetSquid, a network simulator for quantum information using discrete events. <em>Communications Physics</em>, 2021.</li>
+        <li>X. Wu et al. SeQUeNCe: a customizable discrete-event simulator of quantum networks. <em>Quantum Science and Technology</em>, 2021.</li>
+      </ol>
+
+      <p class="post-back"><a href="../blog.html">← All posts</a></p>
+    </div>
+  </article>
+</main>
+
+
+<footer class="foot">
+  <div class="foot__inner">
+    <div>
+      <p class="foot__brand">Qryptonics</p>
+      <p class="foot__note">Quantum-safe infrastructure and quantum-scale optimization.</p>
+    </div>
+    <div><p class="foot__h">Company</p><ul class="foot__list">
+      <li><a href="../index.html">Home</a></li><li><a href="../community.html">Q-Majlis</a></li>
+      <li><a href="../about.html">About</a></li>
+      <li><a href="../contact.html">Contact</a></li></ul></div>
+    <div><p class="foot__h">What we do</p><ul class="foot__list">
+      <li><a href="../development.html">Development</a></li><li><a href="../services.html">Services</a></li>
+      <li><a href="../simulator.html">Simulator</a></li></ul></div>
+    <div><p class="foot__h">News</p><ul class="foot__list">
+      <li><a href="../blog.html">Blog</a></li><li><a href="../research.html">Research</a></li><li><a href="../whitepaper.html">Whitepaper</a></li><li><a href="../docs.html">Docs</a></li></ul></div>
+  </div>
+  <p class="foot__legal">© <span id="year">2026</span> Qryptonics. <a href="../privacy.html">Privacy</a> <a href="../security.html">Security</a></p>
+</footer>
+
+<script src="../site.js" defer></script>
+<script src="../motion.js" defer></script>
+</body>
+</html>

@@ -20,6 +20,8 @@ operational problems belong on quantum or hybrid hardware now.
 - [Whitepaper](https://qryptonics.com/whitepaper.html): Working paper on cryptographic inventory before post-quantum migration.
 - [Docs](https://qryptonics.com/docs.html): How the quantum simulator computes its results — density-matrix noise, optical loss budgets, coupling maps, limits.
 - [Research](https://qryptonics.com/research.html): Open research questions in quantum optimization, QML under realistic data, PQC engineering, and hybrid runtimes.
+- [Blog](https://qryptonics.com/blog.html): Engineering notes on quantum networks, post-quantum migration and optimization.
+- [Full-stack quantum networks](https://qryptonics.com/blog/full-stack-quantum-networks.html): Why layered quantum network stacks matter, what they make possible, and the open problems before deployment.
 - [About](https://qryptonics.com/about.html): Who we are and how we work.
 - [Get in touch](https://qryptonics.com/contact.html): WhatsApp and email.
 - [Security](https://qryptonics.com/security.html): Vulnerability disclosure policy and scope.
