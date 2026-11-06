@@ -126,14 +126,14 @@
       <p class="eyebrow">Q-Majlis</p>
       <h1 class="phead__title">Q-Majlis — a quantum community, open to everyone.</h1>
       <p class="phead__lede">
-        A majlis is where people sit down and work something out together. We took the name
-        from where we are, and opened the room to everyone. Wherever you are, if you want to
+        A majlis is where people sit down and work something out together. That is the room
+        we wanted to build, and it is open to everyone. Wherever you are, if you want to
         learn quantum computing properly, and the cryptography work that has to happen whether
         or not the hardware arrives on schedule, this is for you. Free, open material, no
         gatekeeping, no entry test.
       </p>
       <ul class="phead__meta">
-        <li>Global</li><li>Free</li><li>Online-first</li><li>English &amp; Arabic</li>
+        <li>Global</li><li>Free</li><li>Online-first</li>
       </ul>
       <div class="phead__fig" aria-hidden="true"><svg viewBox="0 0 220 180" role="img" aria-label="A distributed community: members entangled across time zones"><g class="il-nodes"><ellipse cx="110" cy="92" rx="92" ry="66" fill="none" stroke="var(--line)" stroke-dasharray="2 4"/><ellipse cx="110" cy="92" rx="52" ry="66" fill="none" stroke="var(--line)" stroke-dasharray="2 4"/><line x1="18" y1="92" x2="202" y2="92" stroke="var(--line)" stroke-dasharray="2 4"/><line x1="38" y1="58" x2="64" y2="118" stroke="var(--copper)" stroke-opacity=".38" stroke-width="1.2"/><line x1="84" y1="34" x2="140" y2="44" stroke="var(--copper)" stroke-opacity=".38" stroke-width="1.2"/><line x1="140" y1="44" x2="186" y2="72" stroke="var(--copper)" stroke-opacity=".38" stroke-width="1.2"/><line x1="64" y1="118" x2="118" y2="104" stroke="var(--copper)" stroke-opacity=".38" stroke-width="1.2"/><line x1="118" y1="104" x2="150" y2="96" stroke="var(--copper)" stroke-opacity=".38" stroke-width="1.2"/><line x1="186" y1="72" x2="150" y2="96" stroke="var(--copper)" stroke-opacity=".38" stroke-width="1.2"/><line x1="64" y1="118" x2="44" y2="96" stroke="var(--copper)" stroke-opacity=".38" stroke-width="1.2"/><line x1="118" y1="104" x2="96" y2="152" stroke="var(--copper)" stroke-opacity=".38" stroke-width="1.2"/><line x1="84" y1="34" x2="118" y2="104" stroke="var(--copper)" stroke-opacity=".38" stroke-width="1.2"/><line x1="172" y1="132" x2="150" y2="96" stroke="var(--copper)" stroke-opacity=".38" stroke-width="1.2"/><circle cx="38" cy="58" r="6.5" fill="var(--paper)" stroke="var(--g-1q)" stroke-width="1.8" class="il-pulse"/><circle cx="84" cy="34" r="5" fill="var(--paper)" stroke="var(--g-1q)" stroke-width="1.8" class="il-pulse"/><circle cx="140" cy="44" r="5" fill="var(--paper)" stroke="var(--g-1q)" stroke-width="1.8" class="il-pulse"/><circle cx="186" cy="72" r="6.5" fill="var(--paper)" stroke="var(--g-1q)" stroke-width="1.8" class="il-pulse"/><circle cx="64" cy="118" r="5" fill="var(--paper)" stroke="var(--g-1q)" stroke-width="1.8" class="il-pulse"/><circle cx="118" cy="104" r="5" fill="var(--paper)" stroke="var(--g-1q)" stroke-width="1.8" class="il-pulse"/><circle cx="172" cy="132" r="6.5" fill="var(--paper)" stroke="var(--g-1q)" stroke-width="1.8" class="il-pulse"/><circle cx="96" cy="152" r="5" fill="var(--paper)" stroke="var(--g-1q)" stroke-width="1.8" class="il-pulse"/><circle cx="44" cy="96" r="5" fill="var(--paper)" stroke="var(--g-1q)" stroke-width="1.8" class="il-pulse"/><circle cx="150" cy="96" r="6.5" fill="var(--paper)" stroke="var(--g-1q)" stroke-width="1.8" class="il-pulse"/></g></svg></div>
     </div>
@@ -159,7 +159,7 @@
         <p class="stake__body">
           Most quantum communities schedule for North American or European hours, which quietly
           excludes most of Asia, Africa and Oceania. We run cohorts across time bands rather
-          than one, and produce material in English and Arabic.
+          than one.
         </p>
         <p class="stake__note">Cohorts run in two time bands so nobody is permanently on a 3am call.</p>
       </article>
@@ -255,19 +255,8 @@
           </div>
           <div class="field">
             <label for="country">Country <span class="req" aria-hidden="true">*</span></label>
-            <select id="country" name="country" required>
-              <option value="">Select…</option>
-              <option>Australia</option><option>Bahrain</option><option>Bangladesh</option>
-              <option>Brazil</option><option>Canada</option><option>Egypt</option>
-              <option>France</option><option>Germany</option><option>India</option>
-              <option>Indonesia</option><option>Jordan</option><option>Kenya</option>
-              <option>Kuwait</option><option>Malaysia</option><option>Nigeria</option>
-              <option>Oman</option><option>Pakistan</option><option>Qatar</option>
-              <option>Saudi Arabia</option><option>South Africa</option><option>Türkiye</option>
-              <option>United Arab Emirates</option><option>United Kingdom</option><option>United States</option>
-              <option>Other</option>
-            </select>
-            <p class="field__err">Pick one so we can schedule for your time zone.</p>
+            <input id="country" name="country" type="text" autocomplete="country-name" required>
+            <p class="field__err">Tell us your country so we can schedule for your time zone.</p>
           </div>
           <div class="field">
             <label for="city">City</label>
