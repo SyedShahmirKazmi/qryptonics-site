@@ -22,7 +22,7 @@
     lh: { label: 'Line spacing', opts: [['Normal', 0], ['Relaxed', 1], ['Loose', 2]] },
     mw: { label: 'Line width', opts: [['Narrow', 0], ['Comfortable', 1], ['Full', 2]] },
     ff: { label: 'Font', opts: [['Sans', 'sans'], ['Serif', 'serif'], ['Spaced', 'spaced']] },
-    hc: { label: 'Contrast', opts: [['Normal', 0], ['High', 1]] }
+    hc: { label: 'Contrast', opts: [['Normal', 0], ['High', 1], ['Light', 2]] }
   };
 
   var s = load();
