@@ -367,6 +367,26 @@ strong{color:var(--ink)}
   .post{grid-template-columns:1fr}
   .post__state{grid-column:1;grid-row:auto;justify-self:start}
 }
+a.post{color:inherit;text-decoration:none}
+a.post:hover .post__title{color:var(--copper-hi)}
+a.post:focus-visible{outline:2px solid var(--copper);outline-offset:-2px}
+
+/* ── a single post ─────────────────────────────────────── */
+.eyebrow a{color:inherit;text-decoration:none}
+.eyebrow a:hover{text-decoration:underline;text-underline-offset:3px}
+.prose--post{margin:0 auto;padding-bottom:var(--space-section)}
+.prose--post h2{scroll-margin-top:5rem}
+.prose h3{font-size:1.05rem;margin-top:.8rem;color:var(--ink)}
+.prose strong{color:var(--ink)}
+.post-fig{margin:1rem 0}
+.post-fig svg{display:block;width:100%;height:auto}
+.post-fig figcaption{margin-top:.8rem;font-size:.85rem;line-height:1.6;color:var(--muted)}
+.prose .timeline{list-style:none;padding-left:0}
+.timeline li{display:grid;grid-template-columns:3.6rem minmax(0,1fr);gap:1rem;padding:.7rem 0;border-top:var(--rule)}
+.timeline span{font-family:var(--f-mono);font-size:.8rem;color:var(--copper);padding-top:.15rem}
+.refs{display:grid;gap:.55rem;padding-left:1.5rem;list-style:decimal;font-size:.86rem;color:var(--muted)}
+.prose .refs li{line-height:1.55}
+.post-back{margin-top:1.5rem;font-family:var(--f-mono);font-size:.8rem}
 
 .empty{
   background:var(--card);border:1px dashed var(--line-hi);border-radius:5px;
@@ -749,7 +769,10 @@ fieldset{border:0;padding:0;margin:0;display:grid;gap:.45rem}
    occupies column two across all rows. Without this the grid would treat
    each paragraph as its own cell and scatter them. */
 .phead__inner--fig > *:not(.phead__fig){grid-column:1}
-.phead__fig{grid-column:2;grid-row:1/-1;align-self:center;width:min(280px,26vw);justify-self:end}
+/* span 4, not 1/-1: with no explicit rows, -1 is line 1, so the figure
+   sat in row one alone and stretched the eyebrow to its full height.
+   Page heads have three or four text rows; an unused fourth stays 0px. */
+.phead__fig{grid-column:2;grid-row:1 / span 4;align-self:center;width:min(280px,26vw);justify-self:end}
 .phead__fig svg{width:100%;height:auto;display:block;overflow:visible}
 .il-t{font-family:'IBM Plex Mono',monospace;font-size:12px;fill:var(--muted)}
 .il-g{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:500}
