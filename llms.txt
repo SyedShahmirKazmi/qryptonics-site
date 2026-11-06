@@ -1,6 +1,6 @@
 # Qryptonics
 
-> Quantum systems engineering in Doha, Qatar. Post-quantum cryptographic
+> Quantum systems engineering. Post-quantum cryptographic
 > migration, quantum optimization, quantum machine learning, and hybrid
 > quantum-classical HPC.
 
@@ -16,17 +16,17 @@ operational problems belong on quantum or hybrid hardware now.
 - [PQC solutions](https://qryptonics.com/pqc-solutions.html): Post-quantum cryptography as a managed solution (page in preparation).
 - [Software solutions](https://qryptonics.com/software-solutions.html): Quantum, hybrid and classical software, built and handed over (page in preparation).
 - [Simulator](https://qryptonics.com/simulator.html): Free browser-based quantum simulator. Density-matrix circuit simulation with T1/T2 decoherence, quantum network entanglement distribution over fibre, and distributed quantum computing across QPUs. No account, nothing uploaded.
-- [Q-Majlis](https://qryptonics.com/community.html): A free, global quantum computing community founded in Doha. Tracks in foundations, optimization and machine learning, post-quantum cryptography, and quantum networks.
+- [Q-Majlis](https://qryptonics.com/community.html): A free, global quantum computing community. Tracks in foundations, optimization and machine learning, post-quantum cryptography, and quantum networks.
 - [Whitepaper](https://qryptonics.com/whitepaper.html): Working paper on cryptographic inventory before post-quantum migration.
 - [Docs](https://qryptonics.com/docs.html): How the quantum simulator computes its results — density-matrix noise, optical loss budgets, coupling maps, limits.
 - [Research](https://qryptonics.com/research.html): Open research questions in quantum optimization, QML under realistic data, PQC engineering, and hybrid runtimes.
 - [About](https://qryptonics.com/about.html): Who we are and how we work.
-- [Get in touch](https://qryptonics.com/contact.html): WhatsApp, email and location.
+- [Get in touch](https://qryptonics.com/contact.html): WhatsApp and email.
 - [Security](https://qryptonics.com/security.html): Vulnerability disclosure policy and scope.
 
 ## Facts
 
-- Founded in Doha, Qatar. Serves Qatar and the wider GCC.
+- Works with clients internationally, remote-first.
 - Specialises in NIST post-quantum standards FIPS 203, 204 and 205.
 - Publishes a free, dependency-free quantum simulator that runs entirely client-side.
 - Contact: hello@qryptonics.com

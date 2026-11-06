@@ -103,8 +103,8 @@ trade-off is friction and no structured storage.
 
 Before choosing a provider, note that it becomes a **data processor** for personal data. You
 need a data processing agreement with them, and `privacy.html` must be updated to name them —
-it currently states that nobody else sees the data. Prefer a provider that lets you pick an
-EU or Gulf region.
+it currently states that nobody else sees the data. Prefer a provider that lets you choose
+the data region.
 
 ## Local development
 
