@@ -1209,6 +1209,55 @@
     });
   }
 
+  /* ── plot lightbox ─────────────────────────────────────
+     Click any plot to enlarge it. Delegated on #results so it keeps
+     working after every re-render. The enlarged copy is a clone, so
+     the live chart is untouched; SVGs carry a viewBox and scale up
+     cleanly. DOM + classes only, so the strict CSP is unaffected. */
+  (function () {
+    var box = document.createElement('div');
+    box.className = 'sim-lightbox';
+    box.setAttribute('role', 'dialog');
+    box.setAttribute('aria-modal', 'true');
+    box.setAttribute('aria-label', 'Enlarged plot');
+    var inner = document.createElement('div');
+    inner.className = 'sim-lightbox__inner';
+    var close = document.createElement('button');
+    close.type = 'button';
+    close.className = 'sim-lightbox__close';
+    close.setAttribute('aria-label', 'Close');
+    close.textContent = '\u2715';
+    var content = document.createElement('div');
+    inner.appendChild(close);
+    inner.appendChild(content);
+    box.appendChild(inner);
+    document.body.appendChild(box);
+
+    var lastFocus = null;
+    function open(plot) {
+      content.innerHTML = '';
+      content.appendChild(plot.cloneNode(true));
+      box.classList.add('is-open');
+      lastFocus = document.activeElement;
+      close.focus();
+    }
+    function hide() {
+      box.classList.remove('is-open');
+      content.innerHTML = '';
+      if (lastFocus && lastFocus.focus) lastFocus.focus();
+    }
+
+    results.addEventListener('click', function (e) {
+      var plot = e.target.closest('.sim-plot');
+      if (plot && results.contains(plot)) open(plot);
+    });
+    close.addEventListener('click', hide);
+    box.addEventListener('click', function (e) { if (e.target === box) hide(); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && box.classList.contains('is-open')) hide();
+    });
+  })();
+
   readParams();
   loadGHZ();
   loadNetwork();
