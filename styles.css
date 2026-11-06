@@ -164,7 +164,10 @@ strong{color:var(--ink)}
     flex-basis:100%;flex-direction:column;align-items:stretch;gap:.15rem;
     max-height:0;overflow:hidden;transition:max-height .28s ease;
   }
-  .nav__menu.is-open{max-height:32rem;padding-top:.9rem}
+  /* Cap by viewport, not a fixed 32rem: four expandable dropdowns can
+     exceed 32rem and were being clipped with overflow hidden. Scroll
+     within the screen instead. */
+  .nav__menu.is-open{max-height:85vh;overflow-y:auto;padding-top:.9rem}
   .nav__menu > a,.nav__group-btn{padding:.75rem .25rem;font-size:.9rem}
   .nav__group-btn{width:100%;justify-content:space-between}
   .nav__dropdown{
@@ -922,3 +925,8 @@ fieldset{border:0;padding:0;margin:0;display:grid;gap:.45rem}
 .sim-info:hover,.sim-info:focus-visible{border-color:var(--copper);color:var(--copper)}
 .sim-field span{display:flex;align-items:center}
 .sim-kpi[data-tip]{cursor:help}
+
+/* Active state for a page whose nav entry now lives inside a dropdown
+   (e.g. Development under Our technology), and a cue on its parent. */
+.nav__dropdown a[aria-current="page"]{color:var(--copper)}
+.nav__dropdown a[aria-current="page"] small{color:var(--copper-hi)}
