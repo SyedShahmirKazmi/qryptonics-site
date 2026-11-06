@@ -1,0 +1,646 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fingerprinting, PUFs and Quantum PUFs: How a Device Proves What It Is — Qryptonics</title>
+<meta name="description" content="What device fingerprinting and physical unclonable functions are, how they differ, how PUFs generate keys and get broken, what quantum PUFs improve, and what is still open.">
+<meta name="theme-color" content="#161B29">
+<link rel="canonical" href="https://qryptonics.com/blog/fingerprinting-pufs-and-quantum-pufs.html">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2026-11-06">
+<meta property="og:title" content="Fingerprints, PUFs and quantum PUFs: how a device proves what it is">
+<meta property="og:description" content="What device fingerprinting and physical unclonable functions are, how they differ, how PUFs generate keys and get broken, what quantum PUFs improve, and what is still open.">
+<meta property="og:url" content="https://qryptonics.com/blog/fingerprinting-pufs-and-quantum-pufs.html">
+<meta property="og:site_name" content="Qryptonics">
+<meta property="og:image" content="https://qryptonics.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Qryptonics — quantum-safe infrastructure and quantum-scale optimization">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preload" href="../fonts/chivo-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../fonts/ibmplexmono-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../fonts.css?v=66401886">
+<script>document.documentElement.className+=" js"</script>
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-pfgOMgfVZwm2ODyms34QYW9h8EwicylhV77q5LHK8c0=' 'sha256-Paf2ohGSw3dr/hogh90huf6pOBuE8vGCwW4TCqZBti0='; style-src 'self'; font-src 'self'; img-src 'self' data:; connect-src 'none'; form-action 'none'; base-uri 'none'; object-src 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="stylesheet" href="../styles.css?v=a2d95315">
+<script src="../reader.js?v=15d220dc"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BlogPosting",
+      "@id": "https://qryptonics.com/blog/fingerprinting-pufs-and-quantum-pufs.html#post",
+      "mainEntityOfPage": "https://qryptonics.com/blog/fingerprinting-pufs-and-quantum-pufs.html",
+      "headline": "Fingerprints, PUFs and quantum PUFs: how a device proves what it is",
+      "description": "What device fingerprinting and physical unclonable functions are, how they differ, how PUFs generate keys and get broken, what quantum PUFs improve, and what is still open.",
+      "datePublished": "2026-11-06",
+      "dateModified": "2026-11-06",
+      "image": "https://qryptonics.com/og.png",
+      "inLanguage": "en",
+      "keywords": [
+        "physical unclonable functions",
+        "PUF",
+        "quantum PUF",
+        "device fingerprinting",
+        "hardware security",
+        "fuzzy extractors",
+        "post-quantum cryptography"
+      ],
+      "author": {
+        "@id": "https://qryptonics.com/#org"
+      },
+      "publisher": {
+        "@id": "https://qryptonics.com/#org"
+      },
+      "isPartOf": {
+        "@type": "Blog",
+        "@id": "https://qryptonics.com/blog.html#blog",
+        "url": "https://qryptonics.com/blog.html",
+        "name": "Qryptonics Blog"
+      }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://qryptonics.com/#org",
+      "name": "Qryptonics",
+      "url": "https://qryptonics.com/",
+      "logo": "https://qryptonics.com/og.png",
+      "email": "hello@qryptonics.com"
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav" id="top">
+  <a class="nav__brand" href="../index.html" aria-label="Qryptonics home">
+    <svg class="nav__glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M2 8 L12 2 L22 8 L12 14 Z"/><path d="M2 16 L12 10 L22 16 L12 22 Z"/>
+    </svg>
+    <span class="nav__word">Qryptonics</span>
+  </a>
+  <button class="nav__toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Toggle menu">
+    <svg class="nav__ico-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    <svg class="nav__ico-close" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>
+  </button>
+  <nav class="nav__menu" id="nav-menu" aria-label="Primary">
+    <a href="../index.html">Home</a>
+    <div class="nav__group">
+      <button class="nav__group-btn" aria-expanded="false">Our technology
+        <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5L6 8.5L10 4.5"/></svg>
+      </button>
+      <div class="nav__dropdown">
+        <a href="../services.html">Services<small>Assessment, testing, audit</small></a>
+        <a href="../development.html">Development<small>Software we build</small></a>
+      </div>
+    </div>
+    <div class="nav__group">
+      <button class="nav__group-btn" aria-expanded="false">Products
+        <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5L6 8.5L10 4.5"/></svg>
+      </button>
+      <div class="nav__dropdown">
+        <a href="../simulator.html">Simulator<small>Browser-based, free</small></a>
+        <a href="../pqc-solutions.html">PQC solutions<small>Quantum-safe cryptography</small></a>
+        <a href="../software-solutions.html">Software solutions<small>Quantum &amp; hybrid software</small></a>
+      </div>
+    </div>
+    <a href="../community.html">Q-Majlis</a>
+    <div class="nav__group">
+      <button class="nav__group-btn" aria-expanded="false">News
+        <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5L6 8.5L10 4.5"/></svg>
+      </button>
+      <div class="nav__dropdown">
+        <a href="../blog.html">Blog<small>Notes from the field</small></a>
+        <a href="../research.html">Research<small>Papers and preprints</small></a>
+        <a href="../whitepaper.html">Whitepaper<small>Working papers</small></a>
+        <a href="../docs.html">Docs<small>Simulator reference</small></a>
+      </div>
+    </div>
+    <div class="nav__group">
+      <button class="nav__group-btn" aria-expanded="false">About
+        <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5L6 8.5L10 4.5"/></svg>
+      </button>
+      <div class="nav__dropdown">
+        <a href="../about.html">About<small>Who we are</small></a>
+        <a href="../contact.html">Get in touch<small>Start a conversation</small></a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<main id="main">
+  <section class="phead phead--post">
+    <div class="phead__inner">
+      <p class="eyebrow"><a href="../blog.html">Blog</a> · Hardware security</p>
+      <h1 class="phead__title">Fingerprints, PUFs and quantum PUFs: how a device proves what it is.</h1>
+      <p class="phead__lede">
+        Every connected device eventually has to answer one question: are you the chip I think
+        you are? Two families of answers come from physics rather than from stored secrets.
+        Fingerprinting reads the small flaws a device happens to have. Physical unclonable
+        functions build those flaws into a deliberate challenge and response. Quantum versions
+        of both are now appearing. This post explains how each one works, why they differ, what
+        breaks them, and what is still unsolved.
+      </p>
+      <ul class="phead__meta">
+        <li><time datetime="2026-11-06">6 November 2026</time></li><li>17 min read</li><li>Hardware security</li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="post-layout">
+    <nav class="post-toc" aria-label="On this page">
+      <p class="post-toc__h">On this page</p>
+      <ol>
+        <li><a href="#problem">The problem: where does a device keep its secret?</a></li>
+        <li><a href="#fingerprinting">Fingerprinting: identity from what a device already does</a></li>
+        <li><a href="#pufs">PUFs: a challenge only one chip can answer</a></li>
+        <li><a href="#differ">How fingerprints and PUFs differ</a></li>
+        <li><a href="#security">How PUFs provide security</a></li>
+        <li><a href="#attacks">How PUFs get broken</a></li>
+        <li><a href="#qpufs">Quantum PUFs</a></li>
+        <li><a href="#improve">What quantum PUFs improve</a></li>
+        <li><a href="#open">What remains open</a></li>
+        <li><a href="#now">What to do now</a></li>
+        <li><a href="#reading">Further reading</a></li>
+      </ol>
+    </nav>
+    <article class="prose prose--post" id="post">
+
+      <aside class="post-tldr" aria-labelledby="tldr-h">
+        <h2 class="post-tldr__h" id="tldr-h">In short</h2>
+        <ul>
+          <li>No two chips, cameras or radios come out of a factory exactly alike. Those tiny
+            differences can identify a device, the way a fingerprint identifies a person.</li>
+          <li>A <em>fingerprint</em> is observed from the outside and is not secret. A
+            <em>PUF</em> is built into the chip and answers questions only that chip can answer,
+            so it can produce keys without storing them anywhere.</li>
+          <li>Classical PUFs have been broken by machine learning, by physical cloning and by
+            reading their side effects. Quantum PUFs use the rule that quantum states cannot be
+            copied, so an attacker cannot simply record and replay them.</li>
+          <li>Quantum PUFs are still mostly in the lab. They need cheap hardware, a way to cope
+            with noise, and verifiers that do not need large quantum memories.</li>
+        </ul>
+      </aside>
+
+      <h2 id="problem">The problem: where does a device keep its secret?</h2>
+      <p>
+        Most device security rests on a secret key. A payment card, a car key, a smart meter and
+        a server's root of trust all prove who they are by doing something with a key that no
+        one else has. The weak point is where that key lives. It usually sits in
+        <span class="term" tabindex="0" data-tip="Memory that keeps its contents with the power off, such as flash or fuses.">non-volatile memory</span>,
+        and anything stored can in principle be read out. Attackers decap chips, probe buses,
+        image fuses with electron microscopes, and glitch the power supply until the chip leaks.
+        Protecting stored keys against that kind of attack takes shields, sensors and tamper
+        meshes, and it costs money on every unit.
+      </p>
+      <p>
+        There is another option. Manufacturing is never perfect. Two transistors drawn
+        identically on a mask end up with slightly different
+        <span class="term" tabindex="0" data-tip="The voltage at which a transistor switches on. It varies a little from one transistor to the next, even on the same chip.">threshold voltages</span>.
+        Two radios from the same production line have slightly different oscillators. Two
+        sheets of paper have different fibre patterns. These variations are random, cheap to
+        get, and very hard to reproduce on purpose. The idea behind both fingerprinting and
+        PUFs is to use them as identity: let the device be its own key.
+      </p>
+
+      <h2 id="fingerprinting">Fingerprinting: identity from what a device already does</h2>
+      <p>
+        <strong>Device fingerprinting</strong> measures characteristics a device shows in normal
+        operation and compares them with a stored profile. Nothing is added to the device. The
+        verifier simply observes it closely enough to tell it apart from others.
+      </p>
+      <ul>
+        <li><strong>Radio fingerprints.</strong> Every transmitter has small imperfections in
+          its oscillator, amplifier and modulator. Brik and colleagues showed in 2008 that
+          these imperfections identify individual Wi-Fi cards with high accuracy. Similar
+          methods are used to spot cloned or spoofed transmitters in cellular, satellite and
+          IoT networks.</li>
+        <li><strong>Clock skew.</strong> Kohno, Broido and claffy showed in 2005 that a
+          computer's clock drifts at its own rate, and that the drift can be measured remotely
+          from TCP timestamps, even through a network.</li>
+        <li><strong>Camera sensors.</strong> Each image sensor has a fixed pattern of pixel
+          sensitivity, called
+          <span class="term" tabindex="0" data-tip="Photo-response non-uniformity: each pixel converts light to charge with a slightly different efficiency, leaving a fixed pattern in every photo.">PRNU</span>.
+          Lukáš, Fridrich and Goljan used it in 2006 to match photos to the camera that took
+          them, and forensic labs use it today.</li>
+        <li><strong>Browsers.</strong> Eckersley's 2010 study found that the combination of
+          fonts, plugins, screen size and settings made most browsers in his sample unique.
+          Advertising and fraud-detection systems rely on the same effect.</li>
+      </ul>
+      <p>
+        Fingerprinting is attractive because it needs no cooperation from the device and works
+        on hardware already in the field. Its weakness follows from the same fact. A
+        fingerprint is a property anyone can observe, so it is not a secret. If an attacker can
+        measure it, they can record it and, with enough effort, play it back. A
+        <span class="term" tabindex="0" data-tip="A radio that generates its waveform in software, so it can be programmed to imitate many kinds of transmitter.">software-defined radio</span>
+        can be tuned to imitate another transmitter's quirks. A browser's reported settings can
+        be faked. Fingerprints are good evidence of identity, and useful for forensics and for
+        flagging anomalies, but on their own they are weak authentication against a prepared
+        attacker. They also raise a privacy problem: something that identifies a device
+        without its owner's consent can be used to track that owner.
+      </p>
+
+      <h2 id="pufs">PUFs: a challenge only one chip can answer</h2>
+      <p>
+        A <strong>physical unclonable function</strong>, or PUF, takes the same manufacturing
+        randomness and turns it into a function. You send the device a
+        <em>challenge</em>, and the device's physical structure determines the
+        <em>response</em>. The mapping from challenges to responses is fixed for a given device,
+        different for every device, and not something the manufacturer can choose or copy.
+        Pappu, Recht, Taylor and Gershenfeld introduced the idea in <em>Science</em> in 2002
+        with an optical version: a laser shone through a block of epoxy filled with tiny glass
+        spheres produces a
+        <span class="term" tabindex="0" data-tip="The grainy pattern of bright and dark spots formed when laser light scatters through a random material.">speckle pattern</span>
+        that changes completely if the beam moves slightly. The same year Gassend, Clarke,
+        van Dijk and Devadas built the first silicon PUFs from circuit delays.
+      </p>
+      <p>Several designs are now common:</p>
+      <ul>
+        <li><strong>SRAM PUFs.</strong> When static memory powers up, each cell settles to 0 or
+          1 depending on which of its two transistors is slightly stronger. The power-up
+          pattern is random across chips and mostly stable on one chip. Guajardo, Kumar,
+          Schrijen and Tuyls showed in 2007 that it works on ordinary FPGAs, and it is the most
+          widely deployed PUF today because almost every chip already has SRAM.</li>
+        <li><strong>Ring-oscillator PUFs.</strong> Many identical oscillator loops run at
+          slightly different frequencies. Comparing pairs gives bits. Suh and Devadas described
+          the design in 2007.</li>
+        <li><strong>Arbiter PUFs.</strong> A signal races down two paths whose route is set by
+          the challenge bits, and a latch at the end records which path won. Every challenge
+          configures a different race, so the number of challenges grows exponentially with the
+          number of stages.</li>
+        <li><strong>Optical and paper PUFs.</strong> Scattering materials, fibre patterns and
+          printed random features, often used for anti-counterfeiting labels rather than
+          chips.</li>
+      </ul>
+      <p>
+        PUFs split into two kinds. A <strong>weak PUF</strong>, such as SRAM, has only a few
+        challenges and is used inside the chip to produce one key. A
+        <strong>strong PUF</strong>, such as an arbiter PUF, has so many challenges that a
+        verifier can use a fresh one each time and never repeat it. The names describe the
+        number of challenges, not the level of security.
+      </p>
+
+      <h2 id="differ">How fingerprints and PUFs differ</h2>
+      <p>
+        Both use the same raw material, uncontrolled physical variation, but they are built for
+        different jobs. The table puts them side by side with the quantum PUFs discussed further
+        down.
+      </p>
+      <figure class="post-fig">
+        <div class="post-tab">
+          <table>
+            <thead>
+              <tr><th scope="col"></th><th scope="col">Fingerprint</th><th scope="col">Classical PUF</th><th scope="col">Quantum PUF</th></tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">Where it comes from</th><td>Side effects of normal operation</td><td>A circuit or material designed to be random</td><td>Quantum states sent to, or produced by, a random physical system</td></tr>
+              <tr><th scope="row">How it is read</th><td>Passively, by observing the device</td><td>Actively, by sending a challenge</td><td>Actively, with challenges or responses that are quantum states</td></tr>
+              <tr><th scope="row">Is it secret?</th><td>No. Anyone close enough can measure it</td><td>The responses are, until someone models or reads them</td><td>The challenge cannot be fully learned, even by someone who intercepts it</td></tr>
+              <tr><th scope="row">Can it make a key?</th><td>Not reliably</td><td>Yes, with error correction</td><td>Yes in principle; noise handling is still being worked out</td></tr>
+              <tr><th scope="row">Main attacks</th><td>Recording and replay, imitation</td><td>Machine-learning models, side channels, physical cloning</td><td>Mostly open; the theory shows limits as well as guarantees</td></tr>
+              <tr><th scope="row">Maturity</th><td>Widely used in forensics and fraud detection</td><td>In commercial FPGAs and secure chips</td><td>Lab demonstrations and security proofs</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <figcaption>Fingerprints identify. PUFs authenticate and generate keys. Quantum PUFs
+          aim to do the same without trusting that no one is listening.</figcaption>
+      </figure>
+      <p>
+        The short version: a fingerprint is something a device <em>has</em>, and a PUF is
+        something a device <em>does</em>. A fingerprint answers the same way to everyone. A
+        PUF answers a question you chose, and its answer is useless to an eavesdropper if you
+        never ask that question again.
+      </p>
+
+      <h2 id="security">How PUFs provide security</h2>
+      <p>PUFs are used in two main ways.</p>
+      <figure class="post-fig">
+        <div class="flow" role="img" aria-label="Two uses of a PUF. Authentication: at enrolment the verifier records challenge and response pairs; in the field it sends an unused challenge and compares the answer. Key generation: at enrolment the chip reads its PUF and stores public helper data; at power-up it reads the PUF again, corrects the errors with the helper data, and derives the key, which is never stored.">
+          <div class="flow__row">
+            <p class="flow__h">Authentication</p>
+            <ol class="flow__steps">
+              <li><b>Enrol</b><span>Verifier sends many challenges and stores the response pairs</span></li>
+              <li><b>Challenge</b><span>In the field, verifier picks a pair it has never used</span></li>
+              <li><b>Respond</b><span>Device answers from its physical structure</span></li>
+              <li><b>Check</b><span>Close enough to the stored response? Accept, and discard that pair</span></li>
+            </ol>
+          </div>
+          <div class="flow__row">
+            <p class="flow__h">Key generation</p>
+            <ol class="flow__steps">
+              <li><b>Enrol</b><span>Chip reads its PUF once and writes public helper data</span></li>
+              <li><b>Power up</b><span>Chip reads the PUF again; a few bits have flipped</span></li>
+              <li><b>Correct</b><span>Helper data fixes the flipped bits</span></li>
+              <li><b>Derive</b><span>The same key every time, held only while the chip is on</span></li>
+            </ol>
+          </div>
+        </div>
+        <figcaption>In both uses the secret is the physical structure itself. Nothing secret is
+          written to memory.</figcaption>
+      </figure>
+      <p>
+        <strong>Authentication</strong> uses a strong PUF. During enrolment, in a trusted
+        setting, the verifier collects a large set of
+        <span class="term" tabindex="0" data-tip="Challenge-response pairs: a stored list of questions and the answers one specific device gave to them.">challenge-response pairs</span>.
+        Later, to check a device, it sends a challenge from that list and compares the
+        response. Each pair is used once, so an eavesdropper who records the exchange learns
+        nothing about the next one.
+      </p>
+      <p>
+        <strong>Key generation</strong> uses a weak PUF. The difficulty is that PUF readings
+        are noisy: a few percent of SRAM bits come up differently on each power-up, and more at
+        temperature extremes or as the chip ages. A key that changes is useless. The fix is a
+        <span class="term" tabindex="0" data-tip="A construction that turns a noisy, non-uniform reading into a stable, uniformly random key, using public helper data.">fuzzy extractor</span>,
+        formalised by Dodis, Reyzin and Smith in 2004. At enrolment it stores
+        <span class="term" tabindex="0" data-tip="Public data stored next to the PUF that lets the chip correct read-out errors. It is designed to reveal little about the key itself.">helper data</span>
+        that lets the chip correct its own read-out errors later, using an
+        <span class="term" tabindex="0" data-tip="Extra structure added to data so that a limited number of wrong bits can be found and fixed.">error-correcting code</span>.
+        The helper data can be public. The chip reconstructs the key at power-up, uses it, and
+        forgets it at power-down.
+      </p>
+      <p>
+        This gives three security properties that stored keys lack. There is no key at rest to
+        extract with the power off. Invasive attacks tend to change the physical structure and
+        destroy the very thing they try to read. And the manufacturer never knows the key, so
+        a compromised supply chain cannot leak a database of them.
+      </p>
+      <p>
+        PUFs also fit well with the move to
+        <span class="term" tabindex="0" data-tip="Ordinary software cryptography designed to resist attacks by quantum computers. It runs on today's hardware.">post-quantum cryptography</span>.
+        ML-KEM and ML-DSA, the
+        <span class="term" tabindex="0" data-tip="The US National Institute of Standards and Technology, which published the first post-quantum standards in 2024.">NIST</span>
+        standards from 2024, derive their key pairs from short random seeds of 32 bytes. A
+        weak PUF can supply that seed, so a chip can hold a post-quantum identity key that is
+        rebuilt at each boot and never stored. The PUF protects the key at rest. The
+        post-quantum algorithm protects it in use against a future quantum computer.
+      </p>
+
+      <h2 id="attacks">How PUFs get broken</h2>
+      <p>
+        The word “unclonable” is a design goal, not a guarantee. Twenty years of attacks have
+        shown where real PUFs fall short.
+      </p>
+      <ul>
+        <li><strong>Machine-learning models.</strong> Rührmair and colleagues showed in 2010
+          that an arbiter PUF behaves almost like a linear function of its challenge bits.
+          After observing a few thousand pairs,
+          <span class="term" tabindex="0" data-tip="A standard statistical method that learns a yes-or-no rule from examples.">logistic regression</span>
+          predicts its responses with better than 99% accuracy. XOR-ing several arbiter chains
+          raised the cost but did not remove the risk.</li>
+        <li><strong>Reliability attacks.</strong> Becker showed in 2015 that the PUF's noise
+          leaks information: challenges whose responses sometimes flip sit close to a decision
+          boundary. Measuring which ones are unstable let him model XOR arbiter PUFs, including
+          ones in commercial RFID tags, that resisted the earlier attacks.</li>
+        <li><strong>Physical cloning.</strong> Helfmeier, Boit, Nedospasov and Seifert read the
+          power-up state of an SRAM PUF through the back of the chip in 2013, then used a
+          <span class="term" tabindex="0" data-tip="A focused ion beam cuts and rewires circuits on a chip at the scale of single transistors.">focused ion beam</span>
+          to edit a second chip so it produced the same pattern. It took expensive equipment,
+          but it ended the idea that PUFs cannot be copied at all.</li>
+        <li><strong>Side channels.</strong> Power draw, timing and electromagnetic emissions
+          during the read-out and the error correction can leak response bits, just as they
+          leak keys from conventional cryptography.</li>
+        <li><strong>Helper-data manipulation.</strong> If an attacker can rewrite the public
+          helper data and watch whether the chip still works, each attempt can reveal a bit of
+          the key. Helper data needs integrity protection even though it is not secret.</li>
+        <li><strong>Emulation of the reader.</strong> Many PUF schemes assume the verifier
+          talks to the real physical object. An attacker who places a small computer between
+          the reader and the device can answer with a model, and a classical reader cannot
+          tell the difference.</li>
+      </ul>
+      <p>
+        That last point matters most for what comes next. A classical PUF's challenge and
+        response are ordinary bits. Anyone on the channel can copy them, store them, and feed
+        them to a model. Security then depends on the attacker not having enough pairs, enough
+        compute, or close enough physical access. Rührmair and van Dijk argued in 2013 that
+        many published PUF protocols fail under realistic attack models for exactly this
+        reason.
+      </p>
+
+      <h2 id="qpufs">Quantum PUFs</h2>
+      <p>
+        A <strong>quantum PUF</strong> brings quantum physics into the challenge, the response,
+        or the device itself. The key tool is the
+        <span class="term" tabindex="0" data-tip="A theorem of quantum mechanics: there is no way to make a perfect copy of an unknown quantum state.">no-cloning theorem</span>:
+        an unknown quantum state cannot be copied. If the challenge is a quantum state, an
+        attacker who intercepts it cannot keep a copy, and measuring it to learn what it was
+        disturbs it. The term covers four rather different approaches.
+      </p>
+      <h3>1. Quantum readout of a classical PUF</h3>
+      <p>
+        The device is still a classical random object, such as a scattering material, but the
+        verifier probes it with quantum light. Škorić proposed this in 2012. Goorden,
+        Horstmann, Mosk, Škorić and Pinkse demonstrated it in <em>Optica</em> in 2014: they
+        shaped the
+        <span class="term" tabindex="0" data-tip="The shape of a light beam's phase across its cross-section. Shaping it lets you steer light through scattering materials.">wavefront</span>
+        of a light pulse containing fewer photons than the key has
+        <span class="term" tabindex="0" data-tip="The independent patterns light can take as it passes through the material. Many modes mean many possible challenges.">spatial modes</span>,
+        and checked that the light was focused correctly after scattering. With so few
+        photons, an attacker cannot work out which wavefront was sent, so they cannot compute
+        the right answer, even if the full structure of the key is public. This is the
+        property classical PUFs lack: the reader no longer needs to trust that it is talking to
+        the real object. Nikolopoulos and Diamanti extended the scheme to
+        <span class="term" tabindex="0" data-tip="Quantum information carried in the amplitude and phase of light, measured with standard telecom-style detectors rather than single-photon counters.">continuous-variable</span>
+        light in 2017, which suits standard telecom components.
+      </p>
+      <h3>2. Quantum effects with a classical readout</h3>
+      <p>
+        Here the randomness comes from quantum behaviour inside the device, but the challenge
+        and response are classical. Roberts and colleagues reported in 2015 that
+        <span class="term" tabindex="0" data-tip="A tiny diode whose current depends on electrons tunnelling through thin layers. Its current-voltage curve is set by atomic-scale details.">resonant tunnelling diodes</span>
+        give a unique current-voltage signature set by atomic-scale variations, readable at room
+        temperature. These designs are hard to clone physically, but their outputs are still
+        ordinary data once read, so the modelling and replay concerns from the classical side
+        remain.
+      </p>
+      <h3>3. Fully quantum PUFs</h3>
+      <p>
+        In the most ambitious version the device applies an unknown
+        <span class="term" tabindex="0" data-tip="A reversible operation on quantum states. Every ideal quantum gate or circuit is one.">unitary</span>
+        transformation to whatever quantum state it receives. The challenge is a quantum state
+        and so is the response. Arapinis, Delavar, Doosti and Kashefi gave the first formal
+        security analysis in <em>Quantum</em> in 2021. They proved limits as well as
+        guarantees. No quantum PUF can stop an attacker from producing <em>some</em> valid
+        challenge-response pair after enough access, so the strongest notions of
+        unforgeability are impossible. A unitary quantum PUF can stop an attacker from
+        answering a challenge the verifier picks at random, which is the property
+        authentication protocols need. Doosti, Kumar, Delavar and Kashefi then built
+        identification protocols on that guarantee, with security proofs that hold against
+        attackers who have quantum computers.
+      </p>
+      <h3>4. Fingerprinting quantum computers</h3>
+      <p>
+        The last approach turns the idea around. Every quantum processor has its own pattern of
+        qubit frequencies, error rates and crosstalk. Phalak and colleagues used this in 2021 to
+        build quantum PUFs on cloud quantum computers. On IBM hardware, responses from
+        different machines differed in about 55% of bits, while repeated runs on the same
+        machine differed in about 4%. That matters for anyone renting quantum time: a user may
+        want proof that a job ran on the machine they paid for and not on a cheaper or
+        simulated one.
+      </p>
+
+      <h2 id="improve">What quantum PUFs improve</h2>
+      <ul>
+        <li><strong>Interception stops being useful.</strong> With classical PUFs, recording
+          the traffic gives the attacker training data. A quantum challenge cannot be copied,
+          and measuring it disturbs it, so the record is incomplete and the disturbance can be
+          detected.</li>
+        <li><strong>Emulation becomes much harder.</strong> To fake a response, an attacker has
+          to know the challenge. If the challenge is hidden by quantum mechanics, a model of
+          the device is not enough, even a perfect one. This removes the trusted-reader
+          assumption that many classical schemes quietly depend on.</li>
+        <li><strong>Security rests on physics, not on the attacker's budget.</strong> Machine
+          learning attacks on classical PUFs get better with more data and compute. A
+          no-cloning argument does not.</li>
+        <li><strong>A path to formal proofs.</strong> The quantum PUF literature has defined
+          precisely what unforgeability means and which versions can be reached. Classical
+          PUFs were deployed long before such definitions existed.</li>
+        <li><strong>Identity for quantum hardware and networks.</strong> Nodes in a
+          <a href="full-stack-quantum-networks.html">quantum network</a> and machines in a
+          quantum cloud need to be authenticated too. A quantum PUF can do that using the same
+          channels and hardware the network already uses.</li>
+      </ul>
+
+      <h2 id="open">What remains open</h2>
+      <p>
+        Quantum PUFs are promising on paper and work in careful lab setups. Much has to change
+        before they replace the SRAM PUF in a microcontroller.
+      </p>
+      <h3>Building a good unitary cheaply</h3>
+      <p>
+        The security proofs assume the device behaves like a
+        <span class="term" tabindex="0" data-tip="A unitary chosen completely at random. It has the strongest security properties but needs an exponentially large circuit to build exactly.">Haar-random unitary</span>,
+        which would need an exponentially large circuit. The practical substitute is a
+        <span class="term" tabindex="0" data-tip="An efficiently built quantum circuit that no efficient observer can tell apart from a truly random one.">pseudorandom unitary</span>.
+        Ma and Huang showed in 2024 how to build these from any quantum-secure one-way
+        function, which settles the question in theory. What is missing is a physical device,
+        shaped by manufacturing randomness rather than a programmed key, that provably behaves
+        like one.
+      </p>
+      <h3>The verifier's quantum memory</h3>
+      <p>
+        If the responses are quantum states, the verifier has to store them or regenerate them
+        to compare. Storing many quantum states for months is far beyond current
+        <span class="term" tabindex="0" data-tip="A device that holds a qubit's state for later use. Today's best hold it for seconds to minutes under lab conditions.">quantum memories</span>.
+        Some protocols reduce the burden by letting the verifier use classical checks or
+        shifting the quantum work to one side, but each trade-off weakens or complicates the
+        security argument.
+      </p>
+      <h3>Noise, loss and error correction</h3>
+      <p>
+        Classical PUFs solved noise with fuzzy extractors. The quantum equivalent is not
+        settled. Photons get lost, detectors miss counts, and the device itself drifts.
+        Comparing quantum states uses tests such as the
+        <span class="term" tabindex="0" data-tip="A short quantum circuit that estimates how similar two quantum states are, without learning what either one is.">swap test</span>,
+        which only gives a statistical answer, so the verifier needs many rounds and a
+        threshold that tolerates honest noise without letting forgeries through.
+      </p>
+      <h3>Hardware cost and size</h3>
+      <p>
+        The appeal of an SRAM PUF is that it costs almost nothing. Optical quantum readout
+        needs a controlled light source, wavefront shaping and sensitive detectors. That is
+        acceptable for a high-value credential, a vault or a network node, and far too much for
+        a sensor tag. Integrated photonics may close part of the gap.
+      </p>
+      <h3>Side channels in quantum hardware</h3>
+      <p>
+        Quantum key distribution taught the field that real detectors and sources leak
+        information that ideal models leave out. Quantum PUF readers will have the same
+        problem. Very little work so far has attacked an actual quantum PUF setup the way
+        Becker and Helfmeier attacked classical ones.
+      </p>
+      <h3>Better models for classical PUFs</h3>
+      <p>
+        Classical PUFs will remain the workhorse for years, and they still lack agreed security
+        definitions. It is hard to say how many pairs an attacker may collect, or how much
+        entropy an SRAM pattern really has after accounting for spatial correlation and ageing.
+        The ISO/IEC 20897 series, with a test and evaluation part published in 2022, is a
+        start, but certification practice is still young.
+      </p>
+      <h3>Privacy</h3>
+      <p>
+        Anything that identifies a device can track its owner. Fingerprinting already does this
+        on the web and over radio. PUF-based protocols need ways to prove a device is genuine
+        without revealing which device it is, for example through group signatures or
+        anonymous credentials, and those add their own cost.
+      </p>
+      <h3>Fitting into real systems</h3>
+      <p>
+        A PUF is one component. It has to feed a key into secure boot, attestation and
+        post-quantum algorithms, survive firmware updates, and handle the day a device is
+        repaired, recycled or reported stolen. These engineering questions decide whether a
+        design is used, and they get far less research attention than the physics.
+      </p>
+
+      <h2 id="now">What to do now</h2>
+      <p>
+        For most organisations, quantum PUFs are something to watch, not to buy. The useful
+        steps today are classical. Find out where device keys are stored, and whether the
+        hardware you already have includes a PUF-based key store. Check that the keys it
+        protects are moving to ML-KEM and ML-DSA. Treat fingerprints as one signal among
+        several, not as authentication. If you run quantum hardware or a quantum network
+        testbed, start thinking about how its nodes will prove who they are, because that
+        question will arrive with the first shared deployments.
+      </p>
+
+      <h2 id="reading">Further reading</h2>
+      <ol class="refs">
+        <li>R. Pappu, B. Recht, J. Taylor, N. Gershenfeld. Physical one-way functions. <em>Science</em>, 2002.</li>
+        <li>B. Gassend, D. Clarke, M. van Dijk, S. Devadas. Silicon physical random functions. <em>ACM CCS</em>, 2002.</li>
+        <li>G. E. Suh, S. Devadas. Physical unclonable functions for device authentication and secret key generation. <em>Design Automation Conference</em>, 2007.</li>
+        <li>J. Guajardo, S. S. Kumar, G.-J. Schrijen, P. Tuyls. FPGA intrinsic PUFs and their use for IP protection. <em>CHES</em>, 2007.</li>
+        <li>Y. Dodis, L. Reyzin, A. Smith. Fuzzy extractors: how to generate strong keys from biometrics and other noisy data. <em>Eurocrypt</em>, 2004.</li>
+        <li>T. Kohno, A. Broido, K. C. claffy. Remote physical device fingerprinting. <em>IEEE Symposium on Security and Privacy</em>, 2005.</li>
+        <li>J. Lukáš, J. Fridrich, M. Goljan. Digital camera identification from sensor pattern noise. <em>IEEE Transactions on Information Forensics and Security</em>, 2006.</li>
+        <li>V. Brik, S. Banerjee, M. Gruteser, S. Oh. Wireless device identification with radiometric signatures. <em>ACM MobiCom</em>, 2008.</li>
+        <li>P. Eckersley. How unique is your web browser? <em>Privacy Enhancing Technologies Symposium</em>, 2010.</li>
+        <li>U. Rührmair et al. Modeling attacks on physical unclonable functions. <em>ACM CCS</em>, 2010.</li>
+        <li>C. Helfmeier, C. Boit, D. Nedospasov, J.-P. Seifert. Cloning physically unclonable functions. <em>IEEE HOST</em>, 2013.</li>
+        <li>U. Rührmair, M. van Dijk. PUFs in security protocols: attack models and security evaluations. <em>IEEE Symposium on Security and Privacy</em>, 2013.</li>
+        <li>G. T. Becker. The gap between promise and reality: on the insecurity of XOR arbiter PUFs. <em>CHES</em>, 2015.</li>
+        <li>B. Škorić. Quantum readout of physical unclonable functions. <em>International Journal of Quantum Information</em>, 2012.</li>
+        <li>S. A. Goorden, M. Horstmann, A. P. Mosk, B. Škorić, P. W. H. Pinkse. Quantum-secure authentication of a physical unclonable key. <em>Optica</em>, 2014.</li>
+        <li>J. Roberts et al. Using quantum confinement to uniquely identify devices. <em>Scientific Reports</em>, 2015.</li>
+        <li>G. M. Nikolopoulos, E. Diamanti. Continuous-variable quantum authentication of physical unclonable keys. <em>Scientific Reports</em>, 2017.</li>
+        <li>M. Arapinis, M. Delavar, M. Doosti, E. Kashefi. Quantum physical unclonable functions: possibilities and impossibilities. <em>Quantum</em>, 2021.</li>
+        <li>M. Doosti, N. Kumar, M. Delavar, E. Kashefi. Client-server identification protocols with quantum PUF. <em>ACM Transactions on Quantum Computing</em>, 2021.</li>
+        <li>K. Phalak, A. Ash-Saki, M. Alam, R. O. Topaloglu, S. Ghosh. Quantum PUF for security and trust in quantum computing. <em>IEEE Journal on Emerging and Selected Topics in Circuits and Systems</em>, 2021.</li>
+        <li>F. Ma, H.-Y. Huang. How to construct random unitaries. <a href="https://arxiv.org/abs/2410.10116" rel="noopener">arXiv:2410.10116</a>, 2024.</li>
+        <li>ISO/IEC 20897-2:2022. Physically unclonable functions, part 2: test and evaluation methods.</li>
+        <li>NIST. <a href="https://csrc.nist.gov/pubs/fips/203/final" rel="noopener">FIPS 203</a> (ML-KEM) and <a href="https://csrc.nist.gov/pubs/fips/204/final" rel="noopener">FIPS 204</a> (ML-DSA), 2024.</li>
+      </ol>
+
+      <p class="post-back"><a href="../blog.html">← All posts</a></p>
+    </article>
+  </div>
+</main>
+
+
+<footer class="foot">
+  <div class="foot__inner">
+    <div>
+      <p class="foot__brand">Qryptonics</p>
+      <p class="foot__note">Quantum-safe infrastructure and quantum-scale optimization.</p>
+    </div>
+    <div><p class="foot__h">Company</p><ul class="foot__list">
+      <li><a href="../index.html">Home</a></li><li><a href="../community.html">Q-Majlis</a></li>
+      <li><a href="../about.html">About</a></li>
+      <li><a href="../contact.html">Contact</a></li></ul></div>
+    <div><p class="foot__h">What we do</p><ul class="foot__list">
+      <li><a href="../development.html">Development</a></li><li><a href="../services.html">Services</a></li>
+      <li><a href="../simulator.html">Simulator</a></li></ul></div>
+    <div><p class="foot__h">News</p><ul class="foot__list">
+      <li><a href="../blog.html">Blog</a></li><li><a href="../research.html">Research</a></li><li><a href="../whitepaper.html">Whitepaper</a></li><li><a href="../docs.html">Docs</a></li></ul></div>
+  </div>
+  <p class="foot__legal">© <span id="year">2026</span> Qryptonics. <a href="../privacy.html">Privacy</a> <a href="../security.html">Security</a></p>
+</footer>
+
+<script src="../site.js?v=19363ea3" defer></script>
+<script src="../motion.js?v=9066a66d" defer></script>
+</body>
+</html>

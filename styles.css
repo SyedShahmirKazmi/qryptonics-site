@@ -431,7 +431,7 @@ a.post:focus-visible{outline:2px solid var(--copper);outline-offset:-2px}
 .post-toc a[aria-current="true"]{color:var(--ink);border-left-color:var(--copper)}
 @media (max-width:1100px){.post-layout{grid-template-columns:1fr}.post-toc{display:none}}
 
-.prose.prose--post{max-width:none;gap:1.1em;font-size:var(--rd-fs);font-family:var(--rd-font)}
+.prose.prose--post{max-width:none;grid-template-columns:minmax(0,1fr);gap:1.1em;font-size:var(--rd-fs);font-family:var(--rd-font)}
 .prose--post > *{max-width:var(--rd-measure)}
 .prose--post > .post-fig{max-width:none}
 .prose.prose--post p,.prose.prose--post li{line-height:var(--rd-lh)}
@@ -475,6 +475,25 @@ a.post:focus-visible{outline:2px solid var(--copper);outline-offset:-2px}
 .refs{display:grid;gap:.55em;padding-left:1.5em;list-style:decimal;font-size:.85em;color:var(--muted)}
 .prose .refs li{line-height:1.55}
 .post-back{margin-top:1.5em;font-family:var(--f-mono);font-size:.75em}
+/* comparison table: scrolls sideways on small screens instead of squeezing */
+.post-tab{overflow-x:auto;background:var(--card);border:1px solid var(--line-hi);border-radius:5px}
+.post-tab table{width:100%;min-width:40rem;border-collapse:collapse;font-size:.8em}
+.post-tab th,.post-tab td{text-align:left;vertical-align:top;padding:.8em 1em;border-bottom:var(--rule);line-height:1.5}
+.post-tab tr:last-child > *{border-bottom:0}
+.post-tab thead th{font-family:var(--f-mono);font-size:.82em;letter-spacing:.1em;text-transform:uppercase;color:var(--copper);font-weight:400}
+.post-tab tbody th{color:var(--ink);font-weight:600;width:20%}
+.post-tab td{color:var(--body)}
+/* two-row process figure */
+.flow{display:grid;gap:1.1rem}
+.flow__row{display:grid;gap:.5rem}
+.prose.prose--post .flow__h{font-family:var(--f-mono);font-size:.66em;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.prose .flow__steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.5rem;list-style:none;padding:0}
+.flow__steps li{position:relative;background:var(--card);border:1px solid var(--line-hi);border-top:3px solid var(--copper);border-radius:4px;padding:.7em .9em}
+.flow__row + .flow__row .flow__steps li{border-top-color:var(--cryo)}
+.flow__steps b{display:block;font-family:var(--f-mono);font-size:.64em;letter-spacing:.12em;text-transform:uppercase;color:var(--ink)}
+.flow__steps span{display:block;margin-top:.25em;font-size:.78em;line-height:1.5;color:var(--body)}
+@media (max-width:760px){.prose .flow__steps{grid-template-columns:1fr 1fr}}
+@media (max-width:420px){.prose .flow__steps{grid-template-columns:1fr}}
 
 /* ── reading tools: slim strip on the right edge ───────── */
 .rd{position:fixed;right:0;top:50%;transform:translateY(-50%);z-index:70}
@@ -532,7 +551,7 @@ a.post:focus-visible{outline:2px solid var(--copper);outline-offset:-2px}
 
 @media print{
   .nav,.foot,.rd,.post-toc,.skip,.post-back,.tip{display:none !important}
-  body,.phead,.post-tldr,.stack__l,.stack__ctl{background:#fff !important;box-shadow:none !important}
+  body,.phead,.post-tldr,.stack__l,.stack__ctl,.post-tab,.flow__steps li{background:#fff !important;box-shadow:none !important}
   .post-layout{display:block;padding:0}
   .phead--post *,.prose.prose--post,.prose.prose--post *{color:#000 !important}
   .prose--post > *{max-width:none}
