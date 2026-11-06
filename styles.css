@@ -151,12 +151,6 @@ strong{color:var(--ink)}
 .nav__dropdown a:hover{background:var(--sunk);color:var(--ink)}
 .nav__dropdown small{display:block;font-family:var(--f-display);font-size:.72rem;color:var(--faint);margin-top:.1rem}
 
-.nav__cta{
-  color:var(--copper) !important;border:1px solid var(--line-hi);
-  padding:.55rem 1.05rem;border-radius:3px;transition:border-color .18s ease,background .18s ease;
-}
-.nav__cta:hover{border-color:var(--copper);background:var(--copper-bg)}
-
 @media (max-width:1020px){
   .nav{flex-wrap:wrap}
   .nav__toggle{display:block;margin-left:auto}
@@ -177,7 +171,6 @@ strong{color:var(--ink)}
     transition:max-height .22s ease;
   }
   .nav__group-btn[aria-expanded="true"] + .nav__dropdown{max-height:12rem;transform:none}
-  .nav__cta{text-align:center;margin-top:.6rem}
 }
 
 /* ── hero (home) ───────────────────────────────────────── */
@@ -708,7 +701,6 @@ fieldset{border:0;padding:0;margin:0;display:grid;gap:.45rem}
   .nav{padding-top:.35rem;padding-bottom:.35rem}
   .nav.is-scrolled{padding-top:.2rem;padding-bottom:.2rem}
   .nav__menu > a,.nav__group-btn{padding-top:.72rem;padding-bottom:.72rem}
-  .nav__cta{padding-top:.72rem;padding-bottom:.72rem}
   .nav__brand{padding-top:.5rem;padding-bottom:.5rem}
   .nav__dropdown{top:calc(100% + .35rem)}
 }
